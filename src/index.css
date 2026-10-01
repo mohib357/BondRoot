@@ -15,7 +15,7 @@
     padding: 0;
   }
   body {
-    background-color: #f1f5f9;
+    background-color: #eef7f2;
     color: #0f172a;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     -webkit-tap-highlight-color: transparent;
@@ -174,44 +174,80 @@
 }
 
 /* Tight & Crisp Neumorphic Soft UI Classes (No Overlapping Blur) */
+/* ── Neumorphic Cards & Panels ── */
 .neu-card, .neu-panel {
-  background: #ffffff;
-  box-shadow: 4px 4px 10px rgba(166, 175, 195, 0.28), -4px -4px 10px #ffffff;
-  border-radius: 16px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: #f8fffe;
+  box-shadow:
+    6px 6px 14px rgba(140, 175, 160, 0.30),
+    -6px -6px 14px rgba(255, 255, 255, 0.95),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  border-radius: 20px;
+  border: 1px solid rgba(16, 185, 129, 0.12);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
 }
 
 .dark .neu-card, .dark .neu-panel {
-  background: #111827;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
+  background: #0f1a16;
+  box-shadow:
+    6px 6px 18px rgba(0, 0, 0, 0.55),
+    -3px -3px 10px rgba(52, 211, 153, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(52, 211, 153, 0.10);
+  border-radius: 20px;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
 }
 
+/* ── Neumorphic Buttons (clickable elements) ── */
 .neu-button {
-  background: #ffffff;
-  box-shadow: 4px 4px 10px rgba(166, 175, 195, 0.28), -4px -4px 10px #ffffff;
+  background: #f6fefb;
+  box-shadow:
+    5px 5px 12px rgba(130, 168, 150, 0.28),
+    -5px -5px 12px rgba(255, 255, 255, 0.95),
+    inset 0 1px 0 rgba(255,255,255,0.8);
   border-radius: 16px;
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  border: 1px solid rgba(16, 185, 129, 0.10);
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s ease;
 }
 
 .dark .neu-button {
-  background: #111827;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #101e18;
+  box-shadow:
+    5px 5px 14px rgba(0, 0, 0, 0.5),
+    -3px -3px 8px rgba(52, 211, 153, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(52, 211, 153, 0.09);
   border-radius: 16px;
   transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.15s ease;
 }
 
+.neu-button:hover {
+  box-shadow:
+    7px 7px 16px rgba(130, 168, 150, 0.32),
+    -7px -7px 16px rgba(255, 255, 255, 1),
+    inset 0 1px 0 rgba(255,255,255,0.9);
+  transform: translateY(-1px);
+}
+
+.dark .neu-button:hover {
+  box-shadow:
+    7px 7px 18px rgba(0, 0, 0, 0.6),
+    -4px -4px 10px rgba(52, 211, 153, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
+}
+
 .neu-button:active, .neu-button:focus-visible, .neu-pressed {
-  transform: scale(0.98);
-  box-shadow: inset 3px 3px 6px rgba(166, 175, 195, 0.4), inset -2px -2px 5px #ffffff;
+  transform: scale(0.97) translateY(0px);
+  box-shadow:
+    inset 4px 4px 8px rgba(130, 168, 150, 0.38),
+    inset -3px -3px 7px rgba(255, 255, 255, 0.85);
 }
 
 .dark .neu-button:active, .dark .neu-button:focus-visible, .dark .neu-pressed {
-  transform: scale(0.98);
-  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.5), inset -2px -2px 5px rgba(255, 255, 255, 0.05);
+  transform: scale(0.97) translateY(0px);
+  box-shadow:
+    inset 4px 4px 8px rgba(0, 0, 0, 0.55),
+    inset -2px -2px 6px rgba(52, 211, 153, 0.06);
 }
 
 .neu-btn-primary {
@@ -238,15 +274,21 @@
 }
 
 .neu-inset {
-  background: #f1f5f9;
-  box-shadow: inset 3px 3px 6px rgba(166, 175, 195, 0.35), inset -3px -3px 6px #ffffff;
+  background: #ecfdf5;
+  box-shadow:
+    inset 3px 3px 8px rgba(130, 168, 150, 0.30),
+    inset -3px -3px 8px rgba(255, 255, 255, 0.90);
   border-radius: 16px;
+  border: 1px solid rgba(16, 185, 129, 0.10);
 }
 
 .dark .neu-inset {
-  background: #0f172a;
-  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.45), inset -2px -2px 5px rgba(255, 255, 255, 0.04);
+  background: #091510;
+  box-shadow:
+    inset 3px 3px 8px rgba(0, 0, 0, 0.50),
+    inset -2px -2px 6px rgba(52, 211, 153, 0.05);
   border-radius: 16px;
+  border: 1px solid rgba(52, 211, 153, 0.08);
 }
 
 /* SVG Generative Tree Motion Keyframes */

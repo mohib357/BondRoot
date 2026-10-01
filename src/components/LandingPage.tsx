@@ -62,7 +62,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 flex flex-col font-sans transition-colors relative overflow-x-hidden selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a] text-slate-900 dark:text-zinc-100 flex flex-col font-sans transition-colors relative overflow-x-hidden selection:bg-emerald-100 selection:text-emerald-900">
 
 
       {/* Background Ambient Glow */}
@@ -117,7 +117,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       {/* 2. Hero Section (Styled as a Grand Hero Texture Card) */}
       <section className="py-6 sm:py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
-        <div className="p-6 sm:p-12 rounded-3xl sm:rounded-[2.5rem] bg-lineage-pattern border border-emerald-200/70 dark:border-emerald-900/60 shadow-2xl shadow-emerald-500/5 dark:shadow-emerald-900/20 neu-panel relative overflow-hidden text-center flex flex-col items-center">
+        <div className="p-6 sm:p-12 rounded-3xl sm:rounded-[2.5rem] bg-lineage-pattern border border-emerald-300/60 dark:border-emerald-800/50 shadow-[0_8px_32px_rgba(16,185,129,0.12)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.6)] relative overflow-hidden text-center flex flex-col items-center">
 
           {/* Ambient Glowing Background Orbs */}
           <div className="absolute -top-20 -left-20 w-80 h-80 bg-emerald-400/10 dark:bg-emerald-400/15 rounded-full blur-3xl pointer-events-none" />
@@ -236,7 +236,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       {/* 3. Family Tree Visual Preview */}
       <section id="demo-tree-preview" className="py-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
-        <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl neu-panel relative overflow-hidden">
+        <div className="p-6 sm:p-8 rounded-3xl border bg-[#f5fdf8] dark:bg-[#0c1a12] border-emerald-200/60 dark:border-emerald-900/50 shadow-[6px_6px_24px_rgba(140,175,160,0.22),-6px_-6px_20px_rgba(255,255,255,0.90)] dark:shadow-[6px_6px_24px_rgba(0,0,0,0.55),-3px_-3px_10px_rgba(52,211,153,0.04)] relative overflow-hidden" >
 
           {/* Section Badge */}
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-4 mb-6">
@@ -475,7 +475,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
             <button
               onClick={onOpenAuth}
-              className="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-xs sm:text-sm shadow-lg shrink-0 active:scale-95 transition cursor-pointer neu-button"
+              className="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 active:scale-95 active:shadow-inner text-amber-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-400/30 shrink-0 transition-all duration-150 cursor-pointer select-none"
             >
               {isEnglish ? 'Try Kinship Engine' : 'সম্পর্ক ট্রাই করুন'}
             </button>
