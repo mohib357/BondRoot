@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo, useCallback } from 'react';
 import { Person } from '../types/person';
 import { calculateAge, getFullName } from '../utils/relationship';
 import {
@@ -23,6 +23,142 @@ interface TreeViewProps {
   lang?: 'bn' | 'en';
 }
 
+interface TreeNodeCardProps {
+  person: Person;
+  personMap: Map<string, Person>;
+  isRoot: boolean;
+  isEnglish: boolean;
+  onSelectPerson: (p: Person) => void;
+  onAddRelated: (relative: Person, relationType: 'parent' | 'child' | 'spouse') => void;
+  onFocusBranch: (pId: string) => void;
+}
+
+// Memoized Individual Person Node Card for High-FPS Zoom & Drag
+const TreeNodeCard = React.memo<TreeNodeCardProps>(({
+  person,
+  personMap,
+  isRoot,
+  isEnglish,
+  onSelectPerson,
+  onAddRelated,
+  onFocusBranch,
+}) => {
+  const spouseObjects = useMemo(() => {
+    return person.spouseIds
+      .map((sid) => personMap.get(sid))
+      .filter((s): s is Person => s !== undefined);
+  }, [person.spouseIds, personMap]);
+
+  return (
+    <div className="flex items-stretch bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md rounded-2xl border border-white/60 dark:border-zinc-700/50 hover:border-emerald-500/80 dark:hover:border-emerald-500 shadow-md hover:shadow-xl transition-all duration-150 group overflow-hidden max-w-xs w-72 gpu-accelerated">
+      {/* Person Card Body */}
+      <div
+        onClick={() => onSelectPerson(person)}
+        className="p-4 cursor-pointer flex-1 flex flex-col justify-between select-none"
+      >
+        <div className="flex items-start space-x-3">
+          {/* Duo-Tone Avatar */}
+          <div
+            className={`w-12 h-12 rounded-2xl flex items-center justify-center font-black text-sm shrink-0 border-2 shadow-xs ${
+              person.gender === 'female'
+                ? 'bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-700'
+                : person.gender === 'male'
+                ? 'bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-700'
+                : 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-700'
+            }`}
+          >
+            {person.firstName[0]}
+            {person.lastName[0]}
+          </div>
+
+          {/* Info */}
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center space-x-1.5">
+              <h4 className="font-bold text-sm text-slate-900 dark:text-white truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
+                {getFullName(person)}
+              </h4>
+              {isRoot && (
+                <span title="Root Ancestor">
+                  <Shield className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                </span>
+              )}
+            </div>
+
+            <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate mt-0.5">
+              {person.occupation || (person.isLiving ? (isEnglish ? 'Living' : 'জীবিত') : (isEnglish ? 'Deceased' : 'প্রয়াত'))}
+            </p>
+
+            <div className="flex items-center space-x-2 mt-1.5 text-[11px] text-slate-400 dark:text-zinc-500">
+              <span className="flex items-center space-x-1">
+                <Calendar className="w-3 h-3" />
+                <span>{calculateAge(person.birthDate, person.deathDate, person.isLiving)}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Root / Bond Badges */}
+        <div className="mt-3.5 pt-2.5 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-[11px]">
+          <span className="text-slate-500 dark:text-zinc-400 font-medium">
+            {isRoot ? (
+              <span className="text-emerald-700 dark:text-emerald-400 font-semibold">
+                {isEnglish ? 'Root Ancestor' : 'মূল পূর্বপুরুষ'}
+              </span>
+            ) : (
+              `${person.childrenIds.length} ${isEnglish ? 'children' : 'সন্তান'}`
+            )}
+          </span>
+
+          {spouseObjects.length > 0 && (
+            <span className="flex items-center space-x-1 text-rose-600 dark:text-rose-400">
+              <Heart className="w-3 h-3 fill-rose-500 text-rose-500" />
+              <span className="text-[10px] font-semibold truncate max-w-[80px]">
+                {spouseObjects[0].firstName}
+              </span>
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Quick Action Side Strip */}
+      <div className="bg-slate-50/80 dark:bg-zinc-950/60 border-l border-slate-200/80 dark:border-zinc-800 flex flex-col justify-around px-1 text-slate-400 dark:text-zinc-500">
+        <button
+          title="Add Child"
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddRelated(person, 'child');
+          }}
+          className="p-1.5 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-white dark:hover:bg-zinc-800 rounded-lg transition"
+        >
+          <Plus className="w-3.5 h-3.5" />
+        </button>
+        <button
+          title="Add Spouse"
+          onClick={(e) => {
+            e.stopPropagation();
+            onAddRelated(person, 'spouse');
+          }}
+          className="p-1.5 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-white dark:hover:bg-zinc-800 rounded-lg transition"
+        >
+          <Heart className="w-3.5 h-3.5" />
+        </button>
+        <button
+          title="Focus Branch"
+          onClick={(e) => {
+            e.stopPropagation();
+            onFocusBranch(person.id);
+          }}
+          className="p-1.5 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-zinc-800 rounded-lg transition"
+        >
+          <Focus className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+});
+
+TreeNodeCard.displayName = 'TreeNodeCard';
+
 export const TreeView: React.FC<TreeViewProps> = ({
   people,
   onSelectPerson,
@@ -38,7 +174,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
   const isDraggingRef = useRef(false);
   const startPosRef = useRef({ x: 0, y: 0, scrollLeft: 0, scrollTop: 0 });
 
-  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if ((e.target as HTMLElement).closest('button, input, select, a, [data-no-drag]')) return;
     if (!canvasRef.current) return;
     isDraggingRef.current = true;
@@ -51,17 +187,17 @@ export const TreeView: React.FC<TreeViewProps> = ({
     try {
       canvasRef.current.setPointerCapture(e.pointerId);
     } catch {}
-  };
+  }, []);
 
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!isDraggingRef.current || !canvasRef.current) return;
     const dx = e.clientX - startPosRef.current.x;
     const dy = e.clientY - startPosRef.current.y;
     canvasRef.current.scrollLeft = startPosRef.current.scrollLeft - dx;
     canvasRef.current.scrollTop = startPosRef.current.scrollTop - dy;
-  };
+  }, []);
 
-  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+  const handlePointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
     try {
@@ -69,18 +205,22 @@ export const TreeView: React.FC<TreeViewProps> = ({
         canvasRef.current.releasePointerCapture(e.pointerId);
       }
     } catch {}
-  };
+  }, []);
 
-  // Group people into generations starting from roots
-  const personMap = new Map<string, Person>();
-  people.forEach((p) => personMap.set(p.id, p));
+  // Map of people for fast lookup
+  const personMap = useMemo(() => {
+    const map = new Map<string, Person>();
+    people.forEach((p) => map.set(p.id, p));
+    return map;
+  }, [people]);
 
-  const roots = people.filter((p) => p.parentIds.length === 0);
+  const roots = useMemo(() => {
+    return people.filter((p) => p.parentIds.length === 0);
+  }, [people]);
 
-  const calculateGenerations = (): { [gen: number]: Person[] } => {
+  const generations = useMemo(() => {
     const genMap = new Map<string, number>();
 
-    // Initial roots are gen 1
     roots.forEach((r) => genMap.set(r.id, 1));
 
     let changed = true;
@@ -135,15 +275,16 @@ export const TreeView: React.FC<TreeViewProps> = ({
     });
 
     return grouped;
-  };
+  }, [people, roots, focusedRootId, personMap]);
 
-  const generations = calculateGenerations();
-  const genKeys = Object.keys(generations)
-    .map(Number)
-    .sort((a, b) => a - b);
+  const genKeys = useMemo(() => {
+    return Object.keys(generations)
+      .map(Number)
+      .sort((a, b) => a - b);
+  }, [generations]);
 
   // Toggle fullscreen mode
-  const toggleFullscreen = () => {
+  const toggleFullscreen = useCallback(() => {
     if (!containerRef.current) return;
     if (!document.fullscreenElement) {
       containerRef.current.requestFullscreen().catch((err) => console.log(err));
@@ -152,7 +293,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
       document.exitFullscreen().catch((err) => console.log(err));
       setIsFullscreen(false);
     }
-  };
+  }, []);
 
   return (
     <div
@@ -161,7 +302,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
         isFullscreen ? 'fixed inset-0 z-50 rounded-none' : 'min-h-[640px]'
       }`}
     >
-      {/* Tree Controls Toolbar (Glassmorphism) */}
+      {/* Tree Controls Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 p-3.5 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800/80 z-20">
         <div className="flex items-center space-x-2">
           <span className="text-xs font-bold text-slate-500 dark:text-zinc-400 uppercase tracking-wider">
@@ -190,7 +331,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           )}
         </div>
 
-        {/* Zoom & Fullscreen Controls (Soft Neumorphism) */}
+        {/* Zoom & Fullscreen Controls */}
         <div className="flex items-center space-x-2">
           <div className="flex items-center space-x-1 bg-slate-100/90 dark:bg-zinc-800/90 rounded-xl p-1 border border-slate-200 dark:border-zinc-700">
             <button
@@ -242,7 +383,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           touchAction: 'pan-x pan-y',
           overscrollBehavior: 'contain',
         }}
-        className="flex-1 overflow-auto p-6 sm:p-12 flex justify-center bg-grid-pattern relative select-none touch-pan-x touch-pan-y cursor-grab active:cursor-grabbing"
+        className="flex-1 overflow-auto p-6 sm:p-12 flex justify-center bg-grid-pattern relative select-none touch-pan-x touch-pan-y cursor-grab active:cursor-grabbing gpu-accelerated"
       >
         {people.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-12 text-center text-slate-500">
@@ -258,7 +399,7 @@ export const TreeView: React.FC<TreeViewProps> = ({
           </div>
         ) : (
           <div
-            className="transition-transform duration-200 origin-top flex flex-col items-center space-y-12 pb-16"
+            className="transition-transform duration-150 origin-top flex flex-col items-center space-y-12 pb-16 gpu-accelerated"
             style={{ transform: `scale(${zoomLevel})` }}
           >
             {genKeys.map((genNum, idx) => (
@@ -283,123 +424,18 @@ export const TreeView: React.FC<TreeViewProps> = ({
 
                 {/* Nodes in this Generation */}
                 <div className="flex flex-wrap justify-center gap-6 max-w-6xl">
-                  {generations[genNum].map((person) => {
-                    const spouseObjects = person.spouseIds
-                      .map((sid) => personMap.get(sid))
-                      .filter((s): s is Person => s !== undefined);
-
-                    const isRoot = person.parentIds.length === 0;
-
-                    return (
-                      <div
-                        key={person.id}
-                        className="flex items-stretch bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md rounded-2xl border border-white/60 dark:border-zinc-700/50 hover:border-emerald-500/80 dark:hover:border-emerald-500 shadow-md hover:shadow-xl transition-all duration-200 group overflow-hidden max-w-xs w-72"
-                      >
-                        {/* Person Card Body */}
-                        <div
-                          onClick={() => onSelectPerson(person)}
-                          className="p-4 cursor-pointer flex-1 flex flex-col justify-between"
-                        >
-                          <div className="flex items-start space-x-3">
-                            {/* Duo-Tone Avatar */}
-                            <div
-                              className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-sm shrink-0 border-2 shadow-xs ${
-                                person.gender === 'female'
-                                  ? 'bg-rose-50 text-rose-700 border-rose-300 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-700'
-                                  : person.gender === 'male'
-                                  ? 'bg-blue-50 text-blue-700 border-blue-300 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-700'
-                                  : 'bg-emerald-50 text-emerald-700 border-emerald-300 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-700'
-                              }`}
-                            >
-                              {person.firstName[0]}
-                              {person.lastName[0]}
-                            </div>
-
-                            {/* Info */}
-                            <div className="min-w-0 flex-1">
-                              <div className="flex items-center space-x-1.5">
-                                <h4 className="font-bold text-sm text-slate-900 dark:text-white truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition">
-                                  {getFullName(person)}
-                                </h4>
-                                {isRoot && (
-                                  <span title="Root Ancestor">
-                                    <Shield className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                                  </span>
-                                )}
-                              </div>
-
-                              <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate mt-0.5">
-                                {person.occupation || (person.isLiving ? 'জীবিত' : 'প্রয়াত')}
-                              </p>
-
-                              <div className="flex items-center space-x-2 mt-1.5 text-[11px] text-slate-400 dark:text-zinc-500">
-                                <span className="flex items-center space-x-1">
-                                  <Calendar className="w-3 h-3" />
-                                  <span>{calculateAge(person.birthDate, person.deathDate, person.isLiving)}</span>
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-
-                          {/* Quick Root / Bond Badges */}
-                          <div className="mt-3.5 pt-2.5 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-[11px]">
-                            <span className="text-slate-500 dark:text-zinc-400 font-medium">
-                              {isRoot ? (
-                                <span className="text-emerald-700 dark:text-emerald-400 font-semibold">
-                                  {isEnglish ? 'Root Ancestor' : 'মূল পূর্বপুরুষ'}
-                                </span>
-                              ) : (
-                                `${person.childrenIds.length} ${isEnglish ? 'children' : 'সন্তান'}`
-                              )}
-                            </span>
-
-                            {spouseObjects.length > 0 && (
-                              <span className="flex items-center space-x-1 text-rose-600 dark:text-rose-400">
-                                <Heart className="w-3 h-3 fill-rose-500 text-rose-500" />
-                                <span className="text-[10px] font-semibold truncate max-w-[80px]">
-                                  {spouseObjects[0].firstName}
-                                </span>
-                              </span>
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Quick Action Side Strip (Soft Neumorphism) */}
-                        <div className="bg-slate-50/80 dark:bg-zinc-950/60 border-l border-slate-200/80 dark:border-zinc-800 flex flex-col justify-around px-1 text-slate-400 dark:text-zinc-500">
-                          <button
-                            title="Add Child"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onAddRelated(person, 'child');
-                            }}
-                            className="p-1.5 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-white dark:hover:bg-zinc-800 rounded-lg transition"
-                          >
-                            <Plus className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            title="Add Spouse"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onAddRelated(person, 'spouse');
-                            }}
-                            className="p-1.5 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-white dark:hover:bg-zinc-800 rounded-lg transition"
-                          >
-                            <Heart className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            title="Focus Branch"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setFocusedRootId(person.id);
-                            }}
-                            className="p-1.5 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-white dark:hover:bg-zinc-800 rounded-lg transition"
-                          >
-                            <Focus className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })}
+                  {generations[genNum].map((person) => (
+                    <TreeNodeCard
+                      key={person.id}
+                      person={person}
+                      personMap={personMap}
+                      isRoot={person.parentIds.length === 0}
+                      isEnglish={isEnglish}
+                      onSelectPerson={onSelectPerson}
+                      onAddRelated={onAddRelated}
+                      onFocusBranch={setFocusedRootId}
+                    />
+                  ))}
                 </div>
 
                 {/* Connector line between generations */}

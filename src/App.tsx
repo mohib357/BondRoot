@@ -27,6 +27,7 @@ import { EmptyFamilyWelcome } from './components/EmptyFamilyWelcome';
 import { AuthModal } from './components/AuthModal';
 import { SuperAdminDashboardModal } from './components/SuperAdminDashboardModal';
 import { LandingPage } from './components/LandingPage';
+import { SplashScreen } from './components/SplashScreen';
 import { User } from './types/auth';
 import { apiFetch } from './utils/api';
 import { Sparkles, ArrowRight, Wand2, Lightbulb, Calendar, Printer, MessageSquare, Bell, Check, X } from 'lucide-react';
@@ -120,6 +121,19 @@ export const App: React.FC = () => {
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isGuestDemoMode, setIsGuestDemoMode] = useState(false);
+
+  // Splash Screen States
+  const [showSplash, setShowSplash] = useState(true);
+  const [isSplashExiting, setIsSplashExiting] = useState(false);
+
+  // Animated Splash Screen Exit Timer & Data Preload
+  useEffect(() => {
+    const splashTimer = setTimeout(() => {
+      setIsSplashExiting(true);
+    }, 1800);
+
+    return () => clearTimeout(splashTimer);
+  }, []);
 
   // Session validation on mount
   useEffect(() => {
@@ -525,6 +539,15 @@ export const App: React.FC = () => {
   if (!authUser && !isGuestDemoMode) {
     return (
       <>
+        {/* Full-screen Animated Splash Screen */}
+        {showSplash && (
+          <SplashScreen
+            isExiting={isSplashExiting}
+            onFinished={() => setShowSplash(false)}
+            lang={lang}
+          />
+        )}
+
         <LandingPage
           onOpenAuth={() => setIsAuthModalOpen(true)}
           onExploreDemo={() => setIsGuestDemoMode(true)}
@@ -554,6 +577,14 @@ export const App: React.FC = () => {
 
   return (
     <div className="min-h-screen max-w-full overflow-x-hidden flex flex-col bg-slate-100/70 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans relative pb-16 md:pb-0 transition-colors">
+      {/* Full-screen Animated Splash Screen */}
+      {showSplash && (
+        <SplashScreen
+          isExiting={isSplashExiting}
+          onFinished={() => setShowSplash(false)}
+          lang={lang}
+        />
+      )}
       {/* Root Silhouette Watermark */}
       <div
         className="root-watermark bg-contain bg-no-repeat bg-right-bottom hidden sm:block pointer-events-none"
