@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { User, AuthResponse } from '../types/auth';
-import { apiFetch, getApiBaseUrl } from '../utils/api';
+import { apiFetch, getApiBaseUrl, DEFAULT_LIVE_API_URL } from '../utils/api';
 import {
   Network,
   Lock,
@@ -18,6 +18,7 @@ import {
   AlertCircle,
   X,
   Settings,
+  RotateCcw,
 } from 'lucide-react';
 
 interface AuthModalProps {
@@ -56,11 +57,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   const handleSaveApiUrl = (e: React.FormEvent) => {
     e.preventDefault();
-    if (customApiUrl.trim()) {
+    if (customApiUrl.trim() && customApiUrl.trim() !== DEFAULT_LIVE_API_URL) {
       localStorage.setItem('bondroot_api_url', customApiUrl.trim());
     } else {
       localStorage.removeItem('bondroot_api_url');
     }
+    setShowApiSettings(false);
+    setErrorMsg(null);
+  };
+
+  const handleResetApiUrl = () => {
+    localStorage.removeItem('bondroot_api_url');
+    setCustomApiUrl(DEFAULT_LIVE_API_URL);
     setShowApiSettings(false);
     setErrorMsg(null);
   };
@@ -196,15 +204,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             </div>
             <p className="text-[11px] text-slate-500 dark:text-zinc-400">
               {isEnglish
-                ? 'Default for Android emulator is http://10.0.2.2:3000. Set custom IP for physical devices.'
-                : 'অ্যান্ড্রয়েড এমুলেটরের জন্য ডিফল্ট http://10.0.2.2:3000। রিয়েল ফোনের জন্য পিসির IP সেট করুন।'}
+                ? 'Default Live Server: https://bondroot.onrender.com'
+                : 'ডিফল্ট লাইভ সার্ভার: https://bondroot.onrender.com'}
             </p>
             <div className="flex gap-2">
               <input
                 type="text"
                 value={customApiUrl}
                 onChange={(e) => setCustomApiUrl(e.target.value)}
-                placeholder="http://10.0.2.2:3000 or http://192.168.1.100:3000"
+                placeholder="https://bondroot.onrender.com"
                 className="flex-1 px-3 py-1.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-700 text-xs text-slate-900 dark:text-white outline-hidden"
               />
               <button
@@ -212,6 +220,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition cursor-pointer"
               >
                 {isEnglish ? 'Save' : 'সংরক্ষণ'}
+              </button>
+              <button
+                type="button"
+                onClick={handleResetApiUrl}
+                title="Reset to Live Server"
+                className="px-2.5 py-1.5 rounded-xl bg-slate-200 dark:bg-zinc-700 text-slate-700 dark:text-zinc-200 font-bold text-xs hover:bg-slate-300 transition cursor-pointer flex items-center gap-1"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>{isEnglish ? 'Reset' : 'রিসেট'}</span>
               </button>
             </div>
           </form>

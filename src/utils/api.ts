@@ -1,12 +1,13 @@
 import { Capacitor } from '@capacitor/core';
 
+export const DEFAULT_LIVE_API_URL = 'https://bondroot.onrender.com';
+
 /**
  * Returns the base URL for API requests.
- * Order of priority:
+ * Priority:
  * 1. Saved URL in localStorage ('bondroot_api_url')
  * 2. VITE_API_URL environment variable
- * 3. Capacitor Native (Android/iOS): Default to 'http://10.0.2.2:3000' (Android Emulator -> Host PC)
- * 4. Web Browser: '' (relative URL)
+ * 3. Default Live Server ('https://bondroot.onrender.com')
  */
 export const getApiBaseUrl = (): string => {
   if (typeof window !== 'undefined') {
@@ -21,11 +22,7 @@ export const getApiBaseUrl = (): string => {
     return envUrl.trim().replace(/\/$/, '');
   }
 
-  if (typeof window !== 'undefined' && Capacitor.isNativePlatform()) {
-    return 'http://10.0.2.2:3000';
-  }
-
-  return '';
+  return DEFAULT_LIVE_API_URL;
 };
 
 /**
