@@ -24,12 +24,14 @@ import {
 } from 'lucide-react';
 
 import { PublicModalType } from './PublicLegalModal';
+import { FeatureSpotlightKey } from './FeatureSpotlightModal';
 
 interface LandingPageProps {
   onOpenAuth: () => void;
   onExploreDemo: () => void;
   onOpenDeveloperAbout?: () => void;
   onOpenLegal?: (type: PublicModalType) => void;
+  onOpenFeatureSpotlight?: (key: FeatureSpotlightKey) => void;
   lang: 'bn' | 'en';
   onToggleLang: () => void;
   isDarkMode: boolean;
@@ -41,6 +43,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onExploreDemo,
   onOpenDeveloperAbout,
   onOpenLegal,
+  onOpenFeatureSpotlight,
   lang,
   onToggleLang,
   isDarkMode,
@@ -278,7 +281,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
 
           {/* Card 1: Interactive Family Tree */}
-          <div className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-emerald-500/60 transition duration-150 flex flex-col justify-between neu-button group">
+          <div
+            onClick={() => onOpenFeatureSpotlight?.('tree')}
+            className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-emerald-500/60 transition duration-150 flex flex-col justify-between neu-button group cursor-pointer"
+          >
             <div>
               <div className="w-11 h-11 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mb-3">
                 <GitFork className="w-5 h-5 stroke-[2.2]" />
@@ -299,7 +305,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Card 2: Smart Relationship Finder */}
-          <div className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-purple-500/60 transition duration-150 flex flex-col justify-between neu-button group">
+          <div
+            onClick={() => onOpenFeatureSpotlight?.('kinship')}
+            className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-purple-500/60 transition duration-150 flex flex-col justify-between neu-button group cursor-pointer"
+          >
             <div>
               <div className="w-11 h-11 rounded-2xl bg-purple-100 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-800/80 text-purple-700 dark:text-purple-300 flex items-center justify-center mb-3">
                 <Compass className="w-5 h-5 stroke-[2.2]" />
@@ -320,7 +329,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Card 3: Family Vault */}
-          <div className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-teal-500/60 transition duration-150 flex flex-col justify-between neu-button group">
+          <div
+            onClick={() => onOpenFeatureSpotlight?.('vault')}
+            className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-teal-500/60 transition duration-150 flex flex-col justify-between neu-button group cursor-pointer"
+          >
             <div>
               <div className="w-11 h-11 rounded-2xl bg-teal-100 dark:bg-teal-950/80 border border-teal-200 dark:border-teal-800/80 text-teal-700 dark:text-teal-300 flex items-center justify-center mb-3">
                 <MessageSquare className="w-5 h-5 stroke-[2.2]" />
@@ -341,7 +353,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Card 4: Privacy First */}
-          <div className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-amber-500/60 transition duration-150 flex flex-col justify-between neu-button group">
+          <div
+            onClick={() => onOpenFeatureSpotlight?.('privacy')}
+            className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-amber-500/60 transition duration-150 flex flex-col justify-between neu-button group cursor-pointer"
+          >
             <div>
               <div className="w-11 h-11 rounded-2xl bg-amber-100 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-800/80 text-amber-700 dark:text-amber-300 flex items-center justify-center mb-3">
                 <Shield className="w-5 h-5 stroke-[2.2]" />

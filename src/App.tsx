@@ -30,6 +30,7 @@ import { UserProfileModal } from './components/UserProfileModal';
 import { LandingPage } from './components/LandingPage';
 import { SplashScreen } from './components/SplashScreen';
 import { PublicLegalModal, PublicModalType } from './components/PublicLegalModal';
+import { FeatureSpotlightModal, FeatureSpotlightKey } from './components/FeatureSpotlightModal';
 import { App as CapApp } from '@capacitor/app';
 import { User } from './types/auth';
 import { apiFetch } from './utils/api';
@@ -128,6 +129,9 @@ export const App: React.FC = () => {
 
   // Public Legal Modal State
   const [publicLegalModalType, setPublicLegalModalType] = useState<PublicModalType>(null);
+
+  // Feature Spotlight Modal State
+  const [spotlightKey, setSpotlightKey] = useState<FeatureSpotlightKey>(null);
 
   // Back Button Press Toast State
   const [backToastMsg, setBackToastMsg] = useState<string | null>(null);
@@ -257,6 +261,10 @@ export const App: React.FC = () => {
   // Hardware Back Button Handler for Android
   useEffect(() => {
     const handleBackButton = CapApp.addListener('backButton', () => {
+      if (spotlightKey) {
+        setSpotlightKey(null);
+        return;
+      }
       if (publicLegalModalType) {
         setPublicLegalModalType(null);
         return;
@@ -679,6 +687,7 @@ export const App: React.FC = () => {
           onExploreDemo={() => setIsGuestDemoMode(true)}
           onOpenDeveloperAbout={() => setIsDeveloperAboutOpen(true)}
           onOpenLegal={(type) => setPublicLegalModalType(type)}
+          onOpenFeatureSpotlight={(key) => setSpotlightKey(key)}
           lang={lang}
           onToggleLang={() => setLang((l) => (l === 'bn' ? 'en' : 'bn'))}
           isDarkMode={isDarkMode}
@@ -689,6 +698,14 @@ export const App: React.FC = () => {
         <AuthModal
           isOpen={isAuthModalOpen}
           onSuccess={handleAuthSuccess}
+          lang={lang}
+        />
+
+        {/* Feature Spotlight Modal */}
+        <FeatureSpotlightModal
+          featureKey={spotlightKey}
+          onClose={() => setSpotlightKey(null)}
+          onOpenAuth={() => setIsAuthModalOpen(true)}
           lang={lang}
         />
 
@@ -721,15 +738,21 @@ export const App: React.FC = () => {
 
       {/* Sticky Save Warning Banner in Guest Demo Sandbox Mode */}
       {isGuestDemoMode && !authUser && (
-        <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-amber-950 font-bold px-4 py-2.5 shadow-md flex items-center justify-between text-xs sticky top-0 z-40 animate-in slide-in-from-top-2 border-b border-amber-600">
-          <div className="flex items-center space-x-2 min-w-0 pr-2">
-            <span className="shrink-0 text-base">⚠️</span>
-            <span className="truncate">
+        <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-amber-950 font-bold px-3 sm:px-4 py-2.5 shadow-md flex items-center justify-between text-xs sticky top-0 z-40 animate-in slide-in-from-top-2 border-b border-amber-600 flex-wrap gap-2">
+          <div className="flex items-center space-x-2 min-w-0 flex-1">
+            <button
+              onClick={() => setIsGuestDemoMode(false)}
+              className="px-2.5 py-1 rounded-xl bg-amber-950 text-white font-extrabold text-xs hover:bg-slate-900 transition cursor-pointer shrink-0 shadow-xs neu-button"
+            >
+              {lang === 'en' ? '← Back to Home' : '← হোম পেজে ফিরে যান'}
+            </button>
+            <span className="truncate hidden sm:inline">
               {lang === 'en'
-                ? 'You are in Sandbox Demo Mode. Data is temporary. Sign in to save your family tree permanently to the cloud.'
-                : 'আপনি পরীক্ষামূলক ডেমো ব্যবহার করছেন। তথ্যগুলো সাময়িক। আপনার পারিবারিক তথ্য আজীবনের জন্য ক্লাউডে সুরক্ষিত রাখতে লগইন / সাইনআপ করুন।'}
+                ? 'Sandbox Demo Mode (Temporary Data).'
+                : 'আপনি পরীক্ষামূলক ডেমো ব্যবহার করছেন (সাময়িক ডাটা)।'}
             </span>
           </div>
+
           <button
             onClick={() => setIsAuthModalOpen(true)}
             className="px-3 py-1 rounded-xl bg-white text-amber-950 font-black text-xs hover:bg-amber-50 transition cursor-pointer shrink-0 shadow-xs neu-button"
