@@ -60,8 +60,29 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     }
   };
 
+  // ── TEST: Real-time deploy verification (remove after confirmed) ──
+  const [deployInfo, setDeployInfo] = React.useState<{ server_started_at?: string; message?: string } | null>(null);
+  React.useEffect(() => {
+    fetch('/api/test/deploy-ping')
+      .then(r => r.json())
+      .then(d => setDeployInfo(d))
+      .catch(() => setDeployInfo({ message: '❌ Server ping failed' }));
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 flex flex-col font-sans transition-colors relative overflow-x-hidden selection:bg-emerald-100 selection:text-emerald-900">
+
+      {/* ── TEST BANNER — real-time deploy check (remove after confirmed) ── */}
+      {deployInfo && (
+        <div className="w-full bg-emerald-600 dark:bg-emerald-700 text-white text-xs font-bold text-center py-2 px-4 z-50">
+          {deployInfo.message}
+          {deployInfo.server_started_at && (
+            <span className="ml-2 opacity-80">
+              Server চালু হয়েছে: {new Date(deployInfo.server_started_at).toLocaleString('bn-BD', { timeZone: 'Asia/Dhaka' })}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Background Ambient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none" />
