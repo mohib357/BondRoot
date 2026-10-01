@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Network,
   GitFork,
@@ -13,12 +13,14 @@ import {
   LogIn,
   Users,
   Compass,
-  Award,
-  Calendar,
   CheckCircle2,
   Lock,
-  ChevronDown,
+  ChevronRight,
+  Award,
+  Layers,
   UserPlus,
+  Play,
+  Share2,
 } from 'lucide-react';
 
 interface LandingPageProps {
@@ -42,8 +44,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 }) => {
   const isEnglish = lang === 'en';
 
-  const scrollToFeatures = () => {
-    const el = document.getElementById('features-section');
+  const scrollToDemo = () => {
+    const el = document.getElementById('demo-tree-preview');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     } else {
@@ -54,370 +56,492 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 flex flex-col font-sans transition-colors relative overflow-x-hidden selection:bg-emerald-100 selection:text-emerald-900">
 
-      {/* Background Subtle Gradient Blobs */}
+      {/* Background Ambient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none" />
 
-      {/* Top Floating Glass Navbar */}
-      <nav className="sticky top-0 z-40 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-b border-emerald-100 dark:border-zinc-800/80 transition-colors">
+      {/* 1. Header (Clean & Premium) */}
+      <header className="sticky top-0 z-40 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
-          {/* Brand Logo */}
+          {/* Logo + Name */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-700 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-700 via-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 border border-white/20 neu-button">
               <Network className="w-6 h-6 stroke-[2.2]" />
             </div>
-            <div>
-              <span className="text-xl font-black tracking-tight bg-gradient-to-r from-emerald-800 to-teal-700 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent">
-                BondRoot
-              </span>
-              <span className="hidden sm:inline-block text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 ml-2 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-                {isEnglish ? 'Genealogy' : 'বংশলতিকা'}
-              </span>
-            </div>
+            <span className="text-xl font-black tracking-tight bg-gradient-to-r from-emerald-800 via-teal-700 to-emerald-900 dark:from-amber-200 dark:via-emerald-300 dark:to-teal-200 bg-clip-text text-transparent">
+              BondRoot
+            </span>
           </div>
 
           {/* Right Header Actions */}
           <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Dark / Light Toggle */}
+            {/* Dark Mode Toggle */}
             <button
               onClick={onToggleDarkMode}
               title={isDarkMode ? 'Switch to Light' : 'Switch to Dark'}
-              className="p-2 text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl border border-slate-200 dark:border-zinc-700 transition cursor-pointer"
+              className="p-2 text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl border border-slate-200 dark:border-zinc-700 transition cursor-pointer neu-button"
             >
               {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
             </button>
 
-            {/* Language Toggle */}
+            {/* Language Switcher */}
             <button
               onClick={onToggleLang}
-              className="inline-flex items-center space-x-1 px-2.5 py-1.5 text-xs font-bold rounded-xl border border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 transition shadow-2xs cursor-pointer"
+              className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 transition shadow-2xs cursor-pointer neu-button"
             >
               <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>{isEnglish ? 'বাংলা' : 'EN'}</span>
+              <span>{isEnglish ? 'বাংলা' : 'English'}</span>
             </button>
 
-            {/* Login CTA */}
+            {/* Login Button */}
             <button
               onClick={onOpenAuth}
-              className="inline-flex items-center space-x-1.5 px-3.5 py-2 text-xs sm:text-sm font-extrabold text-white bg-gradient-to-r from-emerald-700 to-teal-600 hover:from-emerald-800 hover:to-teal-700 rounded-xl shadow-md shadow-emerald-700/20 active:scale-95 transition cursor-pointer"
+              className="inline-flex items-center space-x-1.5 px-4 py-2 text-xs sm:text-sm font-extrabold text-white bg-emerald-700 hover:bg-emerald-800 active:scale-95 rounded-xl shadow-md shadow-emerald-700/20 transition cursor-pointer neu-button"
             >
               <LogIn className="w-4 h-4" />
-              <span>{isEnglish ? 'Sign In / Sign Up' : 'লগইন / সাইনআপ'}</span>
+              <span>{isEnglish ? 'Login' : 'লগইন'}</span>
             </button>
           </div>
 
         </div>
-      </nav>
+      </header>
 
-      {/* Hero Section */}
-      <section className="relative pt-12 sm:pt-20 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto text-center flex flex-col items-center">
+      {/* 2. Hero Section */}
+      <section className="relative pt-10 sm:pt-16 pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center flex flex-col items-center">
 
-        {/* Badge Pill */}
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-100/90 dark:bg-emerald-950/80 border border-emerald-300/80 dark:border-emerald-800/80 text-emerald-800 dark:text-emerald-300 text-xs font-extrabold shadow-2xs mb-6 animate-in fade-in slide-in-from-top-4 duration-300">
+        {/* Brand Name */}
+        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-100/90 dark:bg-emerald-950/80 border border-emerald-300/80 dark:border-emerald-800/80 text-emerald-900 dark:text-emerald-300 text-xs font-extrabold shadow-2xs mb-5 animate-in fade-in duration-300">
           <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
-          <span>
-            {isEnglish
-              ? '★ Digital Vault for Ancestral Roots & Kinship Bonds'
-              : '★ আপনার পারিবারিক শিকড় ও সম্পর্কের ডিজিটাল মহাফেজখানা'}
-          </span>
+          <span>BondRoot</span>
         </div>
 
-        {/* Hero Title */}
-        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white max-w-4xl leading-tight sm:leading-none">
+        {/* Powerful Headline */}
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white max-w-3xl leading-snug sm:leading-tight">
           {isEnglish ? (
-            <>
-              Preserve Your Family Lineage &{' '}
-              <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 bg-clip-text text-transparent">
-                Kinship Bonds Forever
-              </span>
-            </>
+            <>Your Family Story, Relationships & Lineage — All in One Place</>
           ) : (
-            <>
-              BondRoot — আপনার পারিবারিক শিকড় ও{' '}
-              <span className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-800 bg-clip-text text-transparent">
-                সম্পর্কের ডিজিটাল মহাফেজখানা
-              </span>
-            </>
+            <>“আপনার পরিবারের গল্প, সম্পর্ক ও বংশলতিকা—এক জায়গায়”</>
           )}
         </h1>
 
-        {/* Hero Description */}
-        <p className="mt-6 text-sm sm:text-lg text-slate-600 dark:text-zinc-300 max-w-2xl font-medium leading-relaxed">
+        {/* Meaningful Subtitle */}
+        <p className="mt-4 text-xs sm:text-base text-slate-600 dark:text-zinc-300 max-w-2xl font-medium leading-relaxed">
           {isEnglish
-            ? 'A modern genealogy platform designed to preserve Bengali family heritage, trace ancestral roots across generations, calculate exact respectful calling terms, and keep family memories safe in a lifetime digital vault.'
-            : 'বাঙালি সমৃদ্ধ পারিবারিক সংস্কৃতি, বংশানুক্রমিক রক্তের সামাজিক বন্ধন এবং প্রজন্মের পর প্রজন্ম ধরে পূর্বপুরুষদের অমূল্য স্মৃতি ও পরিচয় সযতনে সংরক্ষণ করার জন্য নির্মিত বিশেষ প্ল্যাটফর্ম।'}
+            ? 'Preserve, discover, and pass down your family connections across generations for the future.'
+            : 'প্রজন্ম থেকে প্রজন্মে আপনার পরিবারের সম্পর্ক সংরক্ষণ করুন, খুঁজে বের করুন এবং ভবিষ্যৎ প্রজন্মের জন্য রেখে যান।'}
         </p>
 
-        {/* Primary CTA Buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
+        {/* Hero CTAs */}
+        <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
+          {/* Primary CTA */}
           <button
             onClick={onOpenAuth}
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-700 hover:to-teal-800 text-white font-black text-sm shadow-xl shadow-emerald-600/25 active:scale-98 transition cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-700 via-teal-600 to-emerald-800 hover:from-emerald-800 hover:to-teal-700 text-white font-black text-sm shadow-xl shadow-emerald-700/25 active:scale-98 transition cursor-pointer neu-button"
           >
-            <LogIn className="w-4 h-4" />
-            <span>{isEnglish ? 'Sign In / Sign Up to Portal' : '🟢 পোর্টালে প্রবেশ / সাইনআপ করুন'}</span>
+            <span>{isEnglish ? '🌳 Get Started — Free' : '🌳 শুরু করুন — বিনামূল্যে'}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
+          {/* Secondary CTA */}
           <button
-            onClick={scrollToFeatures}
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-2xl bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-200 font-extrabold text-sm border border-slate-300 dark:border-zinc-700 shadow-md active:scale-98 transition cursor-pointer"
+            onClick={scrollToDemo}
+            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-2xl bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-200 font-extrabold text-sm border border-slate-300 dark:border-zinc-700 shadow-md active:scale-98 transition cursor-pointer neu-button"
           >
-            <Compass className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-            <span>{isEnglish ? 'Explore Features & Demo' : '⚪ ডেমো বা ফিচার এক্সপ্লোর করুন'}</span>
+            <Play className="w-4 h-4 text-emerald-600 dark:text-emerald-400 fill-emerald-600 dark:fill-emerald-400" />
+            <span>{isEnglish ? 'View Demo Family' : 'ডেমো পরিবার দেখুন'}</span>
           </button>
         </div>
 
-        {/* Trust Badges Bar */}
-        <div className="mt-12 pt-8 border-t border-slate-200/80 dark:border-zinc-800/80 flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-xs font-bold text-slate-500 dark:text-zinc-400">
-          <div className="flex items-center space-x-2">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>{isEnglish ? '100% Private & Encrypted' : '১০০% গোপনীয় ও সুরক্ষিত'}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <GitFork className="w-4 h-4 text-teal-600" />
-            <span>{isEnglish ? 'Multi-Generational Tree' : 'বহু-প্রজন্মীয় বংশলতিকা'}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-purple-600" />
-            <span>{isEnglish ? 'Gemini AI Kinship Logic' : 'জেমিনাই AI আত্মীয়তা লজিক'}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Shield className="w-4 h-4 text-amber-600" />
-            <span>{isEnglish ? 'PWA & Android Support' : 'অ্যান্ড্রয়েড ও ওয়েব সমর্থিত'}</span>
-          </div>
-        </div>
-
       </section>
 
-      {/* Feature Highlights Grid Section */}
-      <section id="features-section" className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+      {/* 3. Family Tree Visual Preview */}
+      <section id="demo-tree-preview" className="py-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+        <div className="p-6 sm:p-8 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-2xl neu-panel relative overflow-hidden">
 
-        {/* Section Title */}
-        <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white">
-            {isEnglish ? 'Core Platform Features' : 'প্রধান ফিচার শোকেস'}
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 mt-2 font-medium">
-            {isEnglish
-              ? 'Everything you need to preserve, trace, and interact with your ancestral heritage.'
-              : 'আপনার পারিবারিক ইতিহাস, রক্তের সম্পর্ক ও স্মৃতি এক জায়গায় ফ্রেমবন্দি করার আধুনিক ফিচারসমূহ।'}
-          </p>
-        </div>
-
-        {/* 4 Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-          {/* Feature 1: Interactive Family Tree */}
-          <div className="p-6 rounded-3xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-xl hover:shadow-2xl hover:border-emerald-500/50 transition duration-200 group flex flex-col justify-between">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                <GitFork className="w-6 h-6 stroke-[2.2]" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {isEnglish ? '1. Interactive Family Tree' : '🌳 ১. ভিজ্যুয়াল বংশলতিকা (Interactive Family Tree)'}
+          {/* Section Badge */}
+          <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-4 mb-6">
+            <div className="flex items-center space-x-2">
+              <span className="w-3 h-3 rounded-full bg-emerald-500 animate-ping" />
+              <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-slate-800 dark:text-zinc-200">
+                {isEnglish ? 'Interactive Family Lineage Graph Preview' : 'বংশলতিকা ও সম্পর্কের ভিজ্যুয়াল ডেমো'}
               </h3>
-              <p className="mt-2.5 text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed font-normal">
-                {isEnglish
-                  ? 'Multi-generational interactive family tree with root ancestor isolation, smooth zoom-pan navigation, and clear branch-by-branch generational hierarchy.'
-                  : 'বহু-প্রজন্মের ইন্টারেক্টিভ বংশলতিকা, রুট অ্যানসেস্টর আইসোলেশন, স্মুথ জুম-প্যান নেভিগেশন এবং শাখা অনুযায়ী বংশানুক্রমের স্পষ্ট ভিজ্যুয়াল রূপরেখা।'}
-              </p>
             </div>
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-xs text-emerald-700 dark:text-emerald-400 font-bold">
-              <span>{isEnglish ? 'Branch View & Zoom' : 'জুম, প্যান ও রুট ফিল্টার'}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-            </div>
-          </div>
-
-          {/* Feature 2: Gemini AI Kinship */}
-          <div className="p-6 rounded-3xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-xl hover:shadow-2xl hover:border-purple-500/50 transition duration-200 group flex flex-col justify-between">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-purple-100 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-800/80 text-purple-700 dark:text-purple-300 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                <Sparkles className="w-6 h-6 stroke-[2.2]" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {isEnglish ? '2. Gemini AI Kinship Calculation' : '🤖 ২. AI আত্মীয়তা ও সম্বোধন নির্ণয় (Gemini AI)'}
-              </h3>
-              <p className="mt-2.5 text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed font-normal">
-                {isEnglish
-                  ? 'Calculates exact blood kinship traversal paths between any two relatives and determines respectful Bengali calling terms (e.g., Younger Brother, Paternal Cousin).'
-                  : 'যেকোনো দুই সদস্যের রক্তের যোগসূত্র ও জটিল আত্মীয়তার নিখুঁত গ্রাফ ট্রাভার্সাল এবং সামনাসামনি ডাকার সঠিক ও মিষ্টি বাংলা সম্বোধন নির্ধারণ (যেমন: স্নেহের ছোট ভাই, ফুফাতো বোন)।'}
-              </p>
-            </div>
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-xs text-purple-700 dark:text-purple-400 font-bold">
-              <span>{isEnglish ? 'Kinship Finder & Calling Terms' : 'গ্রাফ ট্রাভার্সাল ও সম্মোধন'}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-            </div>
-          </div>
-
-          {/* Feature 3: Family Chat & Memory Vault */}
-          <div className="p-6 rounded-3xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-xl hover:shadow-2xl hover:border-teal-500/50 transition duration-200 group flex flex-col justify-between">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-teal-100 dark:bg-teal-950/80 border border-teal-200 dark:border-teal-800/80 text-teal-700 dark:text-teal-300 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                <MessageSquare className="w-6 h-6 stroke-[2.2]" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {isEnglish ? '3. Family Chat & Memory Vault' : '💬 ৩. পারিবারিক চ্যাট ও স্মৃতি ভল্ট (Family Vault)'}
-              </h3>
-              <p className="mt-2.5 text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed font-normal">
-                {isEnglish
-                  ? 'Private in-app messaging between family members and encrypted cloud storage for old photos, birth records, and lifetime family memories.'
-                  : 'পরিবারের সদস্যদের মধ্যে ব্যক্তিগত নিরাপদ বার্তা আদান-প্রদান এবং ফটো মেমোরি ভল্টে পুরোনো ও নতুন ছবি আজীবন অক্ষুণ্ন রাখা।'}
-              </p>
-            </div>
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-xs text-teal-700 dark:text-teal-400 font-bold">
-              <span>{isEnglish ? 'In-App Messages & Photos' : 'সিকিউর চ্যাট ও ফটো গ্যালারি'}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-            </div>
-          </div>
-
-          {/* Feature 4: Cloud Sync & Security */}
-          <div className="p-6 rounded-3xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-xl hover:shadow-2xl hover:border-amber-500/50 transition duration-200 group flex flex-col justify-between">
-            <div>
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-800/80 text-amber-700 dark:text-amber-300 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-                <Shield className="w-6 h-6 stroke-[2.2]" />
-              </div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {isEnglish ? '4. Lifetime Cloud Sync & Privacy' : '🛡️ ৪. সম্পূর্ণ নিরাপদ ও ক্লাউড সিঙ্ক (Neon Storage)'}
-              </h3>
-              <p className="mt-2.5 text-xs sm:text-sm text-slate-600 dark:text-zinc-300 leading-relaxed font-normal">
-                {isEnglish
-                  ? 'Serverless Neon PostgreSQL cloud synchronization, offline caching, and individual privacy controls to keep your family lineage 100% private.'
-                  : 'ক্লাউড সার্ভারলেস ডাটাবেজ সিঙ্ক, এনক্রিপ্টেড ব্যাকআপ এবং ব্যক্তিনির্দিষ্ট প্রাইভেসি কন্ট্রোল যা আপনার পারিবারিক তথ্য রাখে সম্পূর্ণ নিরাপদ।'}
-              </p>
-            </div>
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-zinc-800/80 flex items-center justify-between text-xs text-amber-700 dark:text-amber-400 font-bold">
-              <span>{isEnglish ? 'Encrypted PostgreSQL Storage' : 'সার্ভারলেস ক্লাউড সেফটি'}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-            </div>
-          </div>
-
-        </div>
-
-      </section>
-
-      {/* Why BondRoot? Section */}
-      <section className="py-16 bg-gradient-to-b from-emerald-900 via-teal-950 to-emerald-950 text-white px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
-              {isEnglish ? 'Mission & Values' : 'উদ্দেশ্য ও মূল্যবোধ'}
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black mt-1">
-              {isEnglish ? 'Why Choose BondRoot?' : 'কেন BondRoot ব্যবহার করবেন?'}
-            </h2>
-            <p className="text-xs sm:text-sm text-emerald-200/80 mt-2">
-              {isEnglish
-                ? 'Bringing families closer together in a fast-changing modern world.'
-                : 'ব্যস্ত আধুনিক জীবনে হারিয়ে যাওয়া পারিবারিক শিকড় ও ঐতিহ্যকে ধরে রাখার ডিজিটাল প্রয়াস।'}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-            {/* Value 1 */}
-            <div className="p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center font-black">
-                ১
-              </div>
-              <h3 className="text-base font-bold text-emerald-200">
-                {isEnglish ? 'Reviving Lost Connections' : 'হারিয়ে যাওয়া আত্মীয়তার পুনরুজ্জীবন'}
-              </h3>
-              <p className="text-xs text-emerald-100/70 leading-relaxed">
-                {isEnglish
-                  ? 'Reconnect distant relatives and cousins who have scattered across cities and countries into a single shared digital tree.'
-                  : 'আধুনিক জীবনযাত্রায় দূরে সরে যাওয়া আত্মীয়-স্বজন ও কাজিনদের আবার একই পরিচিত পারিবারিক সীমানায় যুক্ত করা।'}
-              </p>
-            </div>
-
-            {/* Value 2 */}
-            <div className="p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center font-black">
-                ২
-              </div>
-              <h3 className="text-base font-bold text-teal-200">
-                {isEnglish ? 'Connecting Youth to Roots' : 'নতুন প্রজন্মকে শিকড়ের সাথে পরিচয়'}
-              </h3>
-              <p className="text-xs text-emerald-100/70 leading-relaxed">
-                {isEnglish
-                  ? 'Help young family members learn about their ancestors, lineage background, and respectful Bengali family protocols.'
-                  : 'ছোটদের ও নতুন প্রজন্মকে রক্তের সম্পর্ক, পূর্বপুরুষের পরিচয় এবং পারিবারিক আদব-কায়দা ও সম্মোধনের সাথে পরিচয় করানো।'}
-              </p>
-            </div>
-
-            {/* Value 3 */}
-            <div className="p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center font-black">
-                ৩
-              </div>
-              <h3 className="text-base font-bold text-amber-200">
-                {isEnglish ? 'Digital Memory Preservation' : 'জীবন্ত স্মৃতির ডিজিটাল ফ্রেম'}
-              </h3>
-              <p className="text-xs text-emerald-100/70 leading-relaxed">
-                {isEnglish
-                  ? 'Keep marriage records, milestone events, and generational photographs safe for generations to come.'
-                  : 'জন্ম, বিয়ে, পারিবারিক অনুষ্ঠান ও স্মরণীয় স্মৃতির ছবিগুলোকে আজীবন অক্ষুণ্ন ও সুরক্ষিত রাখা।'}
-              </p>
-            </div>
-
-          </div>
-
-          {/* Bottom CTA on Why Section */}
-          <div className="mt-12 text-center">
             <button
-              onClick={onOpenAuth}
-              className="inline-flex items-center space-x-2 px-6 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-xs sm:text-sm shadow-xl transition cursor-pointer"
+              onClick={onExploreDemo}
+              className="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>{isEnglish ? 'Start Building Your Family Tree' : 'আপনার বংশলতিকা তৈরি শুরু করুন'}</span>
-              <ArrowRight className="w-4 h-4" />
+              <span>{isEnglish ? 'Open Interactive Mode' : 'ইন্টারেক্টিভ ডেমো খুলুন'}</span>
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
 
+          {/* Sample Lineage Hierarchy Tree */}
+          <div className="flex flex-col items-center space-y-6 text-xs sm:text-sm">
+
+            {/* Generation 1: Grandparents */}
+            <div className="flex items-center space-x-3">
+              <div className="px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-zinc-800 dark:to-zinc-800/90 border border-emerald-300 dark:border-emerald-700/80 font-bold text-slate-900 dark:text-white shadow-xs neu-button text-center">
+                <span className="text-[10px] text-emerald-700 dark:text-emerald-400 font-bold block">
+                  {isEnglish ? 'Grandparents' : '১ম প্রজন্ম (দাদা / দাদি)'}
+                </span>
+                <span>মুহম্মদ আব্দুর রহিম (১৯৩৫)</span>
+              </div>
+            </div>
+
+            {/* Connector Line */}
+            <div className="w-0.5 h-6 bg-gradient-to-b from-emerald-400 to-teal-600" />
+
+            {/* Generation 2: Parents & Uncles */}
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-6">
+              <div className="px-4 py-2.5 rounded-2xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 font-bold text-slate-800 dark:text-zinc-200 shadow-2xs text-center neu-button">
+                <span className="text-[10px] text-teal-600 dark:text-teal-400 block font-semibold">
+                  {isEnglish ? 'Father' : 'বাবা'}
+                </span>
+                <span>আব্দুল্লাহ হোসেন</span>
+              </div>
+
+              <div className="px-4 py-2.5 rounded-2xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 font-bold text-slate-800 dark:text-zinc-200 shadow-2xs text-center neu-button">
+                <span className="text-[10px] text-amber-600 dark:text-amber-400 block font-semibold">
+                  {isEnglish ? 'Uncle' : 'চাচা'}
+                </span>
+                <span>আব্দুর রহমান</span>
+              </div>
+            </div>
+
+            {/* Connector Line */}
+            <div className="w-0.5 h-6 bg-gradient-to-b from-teal-500 to-emerald-600" />
+
+            {/* Generation 3: Children / Cousins */}
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-6">
+              <div className="px-4 py-2.5 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-300 dark:border-emerald-700 font-extrabold text-emerald-950 dark:text-emerald-200 shadow-xs text-center neu-button">
+                <span className="text-[10px] text-emerald-700 dark:text-emerald-300 block">
+                  {isEnglish ? 'You' : 'সদস্য A'}
+                </span>
+                <span>তানভীর চৌধুরী (১৯৯৮)</span>
+              </div>
+
+              <div className="px-4 py-2.5 rounded-2xl bg-teal-100 dark:bg-teal-950/80 border border-teal-300 dark:border-teal-700 font-extrabold text-teal-950 dark:text-teal-200 shadow-xs text-center neu-button">
+                <span className="text-[10px] text-teal-700 dark:text-teal-300 block">
+                  {isEnglish ? 'Cousin' : 'সদস্য B'}
+                </span>
+                <span>কামাল হোসেন (২০০২)</span>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Relationship Calculation Example Card */}
+          <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-amber-50 via-emerald-50 to-teal-50 dark:from-zinc-800/90 dark:via-zinc-800 dark:to-zinc-800/90 border border-amber-200 dark:border-zinc-700 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs neu-inset">
+            <div className="flex items-center space-x-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-800 dark:text-amber-300 flex items-center justify-center shrink-0">
+                <Compass className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+              </div>
+              <div>
+                <span className="font-extrabold text-slate-900 dark:text-white block text-xs sm:text-sm">
+                  {isEnglish ? 'Tanvir ↔ Kamal Hossain' : '“তানভীর ↔ কামাল হোসেন”'}
+                </span>
+                <span className="text-slate-600 dark:text-zinc-300 font-medium">
+                  {isEnglish
+                    ? 'Paternal Cousin (Son of grandfather’s brother\'s son) | Calling: Younger Brother'
+                    : '“দাদার ভাইয়ের ছেলের ছেলে (চাচাতো ভাই) | সম্বোধন: স্নেহের ছোট ভাই”'}
+                </span>
+              </div>
+            </div>
+            <span className="px-3 py-1 rounded-full bg-emerald-600 text-white font-extrabold text-[11px] shrink-0">
+              {isEnglish ? 'Auto Calculated' : 'স্বয়ংক্রিয় সম্পর্ক নির্ণয়'}
+            </span>
+          </div>
+
         </div>
       </section>
 
-      {/* Footer & Developer Intro Section */}
-      <footer className="bg-slate-900 text-slate-400 text-xs py-10 px-4 sm:px-6 lg:px-8 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      {/* 4. Core Features Grid */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
 
-          {/* Left Footer Info */}
-          <div className="flex items-center space-x-3 text-center md:text-left">
-            <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
-              <Network className="w-5 h-5" />
-            </div>
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white">
+            {isEnglish ? 'Core Platform Features' : 'প্রধান ফিচারসমূহ'}
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 mt-1.5 font-medium">
+            {isEnglish
+              ? 'Everything required to preserve, discover, and organize your lineage.'
+              : 'পারিবারিক রক্তসম্পর্ক ও ইতিহাস সুসংগঠিত রাখার প্রয়োজনীয় চার মূল ফিচার।'}
+          </p>
+        </div>
+
+        {/* 4 Feature Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+
+          {/* Card 1: Interactive Family Tree */}
+          <div className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-emerald-500/60 transition duration-150 flex flex-col justify-between neu-button group">
             <div>
-              <p className="font-bold text-slate-200 text-sm">BondRoot Platform</p>
-              <p className="text-[11px] text-slate-500">
+              <div className="w-11 h-11 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mb-3">
+                <GitFork className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                {isEnglish ? 'Interactive Family Tree' : '🌳 ভিজ্যুয়াল বংশলতিকা'}
+              </h3>
+              <p className="mt-2 text-xs text-slate-600 dark:text-zinc-300 leading-relaxed">
                 {isEnglish
-                  ? 'Digital Ancestral Vault & Kinship Graph Engine'
-                  : 'পারিবারিক রক্তের সম্পর্ক ও বংশলতিকা সংরক্ষণের ডিজিটাল প্ল্যাটফর্ম'}
+                  ? 'Multi-generational interactive family tree with root ancestor filtering and clear generational hierarchy.'
+                  : 'বহু-প্রজন্মের ইন্টারেক্টিভ ট্রি, রুট অ্যানসেস্টর ফিল্টারিং এবং স্পষ্ট সম্পর্কচিত্র।'}
               </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between text-[11px] font-bold text-emerald-700 dark:text-emerald-400">
+              <span>{isEnglish ? 'Interactive Tree' : 'ইন্টারেক্টিভ ট্রি'}</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
             </div>
           </div>
 
-          {/* Center Developer Badge */}
-          <div className="flex items-center space-x-2 bg-slate-800/80 px-4 py-2 rounded-2xl border border-slate-700/80">
-            <Award className="w-4 h-4 text-emerald-400" />
-            <span>
-              <strong className="text-slate-200">Lead Architect & Creator:</strong> Muhibbul Islam
+          {/* Card 2: Smart Relationship Finder */}
+          <div className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-purple-500/60 transition duration-150 flex flex-col justify-between neu-button group">
+            <div>
+              <div className="w-11 h-11 rounded-2xl bg-purple-100 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-800/80 text-purple-700 dark:text-purple-300 flex items-center justify-center mb-3">
+                <Compass className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                {isEnglish ? 'Smart Relationship Finder' : '🧬 স্মার্ট সম্পর্ক নির্ণয়'}
+              </h3>
+              <p className="mt-2 text-xs text-slate-600 dark:text-zinc-300 leading-relaxed">
+                {isEnglish
+                  ? 'Instant graph traversal for blood/marital relations and exact respectful calling terms.'
+                  : 'যেকোনো দুই সদস্যের রক্তের বা বৈবাহিক সম্পর্কের যোগসূত্র এবং সামনাসামনি ডাকার সঠিক সম্বোধন।'}
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between text-[11px] font-bold text-purple-700 dark:text-purple-400">
+              <span>{isEnglish ? 'Relationship Graph' : 'সম্পর্ক ট্রাভার্সাল'}</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
+            </div>
+          </div>
+
+          {/* Card 3: Family Vault */}
+          <div className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-teal-500/60 transition duration-150 flex flex-col justify-between neu-button group">
+            <div>
+              <div className="w-11 h-11 rounded-2xl bg-teal-100 dark:bg-teal-950/80 border border-teal-200 dark:border-teal-800/80 text-teal-700 dark:text-teal-300 flex items-center justify-center mb-3">
+                <MessageSquare className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                {isEnglish ? 'Family Vault & Chat' : '🔐 পারিবারিক মেমোরি ভল্ট'}
+              </h3>
+              <p className="mt-2 text-xs text-slate-600 dark:text-zinc-300 leading-relaxed">
+                {isEnglish
+                  ? 'Private member messaging, milestone events, and encrypted storage for family photographs.'
+                  : 'পরিবারের গোপনীয় বার্তা, স্মরণীয় ঘটনা এবং জীবনবৃত্তান্ত নিরাপদে সংরক্ষণ।'}
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between text-[11px] font-bold text-teal-700 dark:text-teal-400">
+              <span>{isEnglish ? 'Secure Storage' : 'নিরাপদ ভল্ট'}</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
+            </div>
+          </div>
+
+          {/* Card 4: Privacy First */}
+          <div className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-amber-500/60 transition duration-150 flex flex-col justify-between neu-button group">
+            <div>
+              <div className="w-11 h-11 rounded-2xl bg-amber-100 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-800/80 text-amber-700 dark:text-amber-300 flex items-center justify-center mb-3">
+                <Shield className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                {isEnglish ? 'Privacy First Protection' : '🛡️ সম্পূর্ণ প্রাইভেসি ফার্স্ট'}
+              </h3>
+              <p className="mt-2 text-xs text-slate-600 dark:text-zinc-300 leading-relaxed">
+                {isEnglish
+                  ? 'Complete control over individual profile visibility and lifetime lineage security.'
+                  : 'আপনার পারিবারিক তথ্যের সম্পূর্ণ নিয়ন্ত্রণ এবং আজীবন সুরক্ষার নিশ্চয়তা।'}
+              </p>
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-100 dark:border-zinc-800 flex items-center justify-between text-[11px] font-bold text-amber-700 dark:text-amber-400">
+              <span>{isEnglish ? 'Encrypted Security' : 'ব্যক্তিগত গোপনীয়তা'}</span>
+              <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      {/* 5. Relationship Finder Value Highlight Section */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+        <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-900 via-teal-900 to-emerald-950 text-white shadow-2xl relative overflow-hidden neu-panel">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 text-center md:text-left">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-300">
+                {isEnglish ? 'Intelligent Kinship Graph Engine' : 'স্মার্ট আত্মীয়তা অ্যালগরিদম'}
+              </span>
+              <h3 className="text-xl sm:text-2xl font-black">
+                {isEnglish
+                  ? 'Select Any 2 Members to Trace Their Kinship Path'
+                  : '“যেকোনো দুইজন সদস্য নির্বাচন করুন এবং তাদের মধ্যকার পারিবারিক সম্পর্ক ও সম্পূর্ণ সম্পর্কের পথ দেখুন।”'}
+              </h3>
+              <p className="text-xs sm:text-sm text-emerald-100/80 leading-relaxed max-w-xl">
+                {isEnglish
+                  ? 'BondRoot algorithms calculate step-by-step ancestral paths and direct Bengali respectful calling terms.'
+                  : 'বন্ডরুটের বিশেষ সম্পর্কের অ্যালগরিদম ধাপে ধাপে বংশলতিকার প্রতিটি মাধ্যম চিহ্নিত করে রক্তের দূরবর্তী সম্পর্কও স্পষ্ট করে দেয়।'}
+              </p>
+            </div>
+
+            <button
+              onClick={onOpenAuth}
+              className="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-amber-950 font-black text-xs sm:text-sm shadow-lg shrink-0 active:scale-95 transition cursor-pointer neu-button"
+            >
+              {isEnglish ? 'Try Kinship Engine' : 'সম্পর্ক ট্রাই করুন'}
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* 6. How It Works Section (4 Concise Connected Steps) */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white">
+            {isEnglish ? 'How BondRoot Works' : 'কীভাবে কাজ করে'}
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-zinc-400 mt-1.5 font-medium">
+            {isEnglish ? '4 simple steps to organize your complete family lineage.' : 'সহজ ৪টি ধাপে গড়ে তুলুন আপনার ডিজিটাল বংশলতিকা।'}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative">
+
+          {/* Step 1 */}
+          <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm relative neu-button text-center sm:text-left">
+            <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono block mb-2">01</span>
+            <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+              {isEnglish ? 'Start Your Family' : 'পরিবার শুরু করুন'}
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+              {isEnglish ? 'Create your account & add root ancestor.' : 'অ্যাকাউন্ট খুলুন এবং মূল পূর্বপুরুষ নির্ধারণ করুন।'}
+            </p>
+          </div>
+
+          {/* Step 2 */}
+          <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm relative neu-button text-center sm:text-left">
+            <span className="text-2xl font-black text-teal-600 dark:text-teal-400 font-mono block mb-2">02</span>
+            <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+              {isEnglish ? 'Add Members' : 'সদস্য যোগ করুন'}
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+              {isEnglish ? 'Add parents, children, spouses & siblings.' : 'পিতামাতা, সন্তান, জীবনসঙ্গী ও ভাইবোন যুক্ত করুন।'}
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm relative neu-button text-center sm:text-left">
+            <span className="text-2xl font-black text-purple-600 dark:text-purple-400 font-mono block mb-2">03</span>
+            <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+              {isEnglish ? 'Connect Bonds' : 'সম্পর্ক তৈরি করুন'}
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+              {isEnglish ? 'Auto-sync reciprocal bloodline connections.' : 'স্বয়ংক্রিয়ভাবে দ্বিপাক্ষিক রক্তের যোগসূত্র তৈরি হবে।'}
+            </p>
+          </div>
+
+          {/* Step 4 */}
+          <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm relative neu-button text-center sm:text-left">
+            <span className="text-2xl font-black text-amber-600 dark:text-amber-400 font-mono block mb-2">04</span>
+            <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+              {isEnglish ? 'Find Kinship' : 'যেকোনো সম্পর্ক খুঁজে দেখুন'}
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+              {isEnglish ? 'Trace exact calling terms between any two relatives.' : 'যেকোনো দুই সদস্যের মধ্যকার বাংলা সম্বোধন দেখুন।'}
+            </p>
+          </div>
+
+        </div>
+      </section>
+
+      {/* 7. Why BondRoot (Emotional & Professional) */}
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+        <div className="p-8 rounded-3xl bg-slate-900 text-white border border-slate-800 neu-panel">
+          <div className="text-center max-w-xl mx-auto mb-8">
+            <h2 className="text-xl sm:text-2xl font-black">
+              {isEnglish ? 'Why Choose BondRoot?' : 'কেন BondRoot ব্যবহার করবেন?'}
+            </h2>
+            <p className="text-xs text-slate-400 mt-1">
+              {isEnglish ? 'Built to preserve Bengali family heritage and kinship ties.' : 'বাঙালি পরিবারের আবেগ, ঐতিহ্য ও শিকড় সংরক্ষণের অঙ্গীকার।'}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-center md:text-left">
+            <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-2 neu-button">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto md:mx-0">
+                🌳
+              </div>
+              <h4 className="font-bold text-sm text-emerald-300">
+                {isEnglish ? 'Preserving Family Roots' : 'পরিবারের শিকড় সংরক্ষণ'}
+              </h4>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {isEnglish
+                  ? 'Keep complete multi-generational lineage records organized in a lifetime digital vault.'
+                  : 'বহু-প্রজন্মের পারিবারিক শিকড় ও ঐতিহ্য সযতনে ফ্রেমবন্দি রাখার স্থায়ী ডিজিটাল ব্যবস্থা।'}
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-2 neu-button">
+              <div className="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center mx-auto md:mx-0">
+                🤝
+              </div>
+              <h4 className="font-bold text-sm text-teal-300">
+                {isEnglish ? 'Introducing Youth to Kinship' : 'নতুন প্রজন্মকে আত্মীয়তার সাথে পরিচয় করানো'}
+              </h4>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {isEnglish
+                  ? 'Help children learn exact respectful Bengali calling terms for distant cousins and uncles.'
+                  : 'ছোটদের ও নতুন প্রজন্মকে পারিবারিক আত্মীয়তার গভীরতা ও সম্মোধনের সাথে পরিচয় করানো।'}
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-2 neu-button">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto md:mx-0">
+                🕊️
+              </div>
+              <h4 className="font-bold text-sm text-amber-300">
+                {isEnglish ? 'Legacy for Future Generations' : 'পরিবারের ইতিহাস ভবিষ্যৎ প্রজন্মের জন্য রেখে যাওয়া'}
+              </h4>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                {isEnglish
+                  ? 'Pass down authentic family photos, bios, and lineage milestones for decades to come.'
+                  : 'পূর্বপুরুষদের ছবি, গল্প ও স্মরণীয় ঘটনা ভবিষ্যৎ প্রজন্মের জন্য ডিজিটালি অক্ষুণ্ন রাখা।'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 8. Simplified Premium Footer */}
+      <footer className="bg-slate-950 text-slate-400 text-xs py-10 px-4 sm:px-6 lg:px-8 border-t border-slate-900 mt-auto">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+
+          <div>
+            <span className="font-black text-slate-200 text-sm block">BondRoot</span>
+            <span className="text-[11px] text-emerald-400/90 font-medium">
+              “Preserve Your Roots • Build Your Legacy”
             </span>
+          </div>
+
+          {/* Links */}
+          <div className="flex items-center space-x-4 text-[11px] font-semibold text-slate-400">
+            <button onClick={onOpenAuth} className="hover:text-white transition cursor-pointer">
+              {isEnglish ? 'Privacy' : 'গোপনীয়তা'}
+            </button>
+            <span>•</span>
+            <button onClick={onOpenAuth} className="hover:text-white transition cursor-pointer">
+              {isEnglish ? 'Terms' : 'শর্তাবলী'}
+            </button>
+            <span>•</span>
             {onOpenDeveloperAbout && (
-              <button
-                onClick={onOpenDeveloperAbout}
-                className="text-emerald-400 hover:underline font-bold ml-1"
-              >
-                {isEnglish ? 'Contact' : 'যোগাযোগ'}
+              <button onClick={onOpenDeveloperAbout} className="hover:text-white transition cursor-pointer">
+                {isEnglish ? 'Help' : 'সাহায্য'}
               </button>
             )}
           </div>
 
-          {/* Right Copyright */}
-          <div className="text-center md:text-right text-[11px] text-slate-500">
-            <p>© {new Date().getFullYear()} BondRoot. All rights reserved.</p>
-            <p className="mt-0.5 text-emerald-400/80">Preserve Your Roots • Build Your Legacy</p>
-          </div>
+        </div>
 
+        {/* Subtle Creator Credit */}
+        <div className="max-w-5xl mx-auto pt-6 mt-6 border-t border-slate-900 text-center text-[10px] text-slate-600">
+          <span>Created with ❤️ by Muhibbul Islam • BondRoot Platform v1.2</span>
         </div>
       </footer>
 
