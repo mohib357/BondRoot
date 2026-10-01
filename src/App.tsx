@@ -519,7 +519,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-100/70 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans relative pb-16 md:pb-0 transition-colors">
+    <div className="min-h-screen max-w-full overflow-x-hidden flex flex-col bg-slate-100/70 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans relative pb-16 md:pb-0 transition-colors">
       {/* Root Silhouette Watermark */}
       <div
         className="root-watermark bg-contain bg-no-repeat bg-right-bottom hidden sm:block pointer-events-none"
@@ -624,7 +624,7 @@ export const App: React.FC = () => {
       )}
 
       {/* Main View Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-2 sm:px-6 lg:px-8 py-4 sm:py-6 flex flex-col overflow-x-hidden">
         {people.length === 0 ? (
           <EmptyFamilyWelcome
             onAddFirstMember={() => {
