@@ -38,7 +38,7 @@ interface LandingPageProps {
   onToggleDarkMode: () => void;
 }
 
-// ── Standalone Bottom Nav Component ──
+// ── Landing Bottom Nav — Full-width curvy notch active indicator ──
 interface LandingBottomNavProps {
   isEnglish: boolean;
   onOpenAuth: () => void;
@@ -50,89 +50,106 @@ interface LandingBottomNavProps {
 const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
   isEnglish, onOpenAuth, onToggleLang, onOpenDeveloperAbout
 }) => {
-  const [active, setActive] = React.useState<'home' | 'settings' | 'about' | 'login'>('home');
+  const [active, setActive] = React.useState<'home' | 'lang' | 'about' | 'login'>('home');
 
-  const navItems = [
-    {
-      id: 'home' as const,
-      label: isEnglish ? 'Home' : 'হোম',
-      icon: (
-        <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-          <polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-      ),
-      onClick: () => { setActive('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
-    },
-    {
-      id: 'settings' as const,
-      label: isEnglish ? 'Settings' : 'সেটিং',
-      icon: (
-        <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="3"/>
-          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-        </svg>
-      ),
-      onClick: () => { setActive('settings'); onToggleLang(); }
-    },
-    {
-      id: 'about' as const,
-      label: isEnglish ? 'About' : 'এবাউট',
-      icon: (
-        <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="12" y1="8" x2="12" y2="12"/>
-          <line x1="12" y1="16" x2="12.01" y2="16"/>
-        </svg>
-      ),
-      onClick: () => { setActive('about'); onOpenDeveloperAbout?.(); }
-    },
-    {
-      id: 'login' as const,
-      label: isEnglish ? 'Login' : 'লগইন',
-      icon: (
-        <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-      ),
-      onClick: () => { setActive('login'); onOpenAuth(); }
-    },
+  const ITEMS = [
+    { id: 'home' as const,  label: isEnglish ? 'Home'    : 'হোম',     onClick: () => { setActive('home');  window.scrollTo({top:0,behavior:'smooth'}); } },
+    { id: 'lang' as const,  label: isEnglish ? 'বাংলা'  : 'English',     onClick: () => { setActive('lang');  onToggleLang(); } },
+    { id: 'about' as const, label: isEnglish ? 'About'   : 'এবাউট',   onClick: () => { setActive('about'); onOpenDeveloperAbout?.(); } },
+    { id: 'login' as const, label: isEnglish ? 'Login'   : 'লগইন',    onClick: () => { setActive('login'); onOpenAuth(); } },
   ];
 
+  const ICONS: Record<string, React.ReactNode> = {
+    home: (<svg width='22' height='22' fill='none' stroke='currentColor' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round' viewBox='0 0 24 24'><path d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/><polyline points='9 22 9 12 15 12 15 22'/></svg>),
+    lang: (<svg width='22' height='22' fill='none' stroke='currentColor' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10'/><line x1='2' y1='12' x2='22' y2='12'/><path d='M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z'/></svg>),
+    about: (<svg width='22' height='22' fill='none' stroke='currentColor' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round' viewBox='0 0 24 24'><circle cx='12' cy='12' r='10'/><line x1='12' y1='8' x2='12' y2='12'/><line x1='12' y1='16' x2='12.01' y2='16'/></svg>),
+    login: (<svg width='22' height='22' fill='none' stroke='currentColor' strokeWidth='2.2' strokeLinecap='round' strokeLinejoin='round' viewBox='0 0 24 24'><path d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/><circle cx='12' cy='7' r='4'/></svg>),
+  };
+
+  const activeIdx = ITEMS.findIndex(i => i.id === active);
+
+  // Build SVG notch path dynamically
+  function buildNotchPath(W: number, H: number, R: number, idx: number, total: number): string {
+    const cx = (idx + 0.5) * (W / total);
+    const nW = 56;
+    const nD = 20;
+    const nR = 14;
+    const nx1 = cx - nW / 2;
+    const nx2 = cx + nW / 2;
+    return [
+      "M " + R + " 0",
+      "Q 0 0 0 " + R,
+      "L 0 " + (H - R),
+      "Q 0 " + H + " " + R + " " + H,
+      "L " + (W - R) + " " + H,
+      "Q " + W + " " + H + " " + W + " " + (H - R),
+      "L " + W + " " + R,
+      "Q " + W + " 0 " + (W - R) + " 0",
+      "L " + (nx2 + nR) + " 0",
+      "Q " + nx2 + " 0 " + nx2 + " " + nR,
+      "Q " + nx2 + " " + nD + " " + cx + " " + nD,
+      "Q " + nx1 + " " + nD + " " + nx1 + " " + nR,
+      "Q " + nx1 + " 0 " + (nx1 - nR) + " 0",
+      "L " + R + " 0",
+      "Z",
+    ].join(" ");
+  }
+
   return (
-    <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 px-3 pb-3">
-      <div className="mx-auto max-w-xs rounded-[32px] bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-slate-200/70 dark:border-zinc-700/50 shadow-[0_-2px_24px_rgba(16,185,129,0.12),0_8px_32px_rgba(0,0,0,0.14),6px_6px_16px_rgba(140,170,150,0.18),-6px_-6px_16px_rgba(255,255,255,0.80)] flex items-end justify-around px-3 py-2 gap-0">
-        {navItems.map((item) => {
-          const isActive = active === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={item.onClick}
-              className="flex flex-col items-center gap-0.5 transition-all duration-200 active:scale-90 cursor-pointer select-none"
-              style={{ minWidth: 56 }}
-            >
-              {isActive ? (
-                // Active — elevated glossy pill
-                <div className="-mt-6 flex flex-col items-center gap-1">
+    <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50">
+      <div className="relative" style={{height: 68}}>
+
+        {/* SVG nav bar background with curvy notch */}
+        <svg
+          className="absolute inset-0 w-full h-full"
+          viewBox="0 0 400 68"
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+          style={{filter:"drop-shadow(0 -3px 8px rgba(16,185,129,0.12)) drop-shadow(0 2px 6px rgba(0,0,0,0.10))"}}>
+          <path
+            d={buildNotchPath(400, 68, 16, activeIdx, 4)}
+            className="fill-white dark:fill-zinc-900"
+          />
+        </svg>
+
+        {/* Nav items */}
+        <div className="absolute inset-0 flex items-end justify-around" style={{paddingBottom: 6}}>
+          {ITEMS.map((item, idx) => {
+            const isAct = active === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={item.onClick}
+                className="flex-1 flex flex-col items-center gap-0.5 transition-all duration-200 active:scale-90 cursor-pointer select-none relative"
+              >
+                {isAct ? (
                   <div
-                    className="w-14 h-14 rounded-full flex items-center justify-center shadow-[0_8px_20px_rgba(5,150,105,0.50),0_2px_6px_rgba(5,150,105,0.30),inset_0_1px_0_rgba(255,255,255,0.35)] border-2 border-white/30"
-                    style={{background:'linear-gradient(160deg,#34d399 0%,#059669 50%,#047857 100%)'}}
+                    className="absolute flex flex-col items-center"
+                    style={{bottom: 6, left:"50%", transform:"translateX(-50%)"}}
                   >
-                    <span className="text-white">{item.icon}</span>
+                    <div
+                      className="w-13 h-13 rounded-full flex items-center justify-center border-[3px] border-white dark:border-zinc-900"
+                      style={{
+                        width: 52, height: 52,
+                        background: 'linear-gradient(145deg,#34d399 0%,#059669 50%,#047857 100%)',
+                        boxShadow: '0 6px 18px rgba(5,150,105,0.55), 0 2px 6px rgba(5,150,105,0.25), inset 0 1px 0 rgba(255,255,255,0.28)',
+                        marginBottom: 1,
+                      }}
+                    >
+                      <span className="text-white">{ICONS[item.id]}</span>
+                    </div>
+                    <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400 whitespace-nowrap">{item.label}</span>
                   </div>
-                  <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400">{item.label}</span>
-                </div>
-              ) : (
-                // Inactive — flat subtle
-                <div className="flex flex-col items-center gap-0.5 py-2 px-2 rounded-2xl">
-                  <span className="text-slate-400 dark:text-zinc-500">{item.icon}</span>
-                  <span className="text-[9px] font-semibold text-slate-400 dark:text-zinc-500">{item.label}</span>
-                </div>
-              )}
-            </button>
-          );
-        })}
+                ) : (
+                  <div className="flex flex-col items-center gap-0.5 py-1">
+                    <span className="text-slate-400 dark:text-zinc-500">{ICONS[item.id]}</span>
+                    <span className="text-[9px] font-semibold text-slate-400 dark:text-zinc-500 whitespace-nowrap">{item.label}</span>
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </nav>
   );
