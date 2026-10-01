@@ -26,6 +26,7 @@ import { getFullName } from './utils/relationship';
 import { EmptyFamilyWelcome } from './components/EmptyFamilyWelcome';
 import { AuthModal } from './components/AuthModal';
 import { SuperAdminDashboardModal } from './components/SuperAdminDashboardModal';
+import { UserProfileModal } from './components/UserProfileModal';
 import { LandingPage } from './components/LandingPage';
 import { SplashScreen } from './components/SplashScreen';
 import { User } from './types/auth';
@@ -101,6 +102,7 @@ export const App: React.FC = () => {
   const [isSideDrawerOpen, setIsSideDrawerOpen] = useState(false);
   const [isDeveloperAboutOpen, setIsDeveloperAboutOpen] = useState(false);
   const [isSuperAdminOpen, setIsSuperAdminOpen] = useState(false);
+  const [isUserProfileOpen, setIsUserProfileOpen] = useState(false);
 
   // User Authentication & Session State
   const [authToken, setAuthToken] = useState<string | null>(() => {
@@ -202,6 +204,17 @@ export const App: React.FC = () => {
         }
       })
       .catch(() => {});
+  };
+
+  const handleUpdateUser = (updatedUser: User, newToken?: string) => {
+    setAuthUser(updatedUser);
+    try {
+      localStorage.setItem('bondroot_auth_user', JSON.stringify(updatedUser));
+      if (newToken) {
+        setAuthToken(newToken);
+        localStorage.setItem('bondroot_auth_token', newToken);
+      }
+    } catch {}
   };
 
   const handleLogout = () => {
@@ -609,7 +622,7 @@ export const App: React.FC = () => {
         onOpenSideDrawer={() => setIsSideDrawerOpen(true)}
         onOpenNotifications={() => setIsNotificationPanelOpen(true)}
         onOpenSuperAdmin={() => setIsSuperAdminOpen(true)}
-        onLogout={handleLogout}
+        onOpenUserProfile={() => setIsUserProfileOpen(true)}
         authUser={authUser}
         unreadNotificationCount={unreadNotificationCount}
         peopleCount={people.length}
@@ -906,6 +919,7 @@ export const App: React.FC = () => {
         onOpenPosterExport={() => setIsPosterExportOpen(true)}
         onOpenDeveloperAbout={() => setIsDeveloperAboutOpen(true)}
         onOpenSuperAdmin={() => setIsSuperAdminOpen(true)}
+        onOpenUserProfile={() => setIsUserProfileOpen(true)}
         onLogout={handleLogout}
         authUser={authUser}
         peopleCount={people.length}
@@ -917,10 +931,25 @@ export const App: React.FC = () => {
 
       {/* User Authentication Gate Modal */}
       <AuthModal
-        isOpen={!authUser || isAuthModalOpen}
+        isOpen={isAuthModalOpen}
         onSuccess={handleAuthSuccess}
         lang={lang}
       />
+
+      {/* User Profile & Kinship Hub Modal */}
+      {authUser && isUserProfileOpen && (
+        <UserProfileModal
+          isOpen={isUserProfileOpen}
+          onClose={() => setIsUserProfileOpen(false)}
+          currentUser={authUser}
+          token={authToken}
+          allPeople={people}
+          onUpdateUser={handleUpdateUser}
+          onSelectPerson={setSelectedPerson}
+          onOpenChatWithPerson={(p) => setActiveChatPartner(p)}
+          lang={lang}
+        />
+      )}
 
       {/* Developer Super Admin Dashboard Panel */}
       {authUser?.role === 'super_admin' && isSuperAdminOpen && (

@@ -40,6 +40,7 @@ interface SideNavDrawerProps {
   onOpenPosterExport: () => void;
   onOpenDeveloperAbout?: () => void;
   onOpenSuperAdmin?: () => void;
+  onOpenUserProfile?: () => void;
   onLogout?: () => void;
   authUser?: User | null;
   peopleCount: number;
@@ -61,6 +62,7 @@ export const SideNavDrawer: React.FC<SideNavDrawerProps> = ({
   onOpenPosterExport,
   onOpenDeveloperAbout,
   onOpenSuperAdmin,
+  onOpenUserProfile,
   onLogout,
   authUser,
   peopleCount,
@@ -116,10 +118,20 @@ export const SideNavDrawer: React.FC<SideNavDrawerProps> = ({
         <div className="flex-1 overflow-y-auto p-4 space-y-5">
           {/* User Account Profile Card */}
           {authUser && (
-            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-zinc-800 dark:to-zinc-800/80 border border-emerald-200 dark:border-zinc-700">
+            <div
+              onClick={() => {
+                if (onOpenUserProfile) onOpenUserProfile();
+                onClose();
+              }}
+              className="p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-zinc-800 dark:to-zinc-800/80 border border-emerald-200 dark:border-zinc-700 cursor-pointer neu-button hover:border-emerald-400 transition"
+            >
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-black text-sm flex items-center justify-center shadow-xs">
-                  {authUser.full_name[0]}
+                  {authUser.avatar_url ? (
+                    <img src={authUser.avatar_url} alt="Avatar" className="w-full h-full object-cover rounded-2xl" />
+                  ) : (
+                    authUser.full_name[0]
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center space-x-1.5">
@@ -127,11 +139,14 @@ export const SideNavDrawer: React.FC<SideNavDrawerProps> = ({
                       {authUser.full_name}
                     </p>
                   </div>
-                  <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">{authUser.email}</p>
+                  <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">
+                    {authUser.username ? '@' + authUser.username : authUser.email}
+                  </p>
                   <span className="inline-flex items-center px-2 py-0.5 mt-1 rounded-full text-[9px] font-extrabold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
                     {authUser.role === 'super_admin' ? '👑 Super Admin' : 'Family Member'}
                   </span>
                 </div>
+                <ChevronRight className="w-4 h-4 text-emerald-600 dark:text-emerald-400 opacity-60" />
               </div>
             </div>
           )}

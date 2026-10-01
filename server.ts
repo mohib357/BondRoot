@@ -55,6 +55,8 @@ async function startServer() {
       CREATE INDEX IF NOT EXISTS idx_messages_unread ON messages (receiver_id, is_read);
 
       ALTER TABLE persons ADD COLUMN IF NOT EXISTS user_id VARCHAR(64);
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS username VARCHAR(100);
+      CREATE INDEX IF NOT EXISTS idx_users_username ON users (username);
     `);
 
     // Seed Developer Super Admin if not exists
@@ -92,7 +94,7 @@ async function startServer() {
     try {
       const client = await pool.connect();
       const res = await client.query(
-        'SELECT id, full_name, email, phone_number, role, avatar_url, created_at FROM users WHERE id = $1',
+        'SELECT id, full_name, email, phone_number, username, role, avatar_url, created_at FROM users WHERE id = $1',
         [decoded.sub]
       );
       client.release();
@@ -228,6 +230,99 @@ async function startServer() {
         return res.status(401).json({ success: false, error: 'সেশন পাওয়া যায়নি বা মেয়াদোত্তীর্ণ।' });
       }
       res.json({ success: true, user });
+    } catch (err: any) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  // GET /api/auth/check-username - Real-time username uniqueness check
+  app.get('/api/auth/check-username', async (req, res) => {
+    try {
+      const { username, current_user_id } = req.query;
+      if (!username || typeof username !== 'string' || !username.trim()) {
+        return res.status(400).json({ available: false, error: 'ইউজারনেম প্রয়োজন' });
+      }
+
+      const cleanUsername = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+      if (cleanUsername.length < 3) {
+        return res.json({ available: false, error: 'ইউজারনেম কমপক্ষে ৩ অক্ষরের হতে হবে।' });
+      }
+
+      const client = await pool.connect();
+      const checkRes = await client.query(
+        'SELECT id FROM users WHERE LOWER(username) = $1 AND id != $2',
+        [cleanUsername, current_user_id || '']
+      );
+      client.release();
+
+      const available = checkRes.rows.length === 0;
+      res.json({
+        available,
+        username: cleanUsername,
+        message: available ? 'ইউজারনেমটি ফাঁকা রয়েছে (Available)!' : 'এই ইউজারনেমটি ইতোমধ্যে অন্য কেউ নিয়েছেন।'
+      });
+    } catch (err: any) {
+      res.status(500).json({ available: false, error: err.message });
+    }
+  });
+
+  // PUT /api/auth/update-profile - Update logged-in user profile
+  app.put('/api/auth/update-profile', async (req, res) => {
+    try {
+      const currentUser = await getAuthUser(req);
+      if (!currentUser) {
+        return res.status(401).json({ success: false, error: 'লগইন করুন।' });
+      }
+
+      const { full_name, phone_number, email, username, avatar_url } = req.body;
+      if (!full_name || !email) {
+        return res.status(400).json({ success: false, error: 'নাম ও ইমেইল আবশ্যক।' });
+      }
+
+      const client = await pool.connect();
+
+      // Check username uniqueness if changing
+      if (username && username.trim()) {
+        const cleanUser = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+        const unCheck = await client.query(
+          'SELECT id FROM users WHERE LOWER(username) = $1 AND id != $2',
+          [cleanUser, currentUser.id]
+        );
+        if (unCheck.rows.length > 0) {
+          client.release();
+          return res.status(400).json({ success: false, error: 'এই ইউজারনেমটি অন্য কারো অ্যাকাউন্টে রয়েছে।' });
+        }
+      }
+
+      const updateRes = await client.query(`
+        UPDATE users
+        SET full_name = $1,
+            phone_number = $2,
+            email = $3,
+            username = $4,
+            avatar_url = $5
+        WHERE id = $6
+        RETURNING id, full_name, email, phone_number, username, role, avatar_url, created_at
+      `, [
+        full_name.trim(),
+        phone_number ? phone_number.trim() : null,
+        email.trim().toLowerCase(),
+        username ? username.trim().toLowerCase() : null,
+        avatar_url || currentUser.avatar_url,
+        currentUser.id
+      ]);
+
+      client.release();
+
+      const updatedUser: AuthUser = updateRes.rows[0];
+      const token = generateToken(updatedUser);
+
+      res.json({
+        success: true,
+        message: 'প্রোফাইল সফলভাবে আপডেট হয়েছে!',
+        user: updatedUser,
+        token
+      });
     } catch (err: any) {
       res.status(500).json({ success: false, error: err.message });
     }
