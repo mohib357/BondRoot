@@ -12,7 +12,9 @@ export function getAiClient() {
   });
 }
 
-const MODELS = ["gemini-3.8-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"];
+// Gemini model fallback chain — tries in order until one succeeds
+// See: https://ai.google.dev/gemini-api/docs/models
+const MODELS = ["gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-flash-8b"];
 
 async function generateWithFallback(params: {
   contents: string;

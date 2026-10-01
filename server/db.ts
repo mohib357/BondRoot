@@ -2,11 +2,20 @@ import pg from 'pg';
 
 const { Pool } = pg;
 
-const connectionString = process.env.DATABASE_URL_POOLED || process.env.DATABASE_URL || "postgresql://neondb_owner:npg_mE3u5vzkpAxB@ep-green-dust-b3runsco-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb?sslmode=require";
+const connectionString = process.env.DATABASE_URL_POOLED || process.env.DATABASE_URL;
+
+if (!connectionString) {
+  console.error('FATAL: DATABASE_URL or DATABASE_URL_POOLED environment variable is not set.');
+  process.exit(1);
+}
 
 export const pool = new Pool({
   connectionString,
   ssl: {
     rejectUnauthorized: false
-  }
+  },
+  // Connection pool tuning
+  max: 10,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 5000,
 });

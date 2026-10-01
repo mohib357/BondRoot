@@ -1,6 +1,11 @@
 import crypto from 'crypto';
 
-const AUTH_SECRET = process.env.AUTH_SECRET || 'bondroot_super_secure_auth_session_secret_key_2026';
+const AUTH_SECRET = process.env.AUTH_SECRET;
+
+if (!AUTH_SECRET) {
+  console.error('FATAL: AUTH_SECRET environment variable is not set. Server cannot start securely.');
+  process.exit(1);
+}
 
 export interface AuthUser {
   id: string;
@@ -51,7 +56,7 @@ export function generateToken(user: AuthUser): string {
   const headerB64 = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
   const payloadB64 = Buffer.from(JSON.stringify(payload)).toString('base64url');
   const signature = crypto
-    .createHmac('sha256', AUTH_SECRET)
+    .createHmac('sha256', AUTH_SECRET!)
     .update(`${headerB64}.${payloadB64}`)
     .digest('base64url');
 
@@ -69,7 +74,7 @@ export function verifyToken(token: string): { sub: string; email: string; role: 
 
     const [headerB64, payloadB64, signature] = parts;
     const expectedSig = crypto
-      .createHmac('sha256', AUTH_SECRET)
+      .createHmac('sha256', AUTH_SECRET!)
       .update(`${headerB64}.${payloadB64}`)
       .digest('base64url');
 

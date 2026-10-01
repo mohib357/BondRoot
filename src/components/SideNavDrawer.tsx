@@ -97,7 +97,7 @@ export const SideNavDrawer: React.FC<SideNavDrawerProps> = ({
               <Network className="w-6 h-6 stroke-[2.2]" />
             </div>
             <div>
-              <h2 className="text-lg font-black tracking-tight bg-gradient-to-r from-emerald-800 to-teal-700 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent">
+              <h2 className="text-lg font-black tracking-tight bg-gradient-to-r from-amber-500 via-emerald-600 to-teal-600 dark:from-amber-300 dark:via-emerald-300 dark:to-teal-200 bg-clip-text text-transparent">
                 BondRoot
               </h2>
               <span className="text-[10px] font-bold text-slate-500 dark:text-zinc-400">

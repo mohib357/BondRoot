@@ -72,10 +72,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Logo + Name */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-700 via-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 border border-white/20 neu-button">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-700 via-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 border border-white/20">
               <Network className="w-6 h-6 stroke-[2.2]" />
             </div>
-            <span className="text-xl font-black tracking-tight bg-gradient-to-r from-emerald-800 via-teal-700 to-emerald-900 dark:from-amber-200 dark:via-emerald-300 dark:to-teal-200 bg-clip-text text-transparent">
+            <span className="text-xl font-black tracking-tight bg-gradient-to-r from-amber-500 via-emerald-600 to-teal-600 dark:from-amber-300 dark:via-emerald-300 dark:to-teal-200 bg-clip-text text-transparent">
               BondRoot
             </span>
           </div>
@@ -103,7 +103,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Login Button */}
             <button
               onClick={onOpenAuth}
-              className="inline-flex items-center space-x-1.5 px-4 py-2 text-xs sm:text-sm font-extrabold text-white bg-emerald-700 hover:bg-emerald-800 active:scale-95 rounded-xl shadow-md shadow-emerald-700/20 transition cursor-pointer neu-button"
+              className="inline-flex items-center space-x-1.5 px-4 py-2 text-xs sm:text-sm font-extrabold text-white bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 active:scale-95 rounded-xl shadow-md shadow-emerald-700/20 dark:shadow-emerald-900/40 transition cursor-pointer"
             >
               <LogIn className="w-4 h-4" />
               <span>{isEnglish ? 'Login' : 'লগইন'}</span>
@@ -113,52 +113,76 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </header>
 
-      {/* 2. Hero Section */}
-      <section className="relative pt-10 sm:pt-16 pb-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center flex flex-col items-center">
+      {/* 2. Hero Section (Styled as a Grand Hero Texture Card) */}
+      <section className="py-6 sm:py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+        <div className="p-6 sm:p-12 rounded-3xl sm:rounded-[2.5rem] bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl border border-emerald-200/90 dark:border-zinc-800/90 shadow-2xl neu-panel relative overflow-hidden bg-lineage-pattern text-center flex flex-col items-center">
 
-        {/* Brand Name */}
-        <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-emerald-100/90 dark:bg-emerald-950/80 border border-emerald-300/80 dark:border-emerald-800/80 text-emerald-900 dark:text-emerald-300 text-xs font-extrabold shadow-2xs mb-5 animate-in fade-in duration-300">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
-          <span>BondRoot</span>
+          {/* Ambient Glowing Background Orbs */}
+          <div className="absolute -top-20 -left-20 w-72 h-72 bg-emerald-500/15 dark:bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-amber-500/15 dark:bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+
+          {/* Subtle Genealogical Branch Connecting Overlay (SVG) */}
+          <div className="absolute inset-0 pointer-events-none opacity-[0.06] dark:opacity-[0.12] overflow-hidden">
+            <svg className="w-full h-full" viewBox="0 0 800 400" fill="none">
+              <path d="M 100 0 C 100 150, 300 200, 400 200 C 500 200, 700 250, 700 400" stroke="#10B981" strokeWidth="2.5" strokeDasharray="6 6" />
+              <path d="M 700 0 C 700 150, 500 200, 400 200 C 300 200, 100 250, 100 400" stroke="#F59E0B" strokeWidth="2.5" strokeDasharray="6 6" />
+              <circle cx="400" cy="200" r="10" fill="#10B981" />
+              <circle cx="200" cy="110" r="7" fill="#F59E0B" />
+              <circle cx="600" cy="110" r="7" fill="#14B8A6" />
+            </svg>
+          </div>
+
+          {/* Card Content Layer */}
+          <div className="relative z-10 flex flex-col items-center">
+
+            {/* Brand Badge */}
+            <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-emerald-100/90 dark:bg-emerald-950/80 border border-emerald-300/80 dark:border-emerald-800/80 text-emerald-900 dark:text-emerald-300 text-xs font-extrabold shadow-2xs mb-5 animate-in fade-in duration-300">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
+              <span className="bg-gradient-to-r from-amber-600 via-emerald-600 to-teal-600 dark:from-amber-300 dark:via-emerald-300 dark:to-teal-200 bg-clip-text text-transparent font-black">
+                BondRoot
+              </span>
+            </div>
+
+            {/* Powerful Headline */}
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white max-w-3xl leading-snug sm:leading-tight">
+              {isEnglish ? (
+                <>Your Family Story, Relationships & Lineage — All in One Place</>
+              ) : (
+                <>“আপনার পরিবারের গল্প, সম্পর্ক ও বংশলতিকা—এক জায়গায়”</>
+              )}
+            </h1>
+
+            {/* Meaningful Subtitle */}
+            <p className="mt-4 text-xs sm:text-base text-slate-600 dark:text-zinc-300 max-w-2xl font-medium leading-relaxed">
+              {isEnglish
+                ? 'Preserve, discover, and pass down your family connections across generations for the future.'
+                : 'প্রজন্ম থেকে প্রজন্মে আপনার পরিবারের সম্পর্ক সংরক্ষণ করুন, খুঁজে বের করুন এবং ভবিষ্যৎ প্রজন্মের জন্য রেখে যান।'}
+            </p>
+
+            {/* Hero CTAs */}
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
+              {/* Primary CTA */}
+              <button
+                onClick={onOpenAuth}
+                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-7 py-3.5 rounded-2xl text-white font-black text-sm active:scale-98 transition cursor-pointer neu-btn-primary shadow-lg shadow-emerald-600/20"
+              >
+                <span>{isEnglish ? '🌳 Get Started — Free' : '🌳 শুরু করুন — বিনামূল্যে'}</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+
+              {/* Secondary CTA */}
+              <button
+                onClick={scrollToDemo}
+                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-7 py-3.5 rounded-2xl active:scale-98 transition cursor-pointer neu-btn-secondary"
+              >
+                <Play className="w-4 h-4 text-emerald-600 dark:text-emerald-400 fill-emerald-600 dark:fill-emerald-400" />
+                <span>{isEnglish ? 'View Demo Family' : '▶ ডেমো পরিবার দেখুন'}</span>
+              </button>
+            </div>
+
+          </div>
+
         </div>
-
-        {/* Powerful Headline */}
-        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white max-w-3xl leading-snug sm:leading-tight">
-          {isEnglish ? (
-            <>Your Family Story, Relationships & Lineage — All in One Place</>
-          ) : (
-            <>“আপনার পরিবারের গল্প, সম্পর্ক ও বংশলতিকা—এক জায়গায়”</>
-          )}
-        </h1>
-
-        {/* Meaningful Subtitle */}
-        <p className="mt-4 text-xs sm:text-base text-slate-600 dark:text-zinc-300 max-w-2xl font-medium leading-relaxed">
-          {isEnglish
-            ? 'Preserve, discover, and pass down your family connections across generations for the future.'
-            : 'প্রজন্ম থেকে প্রজন্মে আপনার পরিবারের সম্পর্ক সংরক্ষণ করুন, খুঁজে বের করুন এবং ভবিষ্যৎ প্রজন্মের জন্য রেখে যান।'}
-        </p>
-
-        {/* Hero CTAs */}
-        <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
-          {/* Primary CTA */}
-          <button
-            onClick={onOpenAuth}
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-2xl text-white font-black text-sm active:scale-98 transition cursor-pointer neu-btn-primary"
-          >
-            <span>{isEnglish ? '🌳 Get Started — Free' : '🌳 শুরু করুন — বিনামূল্যে'}</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-
-          {/* Secondary CTA */}
-          <button
-            onClick={scrollToDemo}
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-2xl active:scale-98 transition cursor-pointer neu-btn-secondary"
-          >
-            <Play className="w-4 h-4 text-emerald-600 dark:text-emerald-400 fill-emerald-600 dark:fill-emerald-400" />
-            <span>{isEnglish ? 'View Demo Family' : '▶ ডেমো পরিবার দেখুন'}</span>
-          </button>
-        </div>
-
       </section>
 
       {/* 3. Family Tree Visual Preview */}

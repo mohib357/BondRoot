@@ -1,4 +1,4 @@
-import 'dotenv/config';
+﻿import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
@@ -17,12 +17,67 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// =====================================================
+// In-memory rate limiter (no external dependency needed)
+// =====================================================
+const rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+
+function rateLimit(windowMs: number, maxRequests: number) {
+  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
+    const now = Date.now();
+    const entry = rateLimitStore.get(ip);
+
+    if (!entry || now > entry.resetAt) {
+      rateLimitStore.set(ip, { count: 1, resetAt: now + windowMs });
+      return next();
+    }
+
+    entry.count++;
+    if (entry.count > maxRequests) {
+      return res.status(429).json({
+        success: false,
+        error: 'অনেক বেশি অনুরোধ। কিছুক্ষণ পরে আবার চেষ্টা করুন।'
+      });
+    }
+
+    next();
+  };
+}
+
+// Clean up stale rate-limit entries every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, val] of rateLimitStore.entries()) {
+    if (now > val.resetAt) rateLimitStore.delete(key);
+  }
+}, 5 * 60 * 1000);
+
 async function startServer() {
   const app = express();
   const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
   const isProduction = process.env.NODE_ENV === 'production';
 
-  app.use(cors());
+  // CORS — in production restrict to ALLOWED_ORIGINS env var
+  const allowedOrigins = process.env.ALLOWED_ORIGINS
+    ? process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim()).filter(Boolean)
+    : [];
+
+  app.use(cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, curl, Capacitor)
+      if (!origin) return callback(null, true);
+      // In development allow all
+      if (!isProduction) return callback(null, true);
+      // In production check against whitelist
+      if (allowedOrigins.length === 0 || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS: Origin '${origin}' not allowed`));
+    },
+    credentials: true,
+  }));
+
   app.use(express.json({ limit: '15mb' }));
   app.use(express.static(path.join(__dirname, 'public')));
 
@@ -106,8 +161,8 @@ async function startServer() {
 
   // ================= AUTHENTICATION ENDPOINTS =================
 
-  // POST /api/auth/signup - Register new user
-  app.post('/api/auth/signup', async (req, res) => {
+  // POST /api/auth/signup - Register new user (rate limited: 5 per 15 min per IP)
+  app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 5), async (req, res) => {
     try {
       const { full_name, email, phone_number, password } = req.body;
       if (!full_name || !email || !password) {
@@ -171,8 +226,8 @@ async function startServer() {
     }
   });
 
-  // POST /api/auth/login - User Login
-  app.post('/api/auth/login', async (req, res) => {
+  // POST /api/auth/login - User Login (rate limited: 10 per 15 min per IP)
+  app.post('/api/auth/login', rateLimit(15 * 60 * 1000, 10), async (req, res) => {
     try {
       const { identifier, password } = req.body;
       if (!identifier || !password) {
@@ -417,18 +472,28 @@ async function startServer() {
   });
 
   // POST /api/admin/reset-data - Super Admin Emergency Data Reset
+  // Requires confirmation_token = "CONFIRM_RESET_ALL_DATA" in request body as extra safeguard
   app.post('/api/admin/reset-data', async (req, res) => {
     try {
       const currentUser = await getAuthUser(req);
       if (!currentUser || currentUser.role !== 'super_admin') {
-        return res.status(403).json({ success: false, error: 'শুধুমাত্র সুপার অ্যাডমিনের প্রবেশাধিকার রয়েছে।' });
+        return res.status(403).json({ success: false, error: 'শুধুমাত্র সুপার অ্যাডমিনের প্রবেশাধিকার রয়েছে।' });
+      }
+
+      const { confirmation_token } = req.body;
+      if (confirmation_token !== 'CONFIRM_RESET_ALL_DATA') {
+        return res.status(400).json({
+          success: false,
+          error: 'নিশ্চিতকরণ টোকেন সঠিক নয়। রিসেট করতে body-তে confirmation_token: "CONFIRM_RESET_ALL_DATA" পাঠান।'
+        });
       }
 
       const client = await pool.connect();
       await client.query('TRUNCATE TABLE persons, messages, marriages CASCADE');
       client.release();
 
-      res.json({ success: true, message: 'সমস্ত ফ্যামিলি ট্রি ও বার্তা ডাটাবেস রিসেট করা হয়েছে।' });
+      console.warn([ADMIN RESET] All data wiped by super_admin: ${currentUser.email} at ${new Date().toISOString()});
+      res.json({ success: true, message: 'সমস্ত ফ্যামিলি ট্রি ও বার্তা ডাটাবেস রিসেট করা হয়েছে।' });
     } catch (err: any) {
       res.status(500).json({ success: false, error: err.message });
     }
@@ -462,6 +527,12 @@ async function startServer() {
   // 1.1 Storage Upload Photo Endpoint
   app.post('/api/upload/photo', async (req, res) => {
     try {
+      // Auth guard: only logged-in users can upload photos
+      const uploadUser = await getAuthUser(req);
+      if (!uploadUser) {
+        return res.status(401).json({ success: false, error: 'আপলোড করতে লগইন করুন।' });
+      }
+
       const { person_id, base64_image, filename = 'avatar.jpg', content_type = 'image/jpeg' } = req.body;
       if (!person_id || !base64_image) {
         return res.status(400).json({ error: 'person_id and base64_image are required' });
@@ -535,9 +606,111 @@ async function startServer() {
   app.post('/api/feedback', async (req, res) => {
     try {
       const { name, email, message } = req.body;
-      console.log(`[Developer Feedback Received] From: ${name} (${email}): ${message}`);
-      res.json({ success: true, message: 'আপনার বার্তা ও ফিডব্যাক সফলভাবে পাঠানো হয়েছে!' });
+      if (!name || !email || !message || !message.trim()) {
+        return res.status(400).json({ success: false, error: 'নাম, ইমেইল এবং বার্তা আবশ্যক।' });
+      }
+
+      // Persist feedback to the database so developer can follow up
+      try {
+        const client = await pool.connect();
+        await client.query(`
+          CREATE TABLE IF NOT EXISTS feedback (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255),
+            email VARCHAR(255),
+            message TEXT NOT NULL,
+            created_at TIMESTAMPTZ DEFAULT NOW()
+          )
+        `);
+        await client.query(
+          'INSERT INTO feedback (name, email, message) VALUES ($1, $2, $3)',
+          [name.trim(), email.trim(), message.trim()]
+        );
+        client.release();
+      } catch (dbErr: any) {
+        console.warn('[Feedback] DB save failed (non-critical):', dbErr.message);
+      }
+
+      res.json({ success: true, message: 'আপনার বার্তা ও ফিডব্যাক সফলভাবে পাঠানো হয়েছে!' });
     } catch (err: any) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  // 2.0 CREATE a new person (authenticated)
+  app.post('/api/persons', async (req, res) => {
+    try {
+      const authUser = await getAuthUser(req);
+      if (!authUser) {
+        return res.status(401).json({ success: false, error: 'সদস্য যোগ করতে লগইন করুন।' });
+      }
+
+      const {
+        person_id, name_local, name_english, gender,
+        date_of_birth, date_of_death, is_living,
+        father_id, mother_id, profession, bio,
+        privacy_level
+      } = req.body;
+
+      if (!name_local || !gender) {
+        return res.status(400).json({ success: false, error: 'name_local এবং gender আবশ্যক।' });
+      }
+
+      const validGenders = ['male', 'female', 'other', 'unknown'];
+      if (!validGenders.includes(gender)) {
+        return res.status(400).json({ success: false, error: 'gender হতে হবে: male, female, other, unknown।' });
+      }
+
+      const client = await pool.connect();
+
+      // Auto-generate person_id if not provided
+      let finalId = person_id;
+      if (!finalId) {
+        const countRes = await client.query('SELECT count(*) FROM persons');
+        finalId = 'P' + (100000 + parseInt(countRes.rows[0].count, 10) + 1);
+      }
+
+      // Check for duplicate person_id
+      const existingCheck = await client.query(
+        'SELECT person_id FROM persons WHERE person_id = $1',
+        [finalId]
+      );
+      if (existingCheck.rows.length > 0) {
+        client.release();
+        return res.status(409).json({
+          success: false,
+          error: `এই ID (${finalId}) দিয়ে ইতোমধ্যে একটি সদস্য রয়েছে।`
+        });
+      }
+
+      const result = await client.query(`
+        INSERT INTO persons (
+          person_id, user_id, name_local, name_english, gender,
+          date_of_birth, date_of_death, is_living,
+          father_id, mother_id, profession, bio,
+          privacy_level, version
+        ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,1)
+        RETURNING *
+      `, [
+        finalId,
+        authUser.id,
+        name_local.trim(),
+        (name_english || name_local).trim(),
+        gender,
+        date_of_birth || null,
+        date_of_death || null,
+        is_living ?? true,
+        father_id || null,
+        mother_id || null,
+        profession || null,
+        bio || null,
+        privacy_level || 'FAMILY'
+      ]);
+      client.release();
+
+      res.status(201).json({ success: true, data: result.rows[0] });
+    } catch (err: any) {
+      console.error('Create person error:', err);
       res.status(500).json({ success: false, error: err.message });
     }
   });

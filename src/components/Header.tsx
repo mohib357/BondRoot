@@ -90,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-xl font-black tracking-tight bg-gradient-to-r from-emerald-800 via-teal-700 to-emerald-900 dark:from-amber-200 dark:via-emerald-300 dark:to-teal-200 bg-clip-text text-transparent">
+                <span className="text-xl font-black tracking-tight bg-gradient-to-r from-amber-500 via-emerald-600 to-teal-600 dark:from-amber-300 dark:via-emerald-300 dark:to-teal-200 bg-clip-text text-transparent">
                   BondRoot
                 </span>
                 <span className="hidden sm:inline-block text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
@@ -208,7 +208,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={onOpenSmartAIAdd}
                 title={isEnglish ? 'Smart AI Member Entry' : 'স্মার্ট এআই মেম্বার এন্ট্রি'}
-                className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-xl shadow-md shadow-purple-500/20 transition cursor-pointer neu-button"
+                className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs sm:text-sm font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-xl shadow-md shadow-purple-500/20 transition cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                 <span>{isEnglish ? 'Smart AI Add' : 'স্মার্ট AI'}</span>
@@ -248,7 +248,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={onOpenUserProfile}
                 title={isEnglish ? 'Open My Account & Profile' : 'আমার অ্যাকাউন্ট ও প্রোফাইল'}
-                className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-700 via-teal-600 to-emerald-500 text-white font-black text-xs flex items-center justify-center shadow-md border-2 border-white/80 dark:border-zinc-700 hover:scale-105 active:scale-95 transition cursor-pointer neu-button"
+                className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-700 via-teal-600 to-emerald-500 text-white font-black text-xs flex items-center justify-center shadow-md border-2 border-white/80 dark:border-zinc-700 hover:scale-105 active:scale-95 transition cursor-pointer"
               >
                 {authUser.avatar_url ? (
                   <img src={authUser.avatar_url} alt="Avatar" className="w-full h-full object-cover rounded-2xl" />
@@ -270,7 +270,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Add Person */}
             <button
               onClick={onAddPerson}
-              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-md shadow-emerald-500/20 transition cursor-pointer neu-button"
+              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-xl shadow-md shadow-emerald-500/20 transition cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span className="hidden sm:inline">{isEnglish ? 'Add Person' : 'সদস্য যোগ'}</span>
