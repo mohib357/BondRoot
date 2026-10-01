@@ -258,81 +258,93 @@ export const App: React.FC = () => {
   const [incomingToast, setIncomingToast] = useState<{ senderName: string; content: string; sender: Person } | null>(null);
   const prevUnreadCountRef = React.useRef<number>(0);
 
+  // Check if any modal is currently open
+  const isAnyModalActive = Boolean(
+    spotlightKey ||
+    publicLegalModalType ||
+    isAuthModalOpen ||
+    selectedPerson ||
+    isUserProfileOpen ||
+    isFormOpen ||
+    isRelFinderOpen ||
+    isExportImportOpen ||
+    isSmartAIAddOpen ||
+    isLineageInsightsOpen ||
+    isPosterExportOpen ||
+    isMilestonesOpen ||
+    isSideDrawerOpen ||
+    isNotificationPanelOpen ||
+    isDeveloperAboutOpen ||
+    isSuperAdminOpen
+  );
+
+  const closeTopActiveModal = (): boolean => {
+    if (spotlightKey) { setSpotlightKey(null); return true; }
+    if (publicLegalModalType) { setPublicLegalModalType(null); return true; }
+    if (isAuthModalOpen) { setIsAuthModalOpen(false); return true; }
+    if (selectedPerson) { setSelectedPerson(null); return true; }
+    if (isUserProfileOpen) { setIsUserProfileOpen(false); return true; }
+    if (isFormOpen) {
+      setIsFormOpen(false);
+      setEditingPerson(null);
+      setPresetRelation(null);
+      return true;
+    }
+    if (isRelFinderOpen) { setIsRelFinderOpen(false); return true; }
+    if (isExportImportOpen) { setIsExportImportOpen(false); return true; }
+    if (isSmartAIAddOpen) { setIsSmartAIAddOpen(false); return true; }
+    if (isLineageInsightsOpen) { setIsLineageInsightsOpen(false); return true; }
+    if (isPosterExportOpen) { setIsPosterExportOpen(false); return true; }
+    if (isMilestonesOpen) { setIsMilestonesOpen(false); return true; }
+    if (isSideDrawerOpen) { setIsSideDrawerOpen(false); return true; }
+    if (isNotificationPanelOpen) { setIsNotificationPanelOpen(false); return true; }
+    if (isDeveloperAboutOpen) { setIsDeveloperAboutOpen(false); return true; }
+    if (isSuperAdminOpen) { setIsSuperAdminOpen(false); return true; }
+    return false;
+  };
+
+  // Push History State on modal or view change
+  useEffect(() => {
+    if (isAnyModalActive) {
+      window.history.pushState({ modalOpen: true }, '');
+    } else if (isGuestDemoMode) {
+      window.history.pushState({ view: 'demo' }, '');
+    }
+  }, [isAnyModalActive, isGuestDemoMode]);
+
+  // Window Popstate Listener
+  useEffect(() => {
+    const handlePopState = () => {
+      if (isAnyModalActive) {
+        closeTopActiveModal();
+        return;
+      }
+      if (isGuestDemoMode) {
+        setIsGuestDemoMode(false);
+        return;
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [isAnyModalActive, isGuestDemoMode]);
+
   // Hardware Back Button Handler for Android
   useEffect(() => {
     const handleBackButton = CapApp.addListener('backButton', () => {
-      if (spotlightKey) {
-        setSpotlightKey(null);
-        return;
-      }
-      if (publicLegalModalType) {
-        setPublicLegalModalType(null);
-        return;
-      }
-      if (isAuthModalOpen) {
-        setIsAuthModalOpen(false);
-        return;
-      }
-      if (selectedPerson) {
-        setSelectedPerson(null);
-        return;
-      }
-      if (isUserProfileOpen) {
-        setIsUserProfileOpen(false);
-        return;
-      }
-      if (isFormOpen) {
-        setIsFormOpen(false);
-        setEditingPerson(null);
-        setPresetRelation(null);
-        return;
-      }
-      if (isRelFinderOpen) {
-        setIsRelFinderOpen(false);
-        return;
-      }
-      if (isExportImportOpen) {
-        setIsExportImportOpen(false);
-        return;
-      }
-      if (isSmartAIAddOpen) {
-        setIsSmartAIAddOpen(false);
-        return;
-      }
-      if (isLineageInsightsOpen) {
-        setIsLineageInsightsOpen(false);
-        return;
-      }
-      if (isPosterExportOpen) {
-        setIsPosterExportOpen(false);
-        return;
-      }
-      if (isMilestonesOpen) {
-        setIsMilestonesOpen(false);
-        return;
-      }
-      if (isSideDrawerOpen) {
-        setIsSideDrawerOpen(false);
-        return;
-      }
-      if (isNotificationPanelOpen) {
-        setIsNotificationPanelOpen(false);
-        return;
-      }
-      if (isDeveloperAboutOpen) {
-        setIsDeveloperAboutOpen(false);
-        return;
-      }
-      if (isSuperAdminOpen) {
-        setIsSuperAdminOpen(false);
+      // Priority 1: Modal open -> close active modal
+      if (isAnyModalActive) {
+        closeTopActiveModal();
         return;
       }
 
+      // Priority 2: Guest Demo View active -> return to main Landing Screen
       if (isGuestDemoMode) {
         setIsGuestDemoMode(false);
         return;
       }
 
+      // Priority 3: Strictly on Root Landing/Dashboard Screen with zero active modals
       const now = Date.now();
       if (now - lastBackPressRef.current < 2000) {
         CapApp.exitApp();
@@ -346,25 +358,7 @@ export const App: React.FC = () => {
     return () => {
       handleBackButton.then((h) => h.remove());
     };
-  }, [
-    publicLegalModalType,
-    isAuthModalOpen,
-    selectedPerson,
-    isUserProfileOpen,
-    isFormOpen,
-    isRelFinderOpen,
-    isExportImportOpen,
-    isSmartAIAddOpen,
-    isLineageInsightsOpen,
-    isPosterExportOpen,
-    isMilestonesOpen,
-    isSideDrawerOpen,
-    isNotificationPanelOpen,
-    isDeveloperAboutOpen,
-    isSuperAdminOpen,
-    isGuestDemoMode,
-    lang,
-  ]);
+  }, [isAnyModalActive, isGuestDemoMode, lang]);
 
   // Handle switch active user persona
   const handleSwitchCurrentUser = (user: Person) => {
