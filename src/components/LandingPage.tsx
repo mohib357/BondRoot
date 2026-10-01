@@ -143,7 +143,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* Primary CTA */}
           <button
             onClick={onOpenAuth}
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-700 via-teal-600 to-emerald-800 hover:from-emerald-800 hover:to-teal-700 text-white font-black text-sm shadow-xl shadow-emerald-700/25 active:scale-98 transition cursor-pointer neu-button"
+            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-2xl text-white font-black text-sm active:scale-98 transition cursor-pointer neu-btn-primary"
           >
             <span>{isEnglish ? '🌳 Get Started — Free' : '🌳 শুরু করুন — বিনামূল্যে'}</span>
             <ArrowRight className="w-4 h-4" />
@@ -152,10 +152,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {/* Secondary CTA */}
           <button
             onClick={scrollToDemo}
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-2xl bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-800 dark:text-zinc-200 font-extrabold text-sm border border-slate-300 dark:border-zinc-700 shadow-md active:scale-98 transition cursor-pointer neu-button"
+            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3.5 rounded-2xl active:scale-98 transition cursor-pointer neu-btn-secondary"
           >
             <Play className="w-4 h-4 text-emerald-600 dark:text-emerald-400 fill-emerald-600 dark:fill-emerald-400" />
-            <span>{isEnglish ? 'View Demo Family' : 'ডেমো পরিবার দেখুন'}</span>
+            <span>{isEnglish ? 'View Demo Family' : '▶ ডেমো পরিবার দেখুন'}</span>
           </button>
         </div>
 
@@ -424,45 +424,53 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative">
 
           {/* Step 1 */}
-          <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm relative neu-button text-center sm:text-left">
-            <span className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono block mb-2">01</span>
-            <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+          <div className="p-5 rounded-2xl neu-card text-center sm:text-left transition">
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-black text-lg flex items-center justify-center font-mono mb-3 border border-emerald-300 dark:border-emerald-700">
+              01
+            </div>
+            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
               {isEnglish ? 'Start Your Family' : 'পরিবার শুরু করুন'}
             </h4>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+            <p className="text-xs text-slate-600 dark:text-zinc-300 mt-1.5 leading-relaxed font-medium">
               {isEnglish ? 'Create your account & add root ancestor.' : 'অ্যাকাউন্ট খুলুন এবং মূল পূর্বপুরুষ নির্ধারণ করুন।'}
             </p>
           </div>
 
           {/* Step 2 */}
-          <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm relative neu-button text-center sm:text-left">
-            <span className="text-2xl font-black text-teal-600 dark:text-teal-400 font-mono block mb-2">02</span>
-            <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+          <div className="p-5 rounded-2xl neu-card text-center sm:text-left transition">
+            <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950 text-teal-800 dark:text-teal-300 font-black text-lg flex items-center justify-center font-mono mb-3 border border-teal-300 dark:border-teal-700">
+              02
+            </div>
+            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
               {isEnglish ? 'Add Members' : 'সদস্য যোগ করুন'}
             </h4>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+            <p className="text-xs text-slate-600 dark:text-zinc-300 mt-1.5 leading-relaxed font-medium">
               {isEnglish ? 'Add parents, children, spouses & siblings.' : 'পিতামাতা, সন্তান, জীবনসঙ্গী ও ভাইবোন যুক্ত করুন।'}
             </p>
           </div>
 
           {/* Step 3 */}
-          <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm relative neu-button text-center sm:text-left">
-            <span className="text-2xl font-black text-purple-600 dark:text-purple-400 font-mono block mb-2">03</span>
-            <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+          <div className="p-5 rounded-2xl neu-card text-center sm:text-left transition">
+            <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300 font-black text-lg flex items-center justify-center font-mono mb-3 border border-purple-300 dark:border-purple-700">
+              03
+            </div>
+            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
               {isEnglish ? 'Connect Bonds' : 'সম্পর্ক তৈরি করুন'}
             </h4>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+            <p className="text-xs text-slate-600 dark:text-zinc-300 mt-1.5 leading-relaxed font-medium">
               {isEnglish ? 'Auto-sync reciprocal bloodline connections.' : 'স্বয়ংক্রিয়ভাবে দ্বিপাক্ষিক রক্তের যোগসূত্র তৈরি হবে।'}
             </p>
           </div>
 
           {/* Step 4 */}
-          <div className="p-5 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 shadow-sm relative neu-button text-center sm:text-left">
-            <span className="text-2xl font-black text-amber-600 dark:text-amber-400 font-mono block mb-2">04</span>
-            <h4 className="font-bold text-sm text-slate-900 dark:text-white">
+          <div className="p-5 rounded-2xl neu-card text-center sm:text-left transition">
+            <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 font-black text-lg flex items-center justify-center font-mono mb-3 border border-amber-300 dark:border-amber-700">
+              04
+            </div>
+            <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
               {isEnglish ? 'Find Kinship' : 'যেকোনো সম্পর্ক খুঁজে দেখুন'}
             </h4>
-            <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
+            <p className="text-xs text-slate-600 dark:text-zinc-300 mt-1.5 leading-relaxed font-medium">
               {isEnglish ? 'Trace exact calling terms between any two relatives.' : 'যেকোনো দুই সদস্যের মধ্যকার বাংলা সম্বোধন দেখুন।'}
             </p>
           </div>
