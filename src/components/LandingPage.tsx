@@ -59,7 +59,7 @@ const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
   }, [activePage]);
 
   const ITEMS = [
-    { id: 'home' as const,  label: isEnglish ? 'Home'    : 'হোম',     onClick: () => { setActive('home');  window.scrollTo({top:0,behavior:'smooth'}); } },
+    { id: 'home' as const,  label: isEnglish ? 'Home'    : 'হোম',     onClick: () => { setActive('home'); setActivePage('home'); window.scrollTo({top:0,behavior:'smooth'}); } },
     { id: 'lang' as const,  label: isEnglish ? 'বাংলা'  : 'English',     onClick: () => { setActive('lang');  onToggleLang(); } },
     { id: 'about' as const, label: isEnglish ? 'About'   : 'এবাউট',   onClick: () => { setActive('about'); setActivePage('about'); } },
     { id: 'login' as const, label: isEnglish ? 'Login'   : 'লগইন',    onClick: () => { setActive('login'); setActivePage('login'); } },
@@ -75,11 +75,11 @@ const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
   const activeIdx = ITEMS.findIndex(i => i.id === active);
 
   // Build SVG notch path dynamically
-  function buildNotchPath(W: number, H: number, R: number, idx: number, total: number): string {
+  function buildNotchPath(W: number, H: number, R: number, idx: number, total: number): string { // H=72
     const cx = (idx + 0.5) * (W / total);
-    const nW = 72;
-    const nD = 30;
-    const nR = 20;
+    const nW = 80;
+    const nD = 40;
+    const nR = 24;
     const nx1 = cx - nW / 2;
     const nx2 = cx + nW / 2;
     return [
@@ -103,23 +103,23 @@ const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
 
   return (
     <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50">
-      <div className="relative" style={{height: 68}}>
+      <div className="relative" style={{height: 72}}>
 
         {/* SVG nav bar background with curvy notch */}
         <svg
           className="absolute inset-0 w-full h-full"
-          viewBox="0 0 400 68"
+          viewBox="0 0 400 72"
           preserveAspectRatio="none"
           xmlns="http://www.w3.org/2000/svg"
           style={{filter:"drop-shadow(0 -3px 8px rgba(16,185,129,0.12)) drop-shadow(0 2px 6px rgba(0,0,0,0.10))"}}>
           <path
-            d={buildNotchPath(400, 68, 16, activeIdx, 4)}
+            d={buildNotchPath(400, 72, 16, activeIdx, 4)}
             className="fill-white dark:fill-zinc-900"
           />
         </svg>
 
         {/* Nav items */}
-        <div className="absolute inset-0 flex items-end justify-around" style={{paddingBottom: 6}}>
+        <div className="absolute inset-0 flex items-end justify-around" style={{paddingBottom: 8}}>
           {ITEMS.map((item, idx) => {
             const isAct = active === item.id;
             return (
@@ -131,7 +131,7 @@ const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
                 {isAct ? (
                   <div
                     className="absolute flex flex-col items-center"
-                    style={{bottom: 6, left:"50%", transform:"translateX(-50%)"}}
+                    style={{bottom: 8, left:"50%", transform:"translateX(-50%)"}}
                   >
                     <div
                       className="w-13 h-13 rounded-full flex items-center justify-center border-[3px] border-white dark:border-zinc-900"
@@ -193,16 +193,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       {/* ── Page content with smooth transitions ── */}
       {/* Home page */}
-      <div
-        style={{
-          opacity: activePage === 'home' ? 1 : 0,
-          pointerEvents: activePage === 'home' ? 'auto' : 'none',
-          position: activePage === 'home' ? 'relative' : 'absolute',
-          inset: 0,
-          transition: 'opacity 0.35s ease',
-          width: '100%',
-        }}
-      >
+      <div style={{display: activePage === 'home' ? 'block' : 'none'}}>
 
       {/* Background Ambient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none" />
@@ -714,17 +705,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </div>{/* end home page */}
 
       {/* ── About Page ── */}
-      <div
-        style={{
-          opacity: activePage === 'about' ? 1 : 0,
-          pointerEvents: activePage === 'about' ? 'auto' : 'none',
-          position: activePage === 'about' ? 'relative' : 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          transition: 'opacity 0.35s ease',
-          zIndex: activePage === 'about' ? 10 : -1,
-        }}
-        className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a] flex flex-col"
-      >
+      <div style={{display: activePage === 'about' ? 'flex' : 'none', flexDirection:'column'}} className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a]">
         {/* Sticky Header */}
         <header className="sticky top-0 z-40 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800">
           <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-3">
@@ -777,17 +758,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </div>
 
       {/* ── Login Page ── */}
-      <div
-        style={{
-          opacity: activePage === 'login' ? 1 : 0,
-          pointerEvents: activePage === 'login' ? 'auto' : 'none',
-          position: activePage === 'login' ? 'relative' : 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          transition: 'opacity 0.35s ease',
-          zIndex: activePage === 'login' ? 10 : -1,
-        }}
-        className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a] flex flex-col"
-      >
+      <div style={{display: activePage === 'login' ? 'flex' : 'none', flexDirection:'column'}} className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a]">
         {/* Sticky Header */}
         <header className="sticky top-0 z-40 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800">
           <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-3">
@@ -838,7 +809,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       />
 
       {/* Spacer for bottom nav on mobile */}
-      <div className="h-24 sm:hidden" />
+      <div className="h-20 sm:hidden" />
 
       {/* 8. Simplified Premium Footer */}
       <footer className="bg-slate-950 text-slate-400 text-xs py-10 pb-28 sm:pb-10 px-4 sm:px-6 lg:px-8 border-t border-slate-900 mt-auto">
