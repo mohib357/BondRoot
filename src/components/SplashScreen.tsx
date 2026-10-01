@@ -18,7 +18,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
     if (isExiting) {
       const timer = setTimeout(() => {
         onFinished();
-      }, 450); // Matches .animate-splash-exit duration
+      }, 600); // Matches .animate-splash-exit 0.6s cinematic duration
       return () => clearTimeout(timer);
     }
   }, [isExiting, onFinished]);

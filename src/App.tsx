@@ -126,11 +126,11 @@ export const App: React.FC = () => {
   const [showSplash, setShowSplash] = useState(true);
   const [isSplashExiting, setIsSplashExiting] = useState(false);
 
-  // Animated Splash Screen Exit Timer & Data Preload
+  // Animated Splash Screen Exit Timer & Data Preload (4.2s total duration)
   useEffect(() => {
     const splashTimer = setTimeout(() => {
       setIsSplashExiting(true);
-    }, 2200);
+    }, 4200);
 
     return () => clearTimeout(splashTimer);
   }, []);
