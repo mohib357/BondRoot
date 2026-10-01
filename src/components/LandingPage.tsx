@@ -83,7 +83,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           {/* Right Header Actions */}
-          <div className="flex items-center space-x-2 sm:space-x-3">
+          <div className="flex items-center space-x-2">
             {/* Dark Mode Toggle */}
             <button
               onClick={onToggleDarkMode}
@@ -102,10 +102,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <span>{isEnglish ? 'বাংলা' : 'English'}</span>
             </button>
 
-            {/* Login Button */}
+            {/* Login — hidden on mobile (moved to bottom nav), visible on sm+ */}
             <button
               onClick={onOpenAuth}
-              className="btn-glossy-primary !py-2 !px-4 text-xs sm:text-sm !rounded-xl"
+              className="hidden sm:inline-flex btn-glossy-primary !py-2 !px-4 text-xs !rounded-xl"
             >
               <LogIn className="w-4 h-4" />
               <span>{isEnglish ? 'Login' : 'লগইন'}</span>
@@ -565,53 +565,87 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-center md:text-left">
-            <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-2 neu-button">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto md:mx-0">
-                🌳
-              </div>
-              <h4 className="font-bold text-sm text-emerald-300">
-                {isEnglish ? 'Preserving Family Roots' : 'পরিবারের শিকড় সংরক্ষণ'}
-              </h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                {isEnglish
-                  ? 'Keep complete multi-generational lineage records organized in a lifetime digital vault.'
-                  : 'বহু-প্রজন্মের পারিবারিক শিকড় ও ঐতিহ্য সযতনে ফ্রেমবন্দি রাখার স্থায়ী ডিজিটাল ব্যবস্থা।'}
-              </p>
+
+            <div className="p-5 rounded-2xl space-y-3 hover:scale-[1.02] transition-all duration-150"
+              style={{background:'linear-gradient(135deg,#ecfdf5 0%,#d1fae5 60%,#a7f3d0 100%)',border:'1px solid rgba(16,185,129,0.28)',boxShadow:'5px 5px 16px rgba(16,185,129,0.15),-5px -5px 14px rgba(255,255,255,0.95)'}}>
+              <div className="w-10 h-10 rounded-xl icon-wrap-emerald flex items-center justify-center mx-auto md:mx-0 text-lg">🌳</div>
+              <h4 className="font-extrabold text-sm text-emerald-800">{isEnglish ? 'Preserving Family Roots' : 'পরিবারের শিকড় সংরক্ষণ'}</h4>
+              <p className="text-xs text-emerald-900/70 leading-relaxed">{isEnglish ? 'Keep complete multi-generational lineage records in a lifetime digital vault.' : 'বহু-প্রজন্মের পারিবারিক শিকড় ও ঐতিহ্য সযতনে ফ্রেমবন্দি রাখার স্থায়ী ডিজিটাল ব্যবস্থা।'}</p>
             </div>
 
-            <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-2 neu-button">
-              <div className="w-9 h-9 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center mx-auto md:mx-0">
-                🤝
-              </div>
-              <h4 className="font-bold text-sm text-teal-300">
-                {isEnglish ? 'Introducing Youth to Kinship' : 'নতুন প্রজন্মকে আত্মীয়তার সাথে পরিচয় করানো'}
-              </h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                {isEnglish
-                  ? 'Help children learn exact respectful Bengali calling terms for distant cousins and uncles.'
-                  : 'ছোটদের ও নতুন প্রজন্মকে পারিবারিক আত্মীয়তার গভীরতা ও সম্মোধনের সাথে পরিচয় করানো।'}
-              </p>
+            <div className="p-5 rounded-2xl space-y-3 hover:scale-[1.02] transition-all duration-150"
+              style={{background:'linear-gradient(135deg,#f0fdfa 0%,#ccfbf1 60%,#99f6e4 100%)',border:'1px solid rgba(20,184,166,0.28)',boxShadow:'5px 5px 16px rgba(20,184,166,0.15),-5px -5px 14px rgba(255,255,255,0.95)'}}>
+              <div className="w-10 h-10 rounded-xl icon-wrap-teal flex items-center justify-center mx-auto md:mx-0 text-lg">🤝</div>
+              <h4 className="font-extrabold text-sm text-teal-800">{isEnglish ? 'Introducing Youth to Kinship' : 'নতুন প্রজন্মকে আত্মীয়তার সাথে পরিচয় করানো'}</h4>
+              <p className="text-xs text-teal-900/70 leading-relaxed">{isEnglish ? 'Help children learn respectful Bengali calling terms for distant relatives.' : 'ছোটদের ও নতুন প্রজন্মকে পারিবারিক আত্মীয়তার গভীরতা ও সম্মোধনের সাথে পরিচয় করানো।'}</p>
             </div>
 
-            <div className="p-5 rounded-2xl bg-slate-800/60 border border-slate-700/60 space-y-2 neu-button">
-              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto md:mx-0">
-                🕊️
-              </div>
-              <h4 className="font-bold text-sm text-amber-300">
-                {isEnglish ? 'Legacy for Future Generations' : 'পরিবারের ইতিহাস ভবিষ্যৎ প্রজন্মের জন্য রেখে যাওয়া'}
-              </h4>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                {isEnglish
-                  ? 'Pass down authentic family photos, bios, and lineage milestones for decades to come.'
-                  : 'পূর্বপুরুষদের ছবি, গল্প ও স্মরণীয় ঘটনা ভবিষ্যৎ প্রজন্মের জন্য ডিজিটালি অক্ষুণ্ন রাখা।'}
-              </p>
+            <div className="p-5 rounded-2xl space-y-3 hover:scale-[1.02] transition-all duration-150"
+              style={{background:'linear-gradient(135deg,#fffbeb 0%,#fef3c7 60%,#fde68a 100%)',border:'1px solid rgba(245,158,11,0.28)',boxShadow:'5px 5px 16px rgba(245,158,11,0.15),-5px -5px 14px rgba(255,255,255,0.95)'}}>
+              <div className="w-10 h-10 rounded-xl icon-wrap-amber flex items-center justify-center mx-auto md:mx-0 text-lg">🕊️</div>
+              <h4 className="font-extrabold text-sm text-amber-800">{isEnglish ? 'Legacy for Future Generations' : 'পরিবারের ইতিহাস ভবিষ্যৎ প্রজন্মের জন্য রেখে যাওয়া'}</h4>
+              <p className="text-xs text-amber-900/70 leading-relaxed">{isEnglish ? 'Pass down authentic family photos, bios, and lineage milestones for decades.' : 'পূর্বপুরুষদের ছবি, গল্প ও স্মরণীয় ঘটনা ভবিষ্যৎ প্রজন্মের জন্য ডিজিটালি অক্ষুণ্ন রাখা।'}</p>
             </div>
+
           </div>
         </div>
       </section>
 
+      {/* ── Landing Bottom Nav (mobile only) ── */}
+      <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-3 pt-1 pointer-events-none">
+        <div className="pointer-events-auto mx-auto max-w-sm rounded-[28px] bg-white/90 dark:bg-zinc-900/92 backdrop-blur-xl border border-slate-200/80 dark:border-zinc-700/60 shadow-[0_-4px_30px_rgba(16,185,129,0.14),0_8px_24px_rgba(0,0,0,0.12)] flex items-center justify-around px-2 py-2 gap-1 relative">
+
+          {/* Home */}
+          <button onClick={() => window.scrollTo({top:0,behavior:'smooth'})} className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-90 cursor-pointer">
+            <div className="w-5 h-5 flex items-center justify-center">
+              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <span className="text-[9px] font-bold">{isEnglish ? 'Home' : 'হোম'}</span>
+          </button>
+
+          {/* Tree / Demo */}
+          <button onClick={scrollToDemo} className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl text-slate-500 dark:text-zinc-400 hover:text-teal-600 dark:hover:text-teal-400 transition-all active:scale-90 cursor-pointer">
+            <div className="w-5 h-5 flex items-center justify-center">
+              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span className="text-[9px] font-bold">{isEnglish ? 'Tree' : 'ট্রি'}</span>
+          </button>
+
+          {/* CENTER LOGIN — elevated pill button */}
+          <button
+            onClick={onOpenAuth}
+            className="relative -mt-5 flex flex-col items-center gap-0.5 cursor-pointer active:scale-90 transition-all"
+          >
+            <div className="w-14 h-14 rounded-full btn-glossy-primary flex items-center justify-center shadow-[0_8px_24px_rgba(5,150,105,0.50)] border-2 border-white/40">
+              <LogIn className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 mt-0.5">{isEnglish ? 'Login' : 'লগইন'}</span>
+          </button>
+
+          {/* AI Features */}
+          <button onClick={() => onOpenFeatureSpotlight?.('kinship')} className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl text-slate-500 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all active:scale-90 cursor-pointer">
+            <div className="w-5 h-5 flex items-center justify-center">
+              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            </div>
+            <span className="text-[9px] font-bold">{isEnglish ? 'Kinship' : 'সম্পর্ক'}</span>
+          </button>
+
+          {/* About */}
+          <button onClick={() => onOpenDeveloperAbout?.()} className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl text-slate-500 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 transition-all active:scale-90 cursor-pointer">
+            <div className="w-5 h-5 flex items-center justify-center">
+              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+            </div>
+            <span className="text-[9px] font-bold">{isEnglish ? 'About' : 'আমরা'}</span>
+          </button>
+
+        </div>
+      </nav>
+
+      {/* Spacer for bottom nav on mobile */}
+      <div className="h-20 sm:hidden" />
+
       {/* 8. Simplified Premium Footer */}
-      <footer className="bg-slate-950 text-slate-400 text-xs py-10 px-4 sm:px-6 lg:px-8 border-t border-slate-900 mt-auto">
+      <footer className="bg-slate-950 text-slate-400 text-xs py-10 pb-28 sm:pb-10 px-4 sm:px-6 lg:px-8 border-t border-slate-900 mt-auto">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
 
           <div>
