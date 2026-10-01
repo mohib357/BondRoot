@@ -130,7 +130,7 @@ export const App: React.FC = () => {
   useEffect(() => {
     const splashTimer = setTimeout(() => {
       setIsSplashExiting(true);
-    }, 1800);
+    }, 2200);
 
     return () => clearTimeout(splashTimer);
   }, []);
