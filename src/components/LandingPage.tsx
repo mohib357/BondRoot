@@ -115,20 +115,67 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       {/* 2. Hero Section (Styled as a Grand Hero Texture Card) */}
       <section className="py-6 sm:py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
-        <div className="p-6 sm:p-12 rounded-3xl sm:rounded-[2.5rem] bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl border border-emerald-200/90 dark:border-zinc-800/90 shadow-2xl neu-panel relative overflow-hidden bg-lineage-pattern text-center flex flex-col items-center">
+        <div className="p-6 sm:p-12 rounded-3xl sm:rounded-[2.5rem] bg-lineage-pattern border border-emerald-200/70 dark:border-emerald-900/60 shadow-2xl shadow-emerald-500/5 dark:shadow-emerald-900/20 neu-panel relative overflow-hidden text-center flex flex-col items-center">
 
           {/* Ambient Glowing Background Orbs */}
-          <div className="absolute -top-20 -left-20 w-72 h-72 bg-emerald-500/15 dark:bg-emerald-500/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-amber-500/15 dark:bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-20 -left-20 w-80 h-80 bg-emerald-400/10 dark:bg-emerald-400/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-amber-400/10 dark:bg-amber-400/12 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-400/05 dark:bg-teal-400/08 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Subtle Genealogical Branch Connecting Overlay (SVG) */}
-          <div className="absolute inset-0 pointer-events-none opacity-[0.06] dark:opacity-[0.12] overflow-hidden">
-            <svg className="w-full h-full" viewBox="0 0 800 400" fill="none">
-              <path d="M 100 0 C 100 150, 300 200, 400 200 C 500 200, 700 250, 700 400" stroke="#10B981" strokeWidth="2.5" strokeDasharray="6 6" />
-              <path d="M 700 0 C 700 150, 500 200, 400 200 C 300 200, 100 250, 100 400" stroke="#F59E0B" strokeWidth="2.5" strokeDasharray="6 6" />
-              <circle cx="400" cy="200" r="10" fill="#10B981" />
-              <circle cx="200" cy="110" r="7" fill="#F59E0B" />
-              <circle cx="600" cy="110" r="7" fill="#14B8A6" />
+          {/* Genealogical Branch SVG Overlay — more intricate */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl sm:rounded-[2.5rem]">
+            <svg className="absolute w-full h-full opacity-[0.07] dark:opacity-[0.13]" viewBox="0 0 900 480" fill="none" preserveAspectRatio="xMidYMid slice">
+              {/* Main trunk */}
+              <path d="M 450 480 L 450 280" stroke="#10B981" strokeWidth="2.5" />
+              {/* Primary branches */}
+              <path d="M 450 280 Q 300 240 180 200" stroke="#10B981" strokeWidth="2" strokeDasharray="5 4" />
+              <path d="M 450 280 Q 600 240 720 200" stroke="#10B981" strokeWidth="2" strokeDasharray="5 4" />
+              {/* Secondary branches left */}
+              <path d="M 180 200 Q 110 170 60 140" stroke="#F59E0B" strokeWidth="1.5" strokeDasharray="4 5" />
+              <path d="M 180 200 Q 200 165 230 130" stroke="#F59E0B" strokeWidth="1.5" strokeDasharray="4 5" />
+              {/* Secondary branches right */}
+              <path d="M 720 200 Q 790 170 840 140" stroke="#F59E0B" strokeWidth="1.5" strokeDasharray="4 5" />
+              <path d="M 720 200 Q 700 165 670 130" stroke="#F59E0B" strokeWidth="1.5" strokeDasharray="4 5" />
+              {/* Tertiary left-left */}
+              <path d="M 60 140 Q 30 110 20 80" stroke="#14B8A6" strokeWidth="1" strokeDasharray="3 5" />
+              <path d="M 60 140 Q 80 110 100 80" stroke="#14B8A6" strokeWidth="1" strokeDasharray="3 5" />
+              {/* Tertiary left-right */}
+              <path d="M 230 130 Q 210 100 200 65" stroke="#14B8A6" strokeWidth="1" strokeDasharray="3 5" />
+              <path d="M 230 130 Q 260 100 280 70" stroke="#14B8A6" strokeWidth="1" strokeDasharray="3 5" />
+              {/* Tertiary right-left */}
+              <path d="M 670 130 Q 640 100 620 70" stroke="#14B8A6" strokeWidth="1" strokeDasharray="3 5" />
+              <path d="M 670 130 Q 690 100 700 65" stroke="#14B8A6" strokeWidth="1" strokeDasharray="3 5" />
+              {/* Tertiary right-right */}
+              <path d="M 840 140 Q 820 110 800 80" stroke="#14B8A6" strokeWidth="1" strokeDasharray="3 5" />
+              <path d="M 840 140 Q 870 110 880 80" stroke="#14B8A6" strokeWidth="1" strokeDasharray="3 5" />
+              {/* Central root node */}
+              <circle cx="450" cy="280" r="6" fill="#10B981" />
+              {/* Level-1 nodes */}
+              <circle cx="180" cy="200" r="5" fill="#10B981" />
+              <circle cx="720" cy="200" r="5" fill="#10B981" />
+              {/* Level-2 nodes */}
+              <circle cx="60" cy="140" r="4" fill="#F59E0B" />
+              <circle cx="230" cy="130" r="4" fill="#F59E0B" />
+              <circle cx="670" cy="130" r="4" fill="#F59E0B" />
+              <circle cx="840" cy="140" r="4" fill="#F59E0B" />
+              {/* Level-3 nodes */}
+              <circle cx="20"  cy="80"  r="3" fill="#14B8A6" />
+              <circle cx="100" cy="80"  r="3" fill="#14B8A6" />
+              <circle cx="200" cy="65"  r="3" fill="#14B8A6" />
+              <circle cx="280" cy="70"  r="3" fill="#14B8A6" />
+              <circle cx="620" cy="70"  r="3" fill="#14B8A6" />
+              <circle cx="700" cy="65"  r="3" fill="#14B8A6" />
+              <circle cx="800" cy="80"  r="3" fill="#14B8A6" />
+              <circle cx="880" cy="80"  r="3" fill="#14B8A6" />
+            </svg>
+
+            {/* Subtle noise/grain texture overlay (SVG filter) */}
+            <svg className="absolute inset-0 w-full h-full opacity-[0.025] dark:opacity-[0.04] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+              <filter id="heroNoise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="4" stitchTiles="stitch" />
+                <feColorMatrix type="saturate" values="0" />
+              </filter>
+              <rect width="100%" height="100%" filter="url(#heroNoise)" />
             </svg>
           </div>
 
