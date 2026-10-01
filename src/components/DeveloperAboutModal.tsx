@@ -1,0 +1,250 @@
+import React, { useState } from 'react';
+import { apiFetch } from '../utils/api';
+import {
+  X,
+  Heart,
+  Code,
+  Mail,
+  Send,
+  Check,
+  Loader2,
+  ExternalLink,
+  Shield,
+  Sparkles,
+  GitBranch,
+  Database,
+  Smartphone,
+  Award,
+} from 'lucide-react';
+
+interface DeveloperAboutModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  lang?: 'bn' | 'en';
+}
+
+export const DeveloperAboutModal: React.FC<DeveloperAboutModalProps> = ({
+  isOpen,
+  onClose,
+  lang = 'bn',
+}) => {
+  if (!isOpen) return null;
+  const isEnglish = lang === 'en';
+
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [sentSuccess, setSentSuccess] = useState(false);
+
+  const handleSubmitFeedback = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !message.trim()) return;
+
+    setIsSending(true);
+    try {
+      await apiFetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, message }),
+      });
+      setSentSuccess(true);
+      setName('');
+      setEmail('');
+      setMessage('');
+      setTimeout(() => setSentSuccess(false), 5000);
+    } catch (err) {
+      console.error('Failed to send feedback:', err);
+    } finally {
+      setIsSending(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-60 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+      <div className="bg-white dark:bg-zinc-900 rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden border border-slate-200 dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-150 flex flex-col max-h-[90vh]">
+        
+        {/* Header Cover */}
+        <div className="relative bg-gradient-to-r from-emerald-800 via-teal-800 to-emerald-950 p-6 text-white">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          <div className="flex items-center space-x-3.5">
+            <div className="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-emerald-300 shadow-md">
+              <Award className="w-7 h-7" />
+            </div>
+            <div>
+              <h2 className="text-xl font-extrabold">
+                {isEnglish ? 'About BondRoot & Developer' : 'অ্যাপ পরিচিতি ও ডেভেলপার বার্তা'}
+              </h2>
+              <p className="text-xs text-emerald-200 mt-0.5">
+                {isEnglish
+                  ? 'Mission to preserve ancestral heritage & Bengali kinship bonds'
+                  : 'বাঙালি সংস্কৃতি, আত্মপরিচয় ও পারিবারিক রক্তসম্পর্ক সংরক্ষণের অঙ্গীকার'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Scrollable Body */}
+        <div className="flex-1 overflow-y-auto p-6 space-y-6 text-xs">
+          
+          {/* Mission Section */}
+          <div className="bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 p-5 rounded-2xl space-y-2">
+            <h3 className="font-extrabold text-sm text-emerald-950 dark:text-emerald-300 flex items-center gap-1.5">
+              <Heart className="w-4 h-4 text-rose-500 fill-rose-500" />
+              <span>{isEnglish ? 'The Vision Behind BondRoot' : 'বন্ডরুট (BondRoot)-এর পেছনের গল্প ও উদ্দেশ্য'}</span>
+            </h3>
+            <p className="text-slate-700 dark:text-zinc-300 leading-relaxed font-normal">
+              {isEnglish
+                ? 'BondRoot was crafted with a heartfelt purpose: to protect multi-generational family ties, cherish departed ancestors, and resolve intricate kinship relationships with mathematical certainty. In an era of rapid urbanization, BondRoot ensures future generations never forget their true roots.'
+                : 'আধুনিক নগরায়ন ও ব্যস্ততার যুগে আমাদের পারিবারিক শিকড় এবং পূর্বপুরুষের স্মৃতি যেন হারিয়ে না যায়—সেই মহৎ উদ্দেশ্যেই বন্ডরুট (BondRoot) নির্মিত। রক্তের সম্পর্কের সূক্ষ্ম হিসাব, নির্ভুল বাংলা সামাজিক সম্বোধন এবং পারিবারিক স্মৃতিবিজড়িত মুহূর্তগুলোকে ডিজিটাল ভল্টে চিরস্থায়ী করে রাখাই এই প্ল্যাটফর্মের মূল লক্ষ্য।'}
+            </p>
+
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 text-[11px] font-semibold text-slate-600 dark:text-zinc-400">
+              <div className="flex items-center space-x-1.5 bg-white dark:bg-zinc-800 p-2 rounded-xl border border-emerald-100 dark:border-zinc-700">
+                <GitBranch className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Kinship Graph</span>
+              </div>
+              <div className="flex items-center space-x-1.5 bg-white dark:bg-zinc-800 p-2 rounded-xl border border-emerald-100 dark:border-zinc-700">
+                <Database className="w-3.5 h-3.5 text-blue-600" />
+                <span>Neon PostgreSQL</span>
+              </div>
+              <div className="flex items-center space-x-1.5 bg-white dark:bg-zinc-800 p-2 rounded-xl border border-emerald-100 dark:border-zinc-700">
+                <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                <span>Gemini AI Engine</span>
+              </div>
+              <div className="flex items-center space-x-1.5 bg-white dark:bg-zinc-800 p-2 rounded-xl border border-emerald-100 dark:border-zinc-700">
+                <Smartphone className="w-3.5 h-3.5 text-amber-600" />
+                <span>PWA Offline Vault</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Developer Card */}
+          <div className="bg-white dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-700 p-5 rounded-2xl flex flex-col sm:flex-row items-center sm:items-start gap-4 shadow-xs">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-extrabold text-xl flex items-center justify-center shrink-0 shadow-lg border-2 border-white/40">
+              MH
+            </div>
+
+            <div className="flex-1 text-center sm:text-left space-y-1">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <h4 className="text-base font-extrabold text-slate-900 dark:text-white">
+                  মুহিববুল হাসান (Muhibbul Hasan)
+                </h4>
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
+                  Lead Architect & Creator
+                </span>
+              </div>
+              <p className="text-slate-500 dark:text-zinc-400 font-medium">
+                Full-Stack Software Engineer • Kinship Graph Systems
+              </p>
+              <p className="text-[11px] text-slate-600 dark:text-zinc-400 pt-1 leading-relaxed">
+                পেশাদার সফটওয়্যার প্রকৌশলী হিসেবে দেশীয় ও আন্তর্জাতিক প্রযুক্তিতে অবদান রাখার পাশাপাশি শিকড়ের সন্ধান ও বাঙালির পারিবারিক ঐতিহ্য সংরক্ষণে নিবেদিতপ্রাণ।
+              </p>
+
+              {/* Developer Links */}
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-2">
+                <a
+                  href="mailto:muhibbul524@gmail.com"
+                  className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-zinc-700 hover:bg-slate-200 font-bold text-slate-800 dark:text-zinc-200 transition"
+                >
+                  <Mail className="w-3.5 h-3.5 text-rose-500" />
+                  <span>muhibbul524@gmail.com</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Feedback & Message Contact Form */}
+          <div className="bg-slate-50 dark:bg-zinc-800/40 border border-slate-200 dark:border-zinc-700/80 p-5 rounded-2xl space-y-3">
+            <div>
+              <h4 className="font-extrabold text-xs text-slate-900 dark:text-white flex items-center gap-1.5">
+                <Send className="w-3.5 h-3.5 text-emerald-600" />
+                <span>{isEnglish ? 'Send Direct Feedback or Message' : 'ডেভেলপারকে সরাসরি বার্তা বা ফিডব্যাক পাঠান'}</span>
+              </h4>
+              <p className="text-[11px] text-slate-500 dark:text-zinc-400">
+                অ্যাপ সম্পর্কিত যেকোনো পরামর্শ, আত্মীয়তার কোনো সূক্ষ্ম নিয়ম বা নতুন ফিচারের অনুরোধ থাকলে সরাসরি লিখুন।
+              </p>
+            </div>
+
+            {sentSuccess && (
+              <div className="p-3 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-200 rounded-xl font-bold flex items-center gap-2 animate-in fade-in">
+                <Check className="w-4 h-4 text-emerald-600" />
+                <span>আপনার বার্তা ও পরামর্শ সফলভাবে পৌঁছেছে! ধন্যবাদ।</span>
+              </div>
+            )}
+
+            <form onSubmit={handleSubmitFeedback} className="space-y-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-zinc-300 mb-1">আপনার নাম *</label>
+                  <input
+                    type="text"
+                    required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="e.g. তানভীর আহমেদ"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block font-bold text-slate-700 dark:text-zinc-300 mb-1">ইমেইল (ঐচ্ছিক)</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="tanvir@example.com"
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 dark:text-zinc-300 mb-1">আপনার বার্তা / পরামর্শ *</label>
+                <textarea
+                  required
+                  rows={3}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="বন্ডরুট অ্যাপ নিয়ে আপনার অনুভূতি বা কোনো নতুন ফিচারের মতামত জানান..."
+                  className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-slate-900 dark:text-white font-medium focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={isSending}
+                  className="inline-flex items-center space-x-1.5 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white rounded-xl font-bold transition shadow-md shadow-emerald-600/20 cursor-pointer"
+                >
+                  {isSending ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>বার্তা পাঠানো হচ্ছে...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-3.5 h-3.5" />
+                      <span>বার্তা পাঠান</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-slate-200 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-950/40 text-[11px] text-slate-400 dark:text-zinc-500 flex items-center justify-between">
+          <span>BondRoot Genealogic Architecture • 2026</span>
+          <span>Crafted with Pride for Family Heritage</span>
+        </div>
+      </div>
+    </div>
+  );
+};

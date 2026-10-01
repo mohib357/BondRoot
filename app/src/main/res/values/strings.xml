@@ -1,0 +1,95 @@
+<resources>
+    <!-- Application Info -->
+    <string name="app_name">BondRoot</string>
+    <string name="tagline">Family Genealogy &amp; Kinship Relationship Finder</string>
+
+    <!-- Language Toggle -->
+    <string name="lang_switch_bn">বাংলা (BN)</string>
+    <string name="lang_switch_en">English (EN)</string>
+    <string name="switch_language">Language / ভাষা</string>
+
+    <!-- Main Dashboard -->
+    <string name="active_user_header">ACTIVE USER PROFILE</string>
+    <string name="master_test_case_badge">★ MASTER TEST CASE (PROMPT VERIFICATION)</string>
+    <string name="master_test_case_desc">Arz Uddin ➔ Mohammad Ali ➔ Idris Ali ➔ Muhib\nMohammad Ali\'s Brother ➔ Azizul Hoque ➔ Kamal Hossain\n\nMuhib ↔ Kamal Hossain = Son of paternal grandfather\'s brother\'s son</string>
+    <string name="btn_run_test_case">Run Kinship Test Case</string>
+
+    <string name="core_actions_header">Core Features</string>
+    <string name="btn_find_relationship">🔍 Find Relationship</string>
+    <string name="btn_view_tree">🌳 View Family Genealogy Tree</string>
+    <string name="btn_add_member">➕ Add New Family Member</string>
+    <string name="btn_signup_flow">📝 Member Sign Up Simulation</string>
+
+    <string name="database_members_title">Genealogy Database Members</string>
+    <string name="living_status">Alive</string>
+    <string name="deceased_status">Deceased</string>
+    <string name="root_ancestor_label">Root Ancestor</string>
+    <string name="father_prefix">Father: %1$s</string>
+    <string name="mother_prefix">Mother: %1$s</string>
+    <string name="unknown">Unknown</string>
+    <string name="view_details">Details</string>
+
+    <!-- Find Relationship Screen -->
+    <string name="title_find_relationship">Find Kinship Relationship</string>
+    <string name="person_1_label">First Person (Person 1 - Origin)</string>
+    <string name="person_2_label">Second Person (Person 2 - Relative)</string>
+    <string name="btn_calculate_relationship">Calculate Relationship</string>
+    <string name="calculated_relationship_header">Calculated Kinship</string>
+    <string name="traversal_path_header">Step-by-Step Graph Traversal Path:</string>
+    <string name="select_both_persons_toast">Please select both individuals</string>
+    <string name="relationship_not_found">No direct relationship connection could be traced</string>
+
+    <!-- Sign Up Screen -->
+    <string name="title_signup">Member Registration &amp; Lineage</string>
+    <string name="step_personal_info">1. Personal Information</string>
+    <string name="hint_name_local">Name in Local Language (Bangla)</string>
+    <string name="hint_name_english">Name in English *</string>
+    <string name="hint_dob">Birth Year (e.g. 1995)</string>
+    <string name="hint_profession">Profession</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_other">Other</string>
+
+    <string name="step_father_selection">2. Father Search &amp; Selection</string>
+    <string name="father_search_desc">Type father\'s name to intelligently search existing database and prevent duplicates:</string>
+    <string name="hint_father_name">Enter father\'s name (e.g. Idris Ali)</string>
+    <string name="btn_search">Search</string>
+    <string name="candidate_found_header">Matching candidates found in database (Select Match):</string>
+    <string name="btn_father_not_found">Not found in list / Add as New Father</string>
+    <string name="selected_father_prefix">Selected Father: %1$s</string>
+    <string name="no_father_selected">Not selected yet</string>
+
+    <string name="step_mother_selection">3. Mother Search &amp; Selection</string>
+    <string name="mother_search_desc">Type mother\'s name to intelligently search existing database and prevent duplicates:</string>
+    <string name="hint_mother_name">Enter mother\'s name</string>
+    <string name="candidate_found_mother_header">Matching mother candidates found in database (Select Match):</string>
+    <string name="btn_mother_not_found">Not found in list / Add as New Mother</string>
+    <string name="selected_mother_prefix">Selected Mother: %1$s</string>
+    <string name="no_mother_selected">Not selected yet</string>
+
+    <string name="step_account_info">4. User Account Credentials</string>
+    <string name="hint_email">Email Address *</string>
+    <string name="hint_password">Password *</string>
+    <string name="btn_complete_signup">Complete Registration</string>
+
+    <!-- Add Person Screen -->
+    <string name="title_add_person">Add Family Member</string>
+    <string name="select_father_header">Select Father</string>
+    <string name="select_mother_header">Select Mother</string>
+    <string name="none_or_unknown">-- None / Unknown / Root Ancestor --</string>
+    <string name="btn_save_person">Save Person to Database</string>
+
+    <!-- Family Tree Screen -->
+    <string name="title_family_tree">Family Genealogy Tree</string>
+    <string name="gen_1_title">1st Generation (Root Ancestor)</string>
+    <string name="gen_2_title">2nd Generation (Grandfathers &amp; Brothers)</string>
+    <string name="gen_3_title">3rd Generation (Fathers &amp; Cousins)</string>
+    <string name="gen_4_title">4th Generation (Current Generation &amp; Descendants)</string>
+    <string name="check_rel_with_muhib">🔍 Check relationship with Muhib</string>
+
+    <!-- Person Profile Screen -->
+    <string name="title_person_profile">Member Profile</string>
+    <string name="lineage_header">Lineage Roots &amp; Bonds</string>
+    <string name="children_prefix">Children (%1$d): %2$s</string>
+    <string name="no_children">No children registered yet</string>
+</resources>

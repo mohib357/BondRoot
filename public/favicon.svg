@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="rootGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#059669" />
+      <stop offset="50%" stop-color="#047857" />
+      <stop offset="100%" stop-color="#064e3b" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#rootGrad)" />
+  <g transform="translate(64, 64)" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="192" cy="70" r="28" fill="#FCD34D" />
+    <circle cx="92" cy="150" r="22" fill="#34D399" />
+    <circle cx="292" cy="150" r="22" fill="#34D399" />
+    <circle cx="192" cy="210" r="32" fill="#FFFFFF" />
+    <path d="M192 98 L192 178" stroke="#FFFFFF" stroke-width="14" />
+    <path d="M106 166 L170 196" stroke="#34D399" stroke-width="12" />
+    <path d="M278 166 L214 196" stroke="#34D399" stroke-width="12" />
+    <path d="M192 242 C 192 290, 110 320, 80 370" fill="none" stroke="url(#goldGrad)" stroke-width="16" />
+    <path d="M192 242 C 192 300, 192 340, 192 390" fill="none" stroke="#FFFFFF" stroke-width="18" />
+    <path d="M192 242 C 192 290, 274 320, 304 370" fill="none" stroke="url(#goldGrad)" stroke-width="16" />
+    <circle cx="80" cy="370" r="14" fill="#F59E0B" />
+    <circle cx="192" cy="390" r="18" fill="#FFFFFF" />
+    <circle cx="304" cy="370" r="14" fill="#F59E0B" />
+  </g>
+</svg>

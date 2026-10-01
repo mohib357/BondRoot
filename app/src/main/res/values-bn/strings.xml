@@ -1,0 +1,95 @@
+<resources>
+    <!-- Application Info -->
+    <string name="app_name">BondRoot</string>
+    <string name="tagline">পারিবারিক বংশলতিকা ও আত্মীয়তার সম্পর্ক নির্ণয়</string>
+
+    <!-- Language Toggle -->
+    <string name="lang_switch_bn">বাংলা (BN)</string>
+    <string name="lang_switch_en">English (EN)</string>
+    <string name="switch_language">ভাষা পরিবর্তন (Language)</string>
+
+    <!-- Main Dashboard -->
+    <string name="active_user_header">লগইনকৃত সদস্য (Active User Profile)</string>
+    <string name="master_test_case_badge">★ মাস্টার টেস্ট কেস (PROMPT VERIFICATION)</string>
+    <string name="master_test_case_desc">আরজ উদ্দিন ➔ মোহাম্মদ আলী ➔ ইদ্রিস আলী ➔ মুহিব\nমোহাম্মদ আলীর ভাই ➔ আজিজুল হক ➔ কামাল হোসেন\n\nমুহিব ↔ কামাল হোসেন = দাদার ভাইয়ের ছেলের ছেলে</string>
+    <string name="btn_run_test_case">টেস্ট সম্পর্ক নির্ণয় করুন</string>
+
+    <string name="core_actions_header">মূল ফিচারসমূহ</string>
+    <string name="btn_find_relationship">🔍 সম্পর্ক অনুসন্ধান (Find Relationship)</string>
+    <string name="btn_view_tree">🌳 বংশলতিকা দেখুন (Family Tree)</string>
+    <string name="btn_add_member">➕ পরিবারের নতুন সদস্য যুক্ত করুন</string>
+    <string name="btn_signup_flow">📝 নতুন সদস্য সাইন-আপ</string>
+
+    <string name="database_members_title">ডাটাবেজের সদস্য তালিকা</string>
+    <string name="living_status">জীবিত</string>
+    <string name="deceased_status">প্রয়াত</string>
+    <string name="root_ancestor_label">মূল পূর্বপুরুষ (Root)</string>
+    <string name="father_prefix">পিতা: %1$s</string>
+    <string name="mother_prefix">মাতা: %1$s</string>
+    <string name="unknown">অজানা</string>
+    <string name="view_details">বিস্তারিত</string>
+
+    <!-- Find Relationship Screen -->
+    <string name="title_find_relationship">সম্পর্ক অনুসন্ধান (Kinship Finder)</string>
+    <string name="person_1_label">প্রথম ব্যক্তি (Person 1 - মূল ব্যক্তি)</string>
+    <string name="person_2_label">দ্বিতীয় ব্যক্তি (Person 2 - আত্মীয়)</string>
+    <string name="btn_calculate_relationship">সম্পর্ক নির্ণয় করুন</string>
+    <string name="calculated_relationship_header">নির্ণীত সম্পর্ক (Calculated Kinship)</string>
+    <string name="traversal_path_header">গ্রাফ ট্রাভার্সাল পাথ (Step-by-Step Path):</string>
+    <string name="select_both_persons_toast">অনুগ্রহ করে দুইজন ব্যক্তি নির্বাচন করুন</string>
+    <string name="relationship_not_found">কোনো প্রত্যক্ষ রক্তের সম্পর্ক পাওয়া যায়নি</string>
+
+    <!-- Sign Up Screen -->
+    <string name="title_signup">নতুন একাউন্ট ও বংশলতিকা সাইন-আপ</string>
+    <string name="step_personal_info">১. ব্যক্তিগত তথ্য</string>
+    <string name="hint_name_local">বাংলা নাম (Local Name) *</string>
+    <string name="hint_name_english">ইংরেজি নাম (English Name)</string>
+    <string name="hint_dob">জন্ম সাল (যেমন: 1995)</string>
+    <string name="hint_profession">পেশা</string>
+    <string name="gender_male">পুরুষ</string>
+    <string name="gender_female">নারী</string>
+    <string name="gender_other">অন্যান্য</string>
+
+    <string name="step_father_selection">২. পিতা নির্বাচন (Father Search &amp; Selection)</string>
+    <string name="father_search_desc">পিতার নাম লিখলে সিস্টেম ডুপ্লিকেট এড়াতে সম্ভাব্য ম্যাচ খুঁজে দেবে:</string>
+    <string name="hint_father_name">বাবার নাম লিখুন (যেমন: ইদ্রিস আলী)</string>
+    <string name="btn_search">খুঁজুন</string>
+    <string name="candidate_found_header">ডাটাবেজে সম্ভাব্য পিতা পাওয়া গেছে (Select Match):</string>
+    <string name="btn_father_not_found">তালিকায় নেই / নতুন পিতা যুক্ত করুন</string>
+    <string name="selected_father_prefix">নির্বাচিত পিতা: %1$s</string>
+    <string name="no_father_selected">এখনো নির্বাচন করা হয়নি</string>
+
+    <string name="step_mother_selection">৩. মাতা নির্বাচন (Mother Search &amp; Selection)</string>
+    <string name="mother_search_desc">মাতার নাম লিখলে সিস্টেম ডুপ্লিকেট এড়াতে সম্ভাব্য ম্যাচ খুঁজে দেবে:</string>
+    <string name="hint_mother_name">মাতার নাম লিখুন</string>
+    <string name="candidate_found_mother_header">ডাটাবেজে সম্ভাব্য মাতা পাওয়া গেছে (Select Match):</string>
+    <string name="btn_mother_not_found">তালিকায় নেই / নতুন মাতা যুক্ত করুন</string>
+    <string name="selected_mother_prefix">নির্বাচিত মাতা: %1$s</string>
+    <string name="no_mother_selected">এখনো নির্বাচন করা হয়নি</string>
+
+    <string name="step_account_info">৪. একাউন্ট লগইন তথ্য</string>
+    <string name="hint_email">ইমেইল এড্রেস *</string>
+    <string name="hint_password">পাসওয়ার্ড *</string>
+    <string name="btn_complete_signup">রেজিস্ট্রেশন সম্পন্ন করুন</string>
+
+    <!-- Add Person Screen -->
+    <string name="title_add_person">পরিবারের সদস্য যুক্ত করুন</string>
+    <string name="select_father_header">পিতা নির্বাচন করুন</string>
+    <string name="select_mother_header">মাতা নির্বাচন করুন</string>
+    <string name="none_or_unknown">-- পিতা/মাতা জানা নেই / আদি পূর্বপুরুষ --</string>
+    <string name="btn_save_person">সদস্য সংরক্ষণ করুন</string>
+
+    <!-- Family Tree Screen -->
+    <string name="title_family_tree">পারিবারিক বংশলতিকা</string>
+    <string name="gen_1_title">১ম প্রজন্ম (Root Ancestor - আদি পূর্বপুরুষ)</string>
+    <string name="gen_2_title">২য় প্রজন্ম (দাদা ও দাদার ভাইগণ)</string>
+    <string name="gen_3_title">৩য় প্রজন্ম (পিতা ও চাচাত ভাইগণ)</string>
+    <string name="gen_4_title">৪র্থ প্রজন্ম (মুহিব ও সমসাময়িক প্রজন্ম)</string>
+    <string name="check_rel_with_muhib">🔍 মুহিবের সাথে সম্পর্ক দেখুন</string>
+
+    <!-- Person Profile Screen -->
+    <string name="title_person_profile">সদস্য প্রোফাইল</string>
+    <string name="lineage_header">পারিবারিক যোগসূত্র (Roots &amp; Bonds)</string>
+    <string name="children_prefix">সন্তানাদি (%1$d জন): %2$s</string>
+    <string name="no_children">কোনো সন্তান নথিভুক্ত নেই</string>
+</resources>

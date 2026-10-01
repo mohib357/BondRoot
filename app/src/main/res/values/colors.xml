@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#0F5132</color>
+    <color name="primary_dark">#0A3622</color>
+    <color name="primary_light">#D1E7DD</color>
+    <color name="accent">#198754</color>
+    <color name="gold">#FFC107</color>
+    <color name="background_light">#F8F9FA</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="text_primary">#212529</color>
+    <color name="text_secondary">#6C757D</color>
+    <color name="divider">#DEE2E6</color>
+    <color name="male_color">#0D6EFD</color>
+    <color name="female_color">#D63384</color>
+    <color name="success">#198754</color>
+</resources>

@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="সম্পর্ক অনুসন্ধান (Kinship Finder)"
+            app:titleTextColor="@android:color/white"
+            app:navigationIcon="@android:drawable/ic_menu_revert" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Card: Select Person A -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="1dp"
+                android:layout_marginBottom="12dp"
+                android:backgroundTint="@color/card_background">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="প্রথম ব্যক্তি (Person 1 - মূল ব্যক্তি)"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary" />
+
+                    <Spinner
+                        android:id="@+id/spinnerPersonA"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="6dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Card: Select Person B -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="1dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/card_background">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="দ্বিতীয় ব্যক্তি (Person 2 - আত্মীয়)"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary" />
+
+                    <Spinner
+                        android:id="@+id/spinnerPersonB"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginTop="6dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Button: Calculate -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCalculate"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="সম্পর্ক নির্ণয় করুন (Find Relationship)"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/primary"
+                android:textColor="@android:color/white"
+                app:cornerRadius="12dp"
+                android:layout_marginBottom="20dp" />
+
+            <!-- Result Box -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardResult"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp"
+                android:backgroundTint="#E8F5E9"
+                app:strokeColor="#A5D6A7"
+                app:strokeWidth="1.5dp"
+                android:layout_marginBottom="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="নির্ণীত সম্পর্ক (Calculated Kinship)"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary"
+                        android:textAllCaps="true" />
+
+                    <TextView
+                        android:id="@+id/tvRelationshipTitleBangla"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="দাদার ভাইয়ের ছেলের ছেলে"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary_dark"
+                        android:layout_marginTop="6dp" />
+
+                    <TextView
+                        android:id="@+id/tvRelationshipTitleEnglish"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Son of paternal grandfather's brother's son"
+                        android:textSize="14sp"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginTop="2dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#C8E6C9"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="14dp" />
+
+                    <!-- Kinship Metrics Box -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:background="#F1F8E9"
+                        android:padding="12dp"
+                        android:layout_marginBottom="14dp">
+
+                        <TextView
+                            android:id="@+id/tvGenDiff"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="প্রজন্ম পার্থক্য (Generation Difference): ০ প্রজন্ম"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary_dark" />
+
+                        <TextView
+                            android:id="@+id/tvGraphDistance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="গ্রাফ দূরত্ব (Graph Distance): ৫ ধাপ"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_primary"
+                            android:layout_marginTop="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvCommonAncestor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="কমন পূর্বপুরুষ (Common Ancestor): আরজ উদ্দিন"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginTop="4dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="গ্রাফ ট্রাভার্সাল পাথ (Step-by-Step Kinship Path):"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvPathDetailed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="মুহিব ➔ বাবা (ইদ্রিস আলী) ➔ বাবা (মোহাম্মদ আলী) ➔ ভাই (মোহাম্মদ আলীর ভাই) ➔ ছেলে (আজিজুল হক) ➔ ছেলে (কামাল হোসেন)"
+                        android:textSize="13sp"
+                        android:lineSpacingExtra="4dp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginBottom="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewInTree"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:text="🌳 বংশলতিকায় এই সম্পর্কটি দেখুন (View in Tree)"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:backgroundTint="#2E7D32"
+                        android:textColor="@android:color/white"
+                        app:cornerRadius="10dp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

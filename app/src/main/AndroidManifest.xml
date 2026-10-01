@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.BondRoot">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.SignupActivity"
+            android:exported="false"
+            android:label="নতুন সদস্য রেজিস্ট্রেশন (Sign Up)"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".ui.FindRelationshipActivity"
+            android:exported="false"
+            android:label="সম্পর্ক অনুসন্ধান (Find Relationship)"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".ui.FamilyTreeActivity"
+            android:exported="false"
+            android:label="বংশলতিকা (Family Genealogy Tree)"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".ui.AddPersonActivity"
+            android:exported="false"
+            android:label="পরিবারের সদস্য যুক্ত করুন"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".ui.PersonProfileActivity"
+            android:exported="false"
+            android:label="সদস্য প্রোফাইল"
+            android:parentActivityName=".MainActivity" />
+
+    </application>
+
+</manifest>

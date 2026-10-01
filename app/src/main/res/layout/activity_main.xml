@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="BondRoot"
+            app:titleTextColor="@android:color/white"
+            app:subtitle="পারিবারিক সম্পর্ক ও বংশলতিকা"
+            app:subtitleTextColor="#D1E7DD" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Language Switcher Bar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:id="@+id/tvCurrentLanguageLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🌐 ভাষা / Language: বাংলা"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/primary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnToggleLanguage"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:text="English এ দেখুন"
+                    android:textSize="12sp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    app:cornerRadius="8dp" />
+            </LinearLayout>
+
+            <!-- Active User Profile Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:strokeColor="#B1DFBB"
+                app:strokeWidth="1dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#E8F5E9">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="লগইনকৃত সদস্য (Active User Profile)"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/primary"
+                        android:textAllCaps="true" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="8dp">
+
+                        <TextView
+                            android:id="@+id/tvUserAvatar"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@color/primary"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:text="মু" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvUserName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="মুহিব (Muhib)"
+                                android:textSize="18sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/text_primary" />
+
+                            <TextView
+                                android:id="@+id/tvUserPersonId"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Person ID: P100005 • পিতা: মোঃ ইদ্রিস আলী"
+                                android:textSize="12sp"
+                                android:textColor="@color/text_secondary" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Incomplete Family Tree Guidance Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardIncompleteTree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="14dp"
+                app:cardElevation="2dp"
+                android:backgroundTint="#FFF3E0"
+                app:strokeColor="#FFE0B2"
+                app:strokeWidth="1dp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:id="@+id/tvIncompleteTreeTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⚠️ আপনার পরিবার বৃক্ষ এখনো অসম্পূর্ণ (Family Tree Incomplete)"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#E65100" />
+
+                    <TextView
+                        android:id="@+id/tvIncompleteTreeDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="সঠিক ও বিস্তৃত আত্মীয়তার নেটওয়ার্ক তৈরি করতে আপনার পিতা, মাতা বা দাদা-দাদি যুক্ত করুন:"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="10dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAddParentQuick"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="+ অভিভাবক যুক্ত করুন"
+                            android:textSize="12sp"
+                            android:layout_marginEnd="6dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAddMemberQuick"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="0dp"
+                            android:layout_height="44dp"
+                            android:layout_weight="1"
+                            android:text="+ সদস্য যুক্ত করুন"
+                            android:textSize="12sp"
+                            android:layout_marginStart="6dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Test Lineage Showcase Card (Special Prompt Test Case) -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="#FFF9C4"
+                app:strokeColor="#FFE082"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="★ মাস্টার টেস্ট কেস (Prompt Test Case Verification)"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="#F57F17" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="আরজ উদ্দিন ➔ মোহাম্মদ আলী ➔ ইদ্রিস আলী ➔ মুহিব\nমোহাম্মদ আলীর ভাই ➔ আজিজুল হক ➔ কামাল হোসেন\n\nমুহিব ↔ কামাল হোসেন = দাদার ভাইয়ের ছেলের ছেলে"
+                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="6dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRunTestCase"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="টেস্ট সম্পর্ক নির্ণয় করুন (Run Muhib Test Case)"
+                        android:backgroundTint="#F57F17"
+                        android:textColor="@android:color/white" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Core Action Cards Grid -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="মূল ফিচারসমূহ (Core Actions)"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Find Relationship Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFindRelationship"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="🔍 সম্পর্ক অনুসন্ধান (Find Relationship)"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:backgroundTint="@color/primary"
+                android:textColor="@android:color/white"
+                app:cornerRadius="12dp"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Family Tree View Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewTree"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="🌳 বংশলতিকা দেখুন (Family Genealogy Tree)"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:backgroundTint="#198754"
+                android:textColor="@android:color/white"
+                app:cornerRadius="12dp"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Add Family Member Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddMember"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="➕ পরিবারের নতুন সদস্য যুক্ত করুন"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:backgroundTint="#0D6EFD"
+                android:textColor="@android:color/white"
+                app:cornerRadius="12dp"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Signup / Account Flow Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSignupFlow"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="📝 নতুন সদস্য সাইন-আপ (Signup Simulation)"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:backgroundTint="#6C757D"
+                android:textColor="@android:color/white"
+                app:cornerRadius="12dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- People Count Header -->
+            <TextView
+                android:id="@+id/tvTotalPeopleCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ডাটাবেজের সদস্য তালিকা (Total 7 Persons)"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Recycler for Persons -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvPersons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

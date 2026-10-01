@@ -1,0 +1,6 @@
+{
+  "name": "BondRoot",
+  "description": "Family tree and relationship bond manager to trace your ancestry, roots, and personal connections.",
+  "permissions": [],
+  "capabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
