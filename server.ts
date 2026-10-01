@@ -499,18 +499,6 @@ async function startServer() {
     }
   });
 
-  // ── TEST BANNER ENDPOINT (remove after real-time test confirmed) ──
-  const TEST_DEPLOY_TIME = new Date().toISOString(); // captured at server startup
-  app.get('/api/test/deploy-ping', (_req, res) => {
-    res.json({
-      status: 'LIVE',
-      message: '✅ নতুন version চলছে! Real-time কাজ হচ্ছে।',
-      server_started_at: TEST_DEPLOY_TIME,
-      node_version: process.version,
-      uptime_seconds: Math.floor(process.uptime()),
-    });
-  });
-
   // 1. Health check & PostgreSQL connection status endpoint
   app.get('/api/health', async (req, res) => {
     try {
