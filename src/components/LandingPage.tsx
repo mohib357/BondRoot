@@ -41,22 +41,28 @@ interface LandingPageProps {
 // ── Landing Bottom Nav — Full-width curvy notch active indicator ──
 interface LandingBottomNavProps {
   isEnglish: boolean;
-  onOpenAuth: () => void;
+  activePage: 'home' | 'about' | 'login';
+  setActivePage: (p: 'home' | 'about' | 'login') => void;
   onToggleLang: () => void;
-  onOpenDeveloperAbout?: () => void;
   isDarkMode: boolean;
 }
 
 const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
-  isEnglish, onOpenAuth, onToggleLang, onOpenDeveloperAbout
+  isEnglish, activePage, setActivePage, onToggleLang
 }) => {
-  const [active, setActive] = React.useState<'home' | 'lang' | 'about' | 'login'>('home');
+  // Sync nav highlight with parent activePage
+  const [active, setActive] = React.useState<'home' | 'lang' | 'about' | 'login'>(activePage);
+  React.useEffect(() => {
+    if (activePage === 'home' || activePage === 'about' || activePage === 'login') {
+      setActive(activePage);
+    }
+  }, [activePage]);
 
   const ITEMS = [
     { id: 'home' as const,  label: isEnglish ? 'Home'    : 'হোম',     onClick: () => { setActive('home');  window.scrollTo({top:0,behavior:'smooth'}); } },
     { id: 'lang' as const,  label: isEnglish ? 'বাংলা'  : 'English',     onClick: () => { setActive('lang');  onToggleLang(); } },
-    { id: 'about' as const, label: isEnglish ? 'About'   : 'এবাউট',   onClick: () => { setActive('about'); onOpenDeveloperAbout?.(); } },
-    { id: 'login' as const, label: isEnglish ? 'Login'   : 'লগইন',    onClick: () => { setActive('login'); onOpenAuth(); } },
+    { id: 'about' as const, label: isEnglish ? 'About'   : 'এবাউট',   onClick: () => { setActive('about'); setActivePage('about'); } },
+    { id: 'login' as const, label: isEnglish ? 'Login'   : 'লগইন',    onClick: () => { setActive('login'); setActivePage('login'); } },
   ];
 
   const ICONS: Record<string, React.ReactNode> = {
@@ -71,9 +77,9 @@ const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
   // Build SVG notch path dynamically
   function buildNotchPath(W: number, H: number, R: number, idx: number, total: number): string {
     const cx = (idx + 0.5) * (W / total);
-    const nW = 56;
-    const nD = 20;
-    const nR = 14;
+    const nW = 72;
+    const nD = 30;
+    const nR = 20;
     const nx1 = cx - nW / 2;
     const nx2 = cx + nW / 2;
     return [
@@ -168,6 +174,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 }) => {
   const isEnglish = lang === 'en';
 
+  // Page-switch state — controls which sub-page is visible
+  const [activePage, setActivePage] = React.useState<'home' | 'about' | 'login'>('home');
+
   const scrollToDemo = () => {
     const el = document.getElementById('demo-tree-preview');
     if (el) {
@@ -179,8 +188,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
 
   return (
-    <div className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a] text-slate-900 dark:text-zinc-100 flex flex-col font-sans transition-colors relative overflow-x-hidden selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a] text-slate-900 dark:text-zinc-100 flex flex-col font-sans relative overflow-x-hidden selection:bg-emerald-100 selection:text-emerald-900">
 
+
+      {/* ── Page content with smooth transitions ── */}
+      {/* Home page */}
+      <div
+        style={{
+          opacity: activePage === 'home' ? 1 : 0,
+          pointerEvents: activePage === 'home' ? 'auto' : 'none',
+          position: activePage === 'home' ? 'relative' : 'absolute',
+          inset: 0,
+          transition: 'opacity 0.35s ease',
+          width: '100%',
+        }}
+      >
 
       {/* Background Ambient Glow */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-gradient-to-b from-emerald-500/10 via-teal-500/5 to-transparent blur-3xl pointer-events-none" />
@@ -342,9 +364,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
             <button
               onClick={onExploreDemo}
-              className="text-xs font-bold text-emerald-700 dark:text-emerald-400 hover:underline flex items-center gap-1 cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-extrabold text-white bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 shadow-md shadow-emerald-500/30 transition-all cursor-pointer"
             >
-              <span>{isEnglish ? 'Open Interactive Mode' : 'ইন্টারেক্টিভ ডেমো খুলুন'}</span>
+              <span>{isEnglish ? 'Open Interactive Demo' : 'ইন্টারেক্টিভ ডেমো খুলুন'}</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </button>
           </div>
@@ -689,12 +711,129 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
+      </div>{/* end home page */}
+
+      {/* ── About Page ── */}
+      <div
+        style={{
+          opacity: activePage === 'about' ? 1 : 0,
+          pointerEvents: activePage === 'about' ? 'auto' : 'none',
+          position: activePage === 'about' ? 'relative' : 'fixed',
+          top: 0, left: 0, right: 0, bottom: 0,
+          transition: 'opacity 0.35s ease',
+          zIndex: activePage === 'about' ? 10 : -1,
+        }}
+        className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a] flex flex-col"
+      >
+        {/* Sticky Header */}
+        <header className="sticky top-0 z-40 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800">
+          <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white">
+              <Network className="w-5 h-5" />
+            </div>
+            <span className="text-lg font-black bg-gradient-to-r from-amber-500 via-emerald-600 to-teal-600 bg-clip-text text-transparent">BondRoot</span>
+            <div className="ml-auto">
+              <button onClick={onToggleDarkMode} className="p-2 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-zinc-800/80 transition-all active:scale-90 cursor-pointer neu-button">
+                {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
+              </button>
+            </div>
+          </div>
+        </header>
+        <div className="flex-1 p-6 pb-28 max-w-xl mx-auto w-full">
+          <div className="section-card p-6 space-y-5 mt-6">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl icon-wrap-emerald flex items-center justify-center text-2xl">👨‍💻</div>
+              <div>
+                <h2 className="text-lg font-black text-slate-900 dark:text-white">{isEnglish ? 'Developer Info' : 'ডেভেলপার পরিচিতি'}</h2>
+                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Muhibbul Islam</p>
+              </div>
+            </div>
+            <p className="text-sm text-slate-600 dark:text-zinc-300 leading-relaxed">
+              {isEnglish
+                ? 'BondRoot is built with ❤️ by Muhibbul Islam to help Bengali families preserve their roots and discover kinship bonds across generations.'
+                : 'BondRoot তৈরি করেছেন মুহিব্বুল ইসলাম — বাঙালি পরিবারের শিকড় সংরক্ষণ ও বংশলতিকা ডিজিটাল করার অঙ্গীকার নিয়ে।'}
+            </p>
+            <div className="space-y-3 pt-2">
+              <p className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400">{isEnglish ? 'Get in touch' : 'যোগাযোগ করুন'}</p>
+              <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 rounded-2xl bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 hover:scale-[1.02] transition-all active:scale-95 cursor-pointer">
+                <span className="text-2xl">💬</span>
+                <div>
+                  <p className="text-sm font-bold text-green-800 dark:text-green-300">WhatsApp</p>
+                  <p className="text-xs text-green-600 dark:text-green-400">+880 1700-000000</p>
+                </div>
+              </a>
+              <a href="mailto:muhibbul524@gmail.com"
+                className="flex items-center gap-3 p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 hover:scale-[1.02] transition-all active:scale-95 cursor-pointer">
+                <span className="text-2xl">📧</span>
+                <div>
+                  <p className="text-sm font-bold text-blue-800 dark:text-blue-300">Email</p>
+                  <p className="text-xs text-blue-600 dark:text-blue-400">muhibbul524@gmail.com</p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Login Page ── */}
+      <div
+        style={{
+          opacity: activePage === 'login' ? 1 : 0,
+          pointerEvents: activePage === 'login' ? 'auto' : 'none',
+          position: activePage === 'login' ? 'relative' : 'fixed',
+          top: 0, left: 0, right: 0, bottom: 0,
+          transition: 'opacity 0.35s ease',
+          zIndex: activePage === 'login' ? 10 : -1,
+        }}
+        className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a] flex flex-col"
+      >
+        {/* Sticky Header */}
+        <header className="sticky top-0 z-40 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800">
+          <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white">
+              <Network className="w-5 h-5" />
+            </div>
+            <span className="text-lg font-black bg-gradient-to-r from-amber-500 via-emerald-600 to-teal-600 bg-clip-text text-transparent">BondRoot</span>
+            <div className="ml-auto">
+              <button onClick={onToggleDarkMode} className="p-2 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-zinc-800/80 transition-all active:scale-90 cursor-pointer neu-button">
+                {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
+              </button>
+            </div>
+          </div>
+        </header>
+        <div className="flex-1 flex flex-col items-center justify-center p-6 pb-28">
+          <div className="section-card p-8 w-full max-w-sm space-y-5">
+            <div className="text-center space-y-2">
+              <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white mx-auto shadow-lg shadow-emerald-500/30">
+                <Network className="w-8 h-8" />
+              </div>
+              <h2 className="text-xl font-black text-slate-900 dark:text-white">{isEnglish ? 'Welcome Back' : 'স্বাগতম'}</h2>
+              <p className="text-xs text-slate-500 dark:text-zinc-400">{isEnglish ? 'Sign in to your BondRoot account' : 'আপনার BondRoot অ্যাকাউন্টে প্রবেশ করুন'}</p>
+            </div>
+            <button
+              onClick={() => { onOpenAuth(); }}
+              className="w-full btn-glossy-primary text-sm"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>{isEnglish ? 'Sign In / Sign Up' : 'লগইন / নিবন্ধন'}</span>
+            </button>
+            <button
+              onClick={() => setActivePage('home')}
+              className="w-full btn-glossy-secondary text-sm"
+            >
+              <span>{isEnglish ? '← Back to Home' : '← হোমে ফিরুন'}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* ── Landing Bottom Nav (mobile only, 4 items with active state) ── */}
       <LandingBottomNav
         isEnglish={isEnglish}
-        onOpenAuth={onOpenAuth}
+        activePage={activePage}
+        setActivePage={setActivePage}
         onToggleLang={onToggleLang}
-        onOpenDeveloperAbout={onOpenDeveloperAbout}
         isDarkMode={isDarkMode}
       />
 
