@@ -93,7 +93,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-800 to-teal-700 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent">
                   BondRoot
                 </span>
-                <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
+                <span className="hidden sm:inline-block text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
                   {isEnglish ? 'Genealogy' : 'বংশলতিকা'}
                 </span>
               </div>
@@ -143,7 +143,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Action buttons */}
-          <div className="flex items-center space-x-1 sm:space-x-2">
+          <div className="flex items-center space-x-1.5 sm:space-x-2">
             {/* PWA In-App Install Prompt */}
             <div className="hidden sm:block">
               <PWAInstallButton lang={lang} />
@@ -162,7 +162,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={onToggleLang}
               title={isEnglish ? 'Switch to Bangla' : 'Switch to English'}
-              className="inline-flex items-center space-x-1 px-2 py-1 sm:px-2.5 sm:py-1.5 text-xs font-bold rounded-xl border border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 transition shadow-2xs cursor-pointer"
+              className="hidden sm:inline-flex items-center space-x-1 px-2.5 py-1.5 text-xs font-bold rounded-xl border border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 transition shadow-2xs cursor-pointer"
             >
               <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
               <span>{isEnglish ? 'বাংলা' : 'EN'}</span>
@@ -219,10 +219,10 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={onOpenSuperAdmin}
                 title="Developer Super Admin Panel"
-                className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-black text-amber-900 dark:text-amber-200 bg-gradient-to-r from-amber-300 via-amber-200 to-amber-300 dark:from-amber-900/80 dark:to-amber-950/80 border border-amber-400 dark:border-amber-700/80 rounded-xl shadow-md shadow-amber-500/15 hover:scale-105 active:scale-95 transition cursor-pointer"
+                className="hidden sm:inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-black text-amber-900 dark:text-amber-200 bg-gradient-to-r from-amber-300 via-amber-200 to-amber-300 dark:from-amber-900/80 dark:to-amber-950/80 border border-amber-400 dark:border-amber-700/80 rounded-xl shadow-md shadow-amber-500/15 hover:scale-105 active:scale-95 transition cursor-pointer"
               >
                 <Crown className="w-3.5 h-3.5 text-amber-700 dark:text-amber-400" />
-                <span className="hidden sm:inline">Super Admin</span>
+                <span>Super Admin</span>
               </button>
             )}
 
