@@ -105,7 +105,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Login Button */}
             <button
               onClick={onOpenAuth}
-              className="inline-flex items-center space-x-1.5 px-4 py-2 text-xs sm:text-sm font-extrabold text-white bg-emerald-700 hover:bg-emerald-800 dark:bg-emerald-600 dark:hover:bg-emerald-500 active:scale-95 rounded-xl shadow-md shadow-emerald-700/20 dark:shadow-emerald-900/40 transition cursor-pointer"
+              className="btn-glossy-primary !py-2 !px-4 text-xs sm:text-sm !rounded-xl"
             >
               <LogIn className="w-4 h-4" />
               <span>{isEnglish ? 'Login' : 'লগইন'}</span>
@@ -120,9 +120,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <div className="p-6 sm:p-12 rounded-3xl sm:rounded-[2.5rem] bg-lineage-pattern border border-emerald-300/60 dark:border-emerald-800/50 shadow-[0_8px_32px_rgba(16,185,129,0.12)] dark:shadow-[0_8px_40px_rgba(0,0,0,0.6)] relative overflow-hidden text-center flex flex-col items-center">
 
           {/* Ambient Glowing Background Orbs */}
-          <div className="absolute -top-20 -left-20 w-80 h-80 bg-emerald-400/10 dark:bg-emerald-400/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-amber-400/10 dark:bg-amber-400/12 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-teal-400/05 dark:bg-teal-400/08 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -left-24 w-96 h-96 bg-emerald-300/30 dark:bg-emerald-500/20 rounded-full blur-3xl pointer-events-none orb-float-1" />
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-300/25 dark:bg-amber-500/18 rounded-full blur-3xl pointer-events-none orb-float-2" />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-72 h-72 bg-teal-300/18 dark:bg-teal-400/12 rounded-full blur-3xl pointer-events-none orb-float-3" />
+          <div className="absolute top-4 right-6 w-20 h-20 border-2 border-dashed border-emerald-300/35 dark:border-emerald-700/40 rounded-full spin-ring pointer-events-none hidden sm:block" />
+          <div className="absolute bottom-6 left-8 w-14 h-14 border border-dashed border-amber-300/30 dark:border-amber-700/35 rounded-full pointer-events-none hidden sm:block" style={{animation:'slowRotate 14s linear infinite reverse'}} />
 
           {/* Genealogical Branch SVG Overlay — more intricate */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl sm:rounded-[2.5rem]">
@@ -193,7 +195,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
 
             {/* Powerful Headline */}
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 dark:text-white max-w-3xl leading-snug sm:leading-tight">
+            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black tracking-tight max-w-3xl leading-snug sm:leading-tight text-shimmer">
               {isEnglish ? (
                 <>Your Family Story, Relationships & Lineage — All in One Place</>
               ) : (
@@ -211,21 +213,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Hero CTAs */}
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
               {/* Primary CTA */}
-              <button
-                onClick={onOpenAuth}
-                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-7 py-3.5 rounded-2xl text-white font-black text-sm active:scale-98 transition cursor-pointer neu-btn-primary shadow-lg shadow-emerald-600/20"
-              >
+              <button onClick={onOpenAuth} className="w-full sm:w-auto btn-glossy-primary text-sm">
                 <span>{isEnglish ? '🌳 Get Started — Free' : '🌳 শুরু করুন — বিনামূল্যে'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
 
               {/* Secondary CTA */}
-              <button
-                onClick={scrollToDemo}
-                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-7 py-3.5 rounded-2xl active:scale-98 transition cursor-pointer neu-btn-secondary"
-              >
-                <Play className="w-4 h-4 text-emerald-600 dark:text-emerald-400 fill-emerald-600 dark:fill-emerald-400" />
-                <span>{isEnglish ? 'View Demo Family' : '▶ ডেমো পরিবার দেখুন'}</span>
+              <button onClick={scrollToDemo} className="w-full sm:w-auto btn-glossy-secondary text-sm">
+                <Play className="w-4 h-4 fill-emerald-600 dark:fill-emerald-400" />
+                <span>{isEnglish ? 'View Demo Family' : 'ডেমো পরিবার দেখুন'}</span>
               </button>
             </div>
 
@@ -235,8 +231,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* 3. Family Tree Visual Preview */}
-      <section id="demo-tree-preview" className="py-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
-        <div className="p-6 sm:p-8 rounded-3xl border bg-[#f5fdf8] dark:bg-[#0c1a12] border-emerald-200/60 dark:border-emerald-900/50 shadow-[6px_6px_24px_rgba(140,175,160,0.22),-6px_-6px_20px_rgba(255,255,255,0.90)] dark:shadow-[6px_6px_24px_rgba(0,0,0,0.55),-3px_-3px_10px_rgba(52,211,153,0.04)] relative overflow-hidden" >
+      <section id="demo-tree-preview" className="py-8 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full bg-mesh-mint">
+        <div className="p-6 sm:p-8 section-card relative overflow-hidden">
 
           {/* Section Badge */}
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800 pb-4 mb-6">
@@ -336,7 +332,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* 4. Core Features Grid */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full bg-features-section">
 
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-10">
@@ -359,7 +355,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-emerald-500/60 transition duration-150 flex flex-col justify-between neu-button group cursor-pointer"
           >
             <div>
-              <div className="w-11 h-11 rounded-2xl bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-200 dark:border-emerald-800/80 text-emerald-700 dark:text-emerald-300 flex items-center justify-center mb-3">
+              <div className="w-11 h-11 rounded-2xl icon-wrap-emerald flex items-center justify-center mb-3 text-emerald-700 dark:text-emerald-300">
                 <GitFork className="w-5 h-5 stroke-[2.2]" />
               </div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -383,7 +379,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-purple-500/60 transition duration-150 flex flex-col justify-between neu-button group cursor-pointer"
           >
             <div>
-              <div className="w-11 h-11 rounded-2xl bg-purple-100 dark:bg-purple-950/80 border border-purple-200 dark:border-purple-800/80 text-purple-700 dark:text-purple-300 flex items-center justify-center mb-3">
+              <div className="w-11 h-11 rounded-2xl icon-wrap-purple flex items-center justify-center mb-3 text-purple-700 dark:text-purple-300">
                 <Compass className="w-5 h-5 stroke-[2.2]" />
               </div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -407,7 +403,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-teal-500/60 transition duration-150 flex flex-col justify-between neu-button group cursor-pointer"
           >
             <div>
-              <div className="w-11 h-11 rounded-2xl bg-teal-100 dark:bg-teal-950/80 border border-teal-200 dark:border-teal-800/80 text-teal-700 dark:text-teal-300 flex items-center justify-center mb-3">
+              <div className="w-11 h-11 rounded-2xl icon-wrap-teal flex items-center justify-center mb-3 text-teal-700 dark:text-teal-300">
                 <MessageSquare className="w-5 h-5 stroke-[2.2]" />
               </div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -431,7 +427,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             className="p-5 rounded-3xl bg-white/90 dark:bg-zinc-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 shadow-lg hover:border-amber-500/60 transition duration-150 flex flex-col justify-between neu-button group cursor-pointer"
           >
             <div>
-              <div className="w-11 h-11 rounded-2xl bg-amber-100 dark:bg-amber-950/80 border border-amber-200 dark:border-amber-800/80 text-amber-700 dark:text-amber-300 flex items-center justify-center mb-3">
+              <div className="w-11 h-11 rounded-2xl icon-wrap-amber flex items-center justify-center mb-3 text-amber-700 dark:text-amber-300">
                 <Shield className="w-5 h-5 stroke-[2.2]" />
               </div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -455,7 +451,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       {/* 5. Relationship Finder Value Highlight Section */}
       <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
-        <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-emerald-900 via-teal-900 to-emerald-950 text-white shadow-2xl relative overflow-hidden neu-panel">
+        <div className="p-6 sm:p-8 rounded-3xl text-white relative overflow-hidden" style={{background:'linear-gradient(135deg,#064e3b 0%,#065f46 35%,#0f766e 65%,#047857 100%)',boxShadow:'0 20px 60px rgba(5,150,105,0.40),0 8px 20px rgba(0,0,0,0.30)',border:'1px solid rgba(52,211,153,0.20)'}}>
+          <div className="absolute inset-0 pointer-events-none" style={{backgroundImage:'radial-gradient(circle, rgba(110,231,183,0.18) 1px, transparent 1px)',backgroundSize:'20px 20px'}} />
+          <div className="absolute -top-20 -right-20 w-64 h-64 bg-teal-400/20 rounded-full blur-3xl pointer-events-none orb-float-1" />
+          <div className="absolute -bottom-16 -left-16 w-48 h-48 bg-emerald-300/15 rounded-full blur-3xl pointer-events-none orb-float-2" />
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="space-y-2 text-center md:text-left">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-amber-300">
@@ -475,7 +474,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
             <button
               onClick={onOpenAuth}
-              className="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 active:scale-95 active:shadow-inner text-amber-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-400/30 shrink-0 transition-all duration-150 cursor-pointer select-none"
+              className="btn-glossy-amber text-xs sm:text-sm shrink-0"
             >
               {isEnglish ? 'Try Kinship Engine' : 'সম্পর্ক ট্রাই করুন'}
             </button>
@@ -484,7 +483,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* 6. How It Works Section (4 Concise Connected Steps) */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
+      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full bg-steps-section">
         <div className="text-center max-w-2xl mx-auto mb-10">
           <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white">
             {isEnglish ? 'How BondRoot Works' : 'কীভাবে কাজ করে'}
@@ -498,7 +497,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Step 1 */}
           <div className="p-5 rounded-2xl neu-card text-center sm:text-left transition">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-black text-lg flex items-center justify-center font-mono mb-3 border border-emerald-300 dark:border-emerald-700">
+            <div className="w-10 h-10 rounded-xl icon-wrap-emerald text-emerald-800 dark:text-emerald-300 font-black text-sm flex items-center justify-center font-mono mb-3">
               01
             </div>
             <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
@@ -511,7 +510,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Step 2 */}
           <div className="p-5 rounded-2xl neu-card text-center sm:text-left transition">
-            <div className="w-10 h-10 rounded-xl bg-teal-100 dark:bg-teal-950 text-teal-800 dark:text-teal-300 font-black text-lg flex items-center justify-center font-mono mb-3 border border-teal-300 dark:border-teal-700">
+            <div className="w-10 h-10 rounded-xl icon-wrap-teal text-teal-800 dark:text-teal-300 font-black text-sm flex items-center justify-center font-mono mb-3">
               02
             </div>
             <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
@@ -524,7 +523,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Step 3 */}
           <div className="p-5 rounded-2xl neu-card text-center sm:text-left transition">
-            <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300 font-black text-lg flex items-center justify-center font-mono mb-3 border border-purple-300 dark:border-purple-700">
+            <div className="w-10 h-10 rounded-xl icon-wrap-purple text-purple-800 dark:text-purple-300 font-black text-sm flex items-center justify-center font-mono mb-3">
               03
             </div>
             <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
@@ -537,7 +536,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Step 4 */}
           <div className="p-5 rounded-2xl neu-card text-center sm:text-left transition">
-            <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 font-black text-lg flex items-center justify-center font-mono mb-3 border border-amber-300 dark:border-amber-700">
+            <div className="w-10 h-10 rounded-xl icon-wrap-amber text-amber-800 dark:text-amber-300 font-black text-sm flex items-center justify-center font-mono mb-3">
               04
             </div>
             <h4 className="font-extrabold text-sm text-slate-900 dark:text-white">
@@ -553,7 +552,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       {/* 7. Why BondRoot (Emotional & Professional) */}
       <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
-        <div className="p-8 rounded-3xl bg-slate-900 text-white border border-slate-800 neu-panel">
+        <div className="p-8 rounded-3xl text-white relative overflow-hidden" style={{background:'linear-gradient(145deg, #0f172a 0%, #111827 40%, #0c1a16 100%)', border:'1px solid rgba(52,211,153,0.12)', boxShadow:'0 20px 50px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.04)'}}>
+          <div className="absolute inset-0 pointer-events-none opacity-10" style={{backgroundImage:'radial-gradient(circle, rgba(52,211,153,0.5) 1px, transparent 1px)', backgroundSize:'24px 24px'}} />
+          <div className="absolute -top-16 right-0 w-48 h-48 bg-emerald-800/20 rounded-full blur-3xl pointer-events-none orb-float-3" />
           <div className="text-center max-w-xl mx-auto mb-8">
             <h2 className="text-xl sm:text-2xl font-black">
               {isEnglish ? 'Why Choose BondRoot?' : 'কেন BondRoot ব্যবহার করবেন?'}
