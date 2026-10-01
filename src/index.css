@@ -53,109 +53,94 @@
 
 /* ═══════════════════════════════════════════════════════════
    Hero Section — Rich Genealogy Texture Pattern
-   Layers (bottom → top):
-     1. Warm ivory/cream base gradient
-     2. Fine diagonal cross-hatch lines (structural feel)
-     3. Dot-grid overlay (genealogy node rhythm)
-     4. Radial vignette edge fade
    ═══════════════════════════════════════════════════════════ */
 .bg-lineage-pattern {
-  background-color: #fafdf9;
+  background-color: #f0fdf6;
   background-image:
-    /* Radial vignette — soft edge darkening */
     radial-gradient(ellipse 90% 85% at 50% 50%,
-      transparent 55%,
-      rgba(16, 185, 129, 0.06) 100%
+      transparent 50%,
+      rgba(16, 185, 129, 0.10) 100%
     ),
-    /* Fine cross-hatch diagonal lines — light warm */
     repeating-linear-gradient(
       45deg,
       transparent,
-      transparent 18px,
-      rgba(16, 185, 129, 0.055) 18px,
-      rgba(16, 185, 129, 0.055) 19px
+      transparent 16px,
+      rgba(16, 185, 129, 0.13) 16px,
+      rgba(16, 185, 129, 0.13) 17.5px
     ),
     repeating-linear-gradient(
       -45deg,
       transparent,
-      transparent 18px,
-      rgba(245, 158, 11, 0.04) 18px,
-      rgba(245, 158, 11, 0.04) 19px
+      transparent 16px,
+      rgba(245, 158, 11, 0.09) 16px,
+      rgba(245, 158, 11, 0.09) 17.5px
     ),
-    /* Primary dot grid — emerald rhythm */
-    radial-gradient(circle, rgba(16, 185, 129, 0.18) 1px, transparent 1px),
-    /* Secondary offset dot grid — amber accent */
-    radial-gradient(circle, rgba(245, 158, 11, 0.10) 1px, transparent 1px),
-    /* Base warm gradient */
+    radial-gradient(circle, rgba(16, 185, 129, 0.35) 1.5px, transparent 1.5px),
+    radial-gradient(circle, rgba(245, 158, 11, 0.22) 1.5px, transparent 1.5px),
     linear-gradient(
       160deg,
-      rgba(236, 253, 245, 1) 0%,
-      rgba(255, 255, 255, 1) 45%,
-      rgba(255, 251, 235, 0.85) 100%
+      rgba(220, 252, 231, 1) 0%,
+      rgba(250, 253, 250, 1) 50%,
+      rgba(254, 252, 232, 0.9) 100%
     );
   background-size:
     100% 100%,
-    38px 38px,
-    38px 38px,
-    22px 22px,
-    22px 22px,
+    34px 34px,
+    34px 34px,
+    20px 20px,
+    20px 20px,
     100% 100%;
   background-position:
     center,
     0 0,
     0 0,
     0 0,
-    11px 11px,
+    10px 10px,
     0 0;
 }
 
 .dark .bg-lineage-pattern {
-  background-color: #0b1120;
+  background-color: #071410;
   background-image:
-    /* Radial vignette — dark edge glow */
     radial-gradient(ellipse 90% 85% at 50% 50%,
-      transparent 50%,
-      rgba(16, 185, 129, 0.08) 100%
+      transparent 45%,
+      rgba(16, 185, 129, 0.12) 100%
     ),
-    /* Fine cross-hatch — dark mode, more visible */
     repeating-linear-gradient(
       45deg,
       transparent,
-      transparent 18px,
-      rgba(52, 211, 153, 0.07) 18px,
-      rgba(52, 211, 153, 0.07) 19px
+      transparent 16px,
+      rgba(52, 211, 153, 0.14) 16px,
+      rgba(52, 211, 153, 0.14) 17.5px
     ),
     repeating-linear-gradient(
       -45deg,
       transparent,
-      transparent 18px,
-      rgba(251, 191, 36, 0.05) 18px,
-      rgba(251, 191, 36, 0.05) 19px
+      transparent 16px,
+      rgba(251, 191, 36, 0.10) 16px,
+      rgba(251, 191, 36, 0.10) 17.5px
     ),
-    /* Primary dot grid — brighter for dark bg */
-    radial-gradient(circle, rgba(52, 211, 153, 0.22) 1px, transparent 1px),
-    /* Secondary dot grid — amber */
-    radial-gradient(circle, rgba(251, 191, 36, 0.13) 1px, transparent 1px),
-    /* Base dark gradient */
+    radial-gradient(circle, rgba(52, 211, 153, 0.40) 1.5px, transparent 1.5px),
+    radial-gradient(circle, rgba(251, 191, 36, 0.25) 1.5px, transparent 1.5px),
     linear-gradient(
       160deg,
-      rgba(6, 24, 18, 1) 0%,
-      rgba(11, 17, 32, 1) 45%,
-      rgba(15, 12, 5, 0.95) 100%
+      rgba(5, 20, 13, 1) 0%,
+      rgba(8, 14, 26, 1) 50%,
+      rgba(12, 9, 2, 1) 100%
     );
   background-size:
     100% 100%,
-    38px 38px,
-    38px 38px,
-    22px 22px,
-    22px 22px,
+    34px 34px,
+    34px 34px,
+    20px 20px,
+    20px 20px,
     100% 100%;
   background-position:
     center,
     0 0,
     0 0,
     0 0,
-    11px 11px,
+    10px 10px,
     0 0;
 }
 
