@@ -38,6 +38,106 @@ interface LandingPageProps {
   onToggleDarkMode: () => void;
 }
 
+// ── Standalone Bottom Nav Component ──
+interface LandingBottomNavProps {
+  isEnglish: boolean;
+  onOpenAuth: () => void;
+  onToggleLang: () => void;
+  onOpenDeveloperAbout?: () => void;
+  isDarkMode: boolean;
+}
+
+const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
+  isEnglish, onOpenAuth, onToggleLang, onOpenDeveloperAbout
+}) => {
+  const [active, setActive] = React.useState<'home' | 'settings' | 'about' | 'login'>('home');
+
+  const navItems = [
+    {
+      id: 'home' as const,
+      label: isEnglish ? 'Home' : 'হোম',
+      icon: (
+        <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      ),
+      onClick: () => { setActive('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    },
+    {
+      id: 'settings' as const,
+      label: isEnglish ? 'Settings' : 'সেটিং',
+      icon: (
+        <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      ),
+      onClick: () => { setActive('settings'); onToggleLang(); }
+    },
+    {
+      id: 'about' as const,
+      label: isEnglish ? 'About' : 'এবাউট',
+      icon: (
+        <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+      ),
+      onClick: () => { setActive('about'); onOpenDeveloperAbout?.(); }
+    },
+    {
+      id: 'login' as const,
+      label: isEnglish ? 'Login' : 'লগইন',
+      icon: (
+        <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      ),
+      onClick: () => { setActive('login'); onOpenAuth(); }
+    },
+  ];
+
+  return (
+    <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 px-3 pb-3">
+      <div className="mx-auto max-w-xs rounded-[32px] bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-slate-200/70 dark:border-zinc-700/50 shadow-[0_-2px_24px_rgba(16,185,129,0.12),0_8px_32px_rgba(0,0,0,0.14),6px_6px_16px_rgba(140,170,150,0.18),-6px_-6px_16px_rgba(255,255,255,0.80)] flex items-end justify-around px-3 py-2 gap-0">
+        {navItems.map((item) => {
+          const isActive = active === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={item.onClick}
+              className="flex flex-col items-center gap-0.5 transition-all duration-200 active:scale-90 cursor-pointer select-none"
+              style={{ minWidth: 56 }}
+            >
+              {isActive ? (
+                // Active — elevated glossy pill
+                <div className="-mt-6 flex flex-col items-center gap-1">
+                  <div
+                    className="w-14 h-14 rounded-full flex items-center justify-center shadow-[0_8px_20px_rgba(5,150,105,0.50),0_2px_6px_rgba(5,150,105,0.30),inset_0_1px_0_rgba(255,255,255,0.35)] border-2 border-white/30"
+                    style={{background:'linear-gradient(160deg,#34d399 0%,#059669 50%,#047857 100%)'}}
+                  >
+                    <span className="text-white">{item.icon}</span>
+                  </div>
+                  <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400">{item.label}</span>
+                </div>
+              ) : (
+                // Inactive — flat subtle
+                <div className="flex flex-col items-center gap-0.5 py-2 px-2 rounded-2xl">
+                  <span className="text-slate-400 dark:text-zinc-500">{item.icon}</span>
+                  <span className="text-[9px] font-semibold text-slate-400 dark:text-zinc-500">{item.label}</span>
+                </div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </nav>
+  );
+};
+
 export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenAuth,
   onExploreDemo,
@@ -82,33 +182,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </span>
           </div>
 
-          {/* Right Header Actions */}
-          <div className="flex items-center space-x-2">
-            {/* Dark Mode Toggle */}
+          {/* Header Right — only dark mode toggle */}
+          <div className="flex items-center">
             <button
               onClick={onToggleDarkMode}
               title={isDarkMode ? 'Switch to Light' : 'Switch to Dark'}
-              className="p-2 text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 rounded-xl border border-slate-200 dark:border-zinc-700 transition cursor-pointer neu-button"
+              className="p-2.5 rounded-2xl border border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-zinc-800/80 text-slate-600 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-700 transition-all active:scale-90 cursor-pointer neu-button"
             >
-              {isDarkMode ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-slate-700" />}
-            </button>
-
-            {/* Language Switcher */}
-            <button
-              onClick={onToggleLang}
-              className="inline-flex items-center space-x-1.5 px-3 py-1.5 text-xs font-bold rounded-xl border border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-100 transition shadow-2xs cursor-pointer neu-button"
-            >
-              <Globe className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-              <span>{isEnglish ? 'বাংলা' : 'English'}</span>
-            </button>
-
-            {/* Login — hidden on mobile (moved to bottom nav), visible on sm+ */}
-            <button
-              onClick={onOpenAuth}
-              className="hidden sm:inline-flex btn-glossy-primary !py-2 !px-4 text-xs !rounded-xl"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>{isEnglish ? 'Login' : 'লগইন'}</span>
+              {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
             </button>
           </div>
 
@@ -591,58 +672,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* ── Landing Bottom Nav (mobile only) ── */}
-      <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-3 pt-1 pointer-events-none">
-        <div className="pointer-events-auto mx-auto max-w-sm rounded-[28px] bg-white/90 dark:bg-zinc-900/92 backdrop-blur-xl border border-slate-200/80 dark:border-zinc-700/60 shadow-[0_-4px_30px_rgba(16,185,129,0.14),0_8px_24px_rgba(0,0,0,0.12)] flex items-center justify-around px-2 py-2 gap-1 relative">
-
-          {/* Home */}
-          <button onClick={() => window.scrollTo({top:0,behavior:'smooth'})} className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-90 cursor-pointer">
-            <div className="w-5 h-5 flex items-center justify-center">
-              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-            </div>
-            <span className="text-[9px] font-bold">{isEnglish ? 'Home' : 'হোম'}</span>
-          </button>
-
-          {/* Tree / Demo */}
-          <button onClick={scrollToDemo} className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl text-slate-500 dark:text-zinc-400 hover:text-teal-600 dark:hover:text-teal-400 transition-all active:scale-90 cursor-pointer">
-            <div className="w-5 h-5 flex items-center justify-center">
-              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </div>
-            <span className="text-[9px] font-bold">{isEnglish ? 'Tree' : 'ট্রি'}</span>
-          </button>
-
-          {/* CENTER LOGIN — elevated pill button */}
-          <button
-            onClick={onOpenAuth}
-            className="relative -mt-5 flex flex-col items-center gap-0.5 cursor-pointer active:scale-90 transition-all"
-          >
-            <div className="w-14 h-14 rounded-full btn-glossy-primary flex items-center justify-center shadow-[0_8px_24px_rgba(5,150,105,0.50)] border-2 border-white/40">
-              <LogIn className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-[9px] font-black text-emerald-600 dark:text-emerald-400 mt-0.5">{isEnglish ? 'Login' : 'লগইন'}</span>
-          </button>
-
-          {/* AI Features */}
-          <button onClick={() => onOpenFeatureSpotlight?.('kinship')} className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl text-slate-500 dark:text-zinc-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all active:scale-90 cursor-pointer">
-            <div className="w-5 h-5 flex items-center justify-center">
-              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            </div>
-            <span className="text-[9px] font-bold">{isEnglish ? 'Kinship' : 'সম্পর্ক'}</span>
-          </button>
-
-          {/* About */}
-          <button onClick={() => onOpenDeveloperAbout?.()} className="flex flex-col items-center gap-0.5 px-3 py-2 rounded-2xl text-slate-500 dark:text-zinc-400 hover:text-amber-600 dark:hover:text-amber-400 transition-all active:scale-90 cursor-pointer">
-            <div className="w-5 h-5 flex items-center justify-center">
-              <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
-            </div>
-            <span className="text-[9px] font-bold">{isEnglish ? 'About' : 'আমরা'}</span>
-          </button>
-
-        </div>
-      </nav>
+      {/* ── Landing Bottom Nav (mobile only, 4 items with active state) ── */}
+      <LandingBottomNav
+        isEnglish={isEnglish}
+        onOpenAuth={onOpenAuth}
+        onToggleLang={onToggleLang}
+        onOpenDeveloperAbout={onOpenDeveloperAbout}
+        isDarkMode={isDarkMode}
+      />
 
       {/* Spacer for bottom nav on mobile */}
-      <div className="h-20 sm:hidden" />
+      <div className="h-24 sm:hidden" />
 
       {/* 8. Simplified Premium Footer */}
       <footer className="bg-slate-950 text-slate-400 text-xs py-10 pb-28 sm:pb-10 px-4 sm:px-6 lg:px-8 border-t border-slate-900 mt-auto">
