@@ -26,6 +26,7 @@ import { getFullName } from './utils/relationship';
 import { EmptyFamilyWelcome } from './components/EmptyFamilyWelcome';
 import { AuthModal } from './components/AuthModal';
 import { SuperAdminDashboardModal } from './components/SuperAdminDashboardModal';
+import { LandingPage } from './components/LandingPage';
 import { User } from './types/auth';
 import { apiFetch } from './utils/api';
 import { Sparkles, ArrowRight, Wand2, Lightbulb, Calendar, Printer, MessageSquare, Bell, Check, X } from 'lucide-react';
@@ -117,7 +118,8 @@ export const App: React.FC = () => {
     return null;
   });
 
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(!authUser);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isGuestDemoMode, setIsGuestDemoMode] = useState(false);
 
   // Session validation on mount
   useEffect(() => {
@@ -195,7 +197,8 @@ export const App: React.FC = () => {
     } catch {}
     setAuthUser(null);
     setAuthToken(null);
-    setIsAuthModalOpen(true);
+    setIsGuestDemoMode(false);
+    setIsAuthModalOpen(false);
   };
 
   // Internal Messaging & Notifications State
@@ -517,6 +520,37 @@ export const App: React.FC = () => {
     const kamal = people.find((p) => p.id === 'P100006');
     handleOpenRelFinderWithPair(muhib, kamal);
   };
+
+  // If user is not authenticated and has not entered guest demo mode, show the Landing Showcase Page
+  if (!authUser && !isGuestDemoMode) {
+    return (
+      <>
+        <LandingPage
+          onOpenAuth={() => setIsAuthModalOpen(true)}
+          onExploreDemo={() => setIsGuestDemoMode(true)}
+          onOpenDeveloperAbout={() => setIsDeveloperAboutOpen(true)}
+          lang={lang}
+          onToggleLang={() => setLang((l) => (l === 'bn' ? 'en' : 'bn'))}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}
+        />
+
+        {/* Auth Modal overlay when "Sign In / Sign Up" is clicked on Landing Page */}
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onSuccess={handleAuthSuccess}
+          lang={lang}
+        />
+
+        {/* Developer About Modal */}
+        <DeveloperAboutModal
+          isOpen={isDeveloperAboutOpen}
+          onClose={() => setIsDeveloperAboutOpen(false)}
+          lang={lang}
+        />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen max-w-full overflow-x-hidden flex flex-col bg-slate-100/70 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans relative pb-16 md:pb-0 transition-colors">
