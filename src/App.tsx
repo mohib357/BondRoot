@@ -29,6 +29,8 @@ import { SuperAdminDashboardModal } from './components/SuperAdminDashboardModal'
 import { UserProfileModal } from './components/UserProfileModal';
 import { LandingPage } from './components/LandingPage';
 import { SplashScreen } from './components/SplashScreen';
+import { PublicLegalModal, PublicModalType } from './components/PublicLegalModal';
+import { App as CapApp } from '@capacitor/app';
 import { User } from './types/auth';
 import { apiFetch } from './utils/api';
 import { Sparkles, ArrowRight, Wand2, Lightbulb, Calendar, Printer, MessageSquare, Bell, Check, X } from 'lucide-react';
@@ -123,6 +125,13 @@ export const App: React.FC = () => {
 
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isGuestDemoMode, setIsGuestDemoMode] = useState(false);
+
+  // Public Legal Modal State
+  const [publicLegalModalType, setPublicLegalModalType] = useState<PublicModalType>(null);
+
+  // Back Button Press Toast State
+  const [backToastMsg, setBackToastMsg] = useState<string | null>(null);
+  const lastBackPressRef = React.useRef<number>(0);
 
   // Splash Screen States
   const [showSplash, setShowSplash] = useState(true);
@@ -244,6 +253,110 @@ export const App: React.FC = () => {
   const [unreadNotificationCount, setUnreadNotificationCount] = useState<number>(0);
   const [incomingToast, setIncomingToast] = useState<{ senderName: string; content: string; sender: Person } | null>(null);
   const prevUnreadCountRef = React.useRef<number>(0);
+
+  // Hardware Back Button Handler for Android
+  useEffect(() => {
+    const handleBackButton = CapApp.addListener('backButton', () => {
+      if (publicLegalModalType) {
+        setPublicLegalModalType(null);
+        return;
+      }
+      if (isAuthModalOpen) {
+        setIsAuthModalOpen(false);
+        return;
+      }
+      if (selectedPerson) {
+        setSelectedPerson(null);
+        return;
+      }
+      if (isUserProfileOpen) {
+        setIsUserProfileOpen(false);
+        return;
+      }
+      if (isFormOpen) {
+        setIsFormOpen(false);
+        setEditingPerson(null);
+        setPresetRelation(null);
+        return;
+      }
+      if (isRelFinderOpen) {
+        setIsRelFinderOpen(false);
+        return;
+      }
+      if (isExportImportOpen) {
+        setIsExportImportOpen(false);
+        return;
+      }
+      if (isSmartAIAddOpen) {
+        setIsSmartAIAddOpen(false);
+        return;
+      }
+      if (isLineageInsightsOpen) {
+        setIsLineageInsightsOpen(false);
+        return;
+      }
+      if (isPosterExportOpen) {
+        setIsPosterExportOpen(false);
+        return;
+      }
+      if (isMilestonesOpen) {
+        setIsMilestonesOpen(false);
+        return;
+      }
+      if (isSideDrawerOpen) {
+        setIsSideDrawerOpen(false);
+        return;
+      }
+      if (isNotificationPanelOpen) {
+        setIsNotificationPanelOpen(false);
+        return;
+      }
+      if (isDeveloperAboutOpen) {
+        setIsDeveloperAboutOpen(false);
+        return;
+      }
+      if (isSuperAdminOpen) {
+        setIsSuperAdminOpen(false);
+        return;
+      }
+
+      if (isGuestDemoMode) {
+        setIsGuestDemoMode(false);
+        return;
+      }
+
+      const now = Date.now();
+      if (now - lastBackPressRef.current < 2000) {
+        CapApp.exitApp();
+      } else {
+        lastBackPressRef.current = now;
+        setBackToastMsg(lang === 'en' ? 'Press back button again to exit' : 'অ্যাপ থেকে বের হতে পুনরায় ব্যাক বাটন চাপুন');
+        setTimeout(() => setBackToastMsg(null), 2000);
+      }
+    });
+
+    return () => {
+      handleBackButton.then((h) => h.remove());
+    };
+  }, [
+    publicLegalModalType,
+    isAuthModalOpen,
+    selectedPerson,
+    isUserProfileOpen,
+    isFormOpen,
+    isRelFinderOpen,
+    isExportImportOpen,
+    isSmartAIAddOpen,
+    isLineageInsightsOpen,
+    isPosterExportOpen,
+    isMilestonesOpen,
+    isSideDrawerOpen,
+    isNotificationPanelOpen,
+    isDeveloperAboutOpen,
+    isSuperAdminOpen,
+    isGuestDemoMode,
+    lang,
+  ]);
 
   // Handle switch active user persona
   const handleSwitchCurrentUser = (user: Person) => {
@@ -565,6 +678,7 @@ export const App: React.FC = () => {
           onOpenAuth={() => setIsAuthModalOpen(true)}
           onExploreDemo={() => setIsGuestDemoMode(true)}
           onOpenDeveloperAbout={() => setIsDeveloperAboutOpen(true)}
+          onOpenLegal={(type) => setPublicLegalModalType(type)}
           lang={lang}
           onToggleLang={() => setLang((l) => (l === 'bn' ? 'en' : 'bn'))}
           isDarkMode={isDarkMode}
@@ -584,12 +698,47 @@ export const App: React.FC = () => {
           onClose={() => setIsDeveloperAboutOpen(false)}
           lang={lang}
         />
+
+        {/* Public Legal & Help Reader Modal */}
+        <PublicLegalModal
+          type={publicLegalModalType}
+          onClose={() => setPublicLegalModalType(null)}
+          lang={lang}
+        />
+
+        {/* Hardware Back-Press Toast Alert */}
+        {backToastMsg && (
+          <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 bg-slate-900/90 text-white text-xs font-bold px-4 py-2.5 rounded-2xl shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 border border-slate-700/80">
+            {backToastMsg}
+          </div>
+        )}
       </>
     );
   }
 
   return (
     <div className="min-h-screen max-w-full overflow-x-hidden flex flex-col bg-slate-100/70 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 font-sans relative pb-16 md:pb-0 transition-colors">
+
+      {/* Sticky Save Warning Banner in Guest Demo Sandbox Mode */}
+      {isGuestDemoMode && !authUser && (
+        <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-amber-500 text-amber-950 font-bold px-4 py-2.5 shadow-md flex items-center justify-between text-xs sticky top-0 z-40 animate-in slide-in-from-top-2 border-b border-amber-600">
+          <div className="flex items-center space-x-2 min-w-0 pr-2">
+            <span className="shrink-0 text-base">⚠️</span>
+            <span className="truncate">
+              {lang === 'en'
+                ? 'You are in Sandbox Demo Mode. Data is temporary. Sign in to save your family tree permanently to the cloud.'
+                : 'আপনি পরীক্ষামূলক ডেমো ব্যবহার করছেন। তথ্যগুলো সাময়িক। আপনার পারিবারিক তথ্য আজীবনের জন্য ক্লাউডে সুরক্ষিত রাখতে লগইন / সাইনআপ করুন।'}
+            </span>
+          </div>
+          <button
+            onClick={() => setIsAuthModalOpen(true)}
+            className="px-3 py-1 rounded-xl bg-white text-amber-950 font-black text-xs hover:bg-amber-50 transition cursor-pointer shrink-0 shadow-xs neu-button"
+          >
+            {lang === 'en' ? 'Sign In / Sign Up' : 'লগইন / সাইনআপ'}
+          </button>
+        </div>
+      )}
+
       {/* Full-screen Animated Splash Screen */}
       {showSplash && (
         <SplashScreen
@@ -971,6 +1120,20 @@ export const App: React.FC = () => {
           }}
           lang={lang}
         />
+      )}
+
+      {/* Public Legal & Help Reader Modal */}
+      <PublicLegalModal
+        type={publicLegalModalType}
+        onClose={() => setPublicLegalModalType(null)}
+        lang={lang}
+      />
+
+      {/* Hardware Back-Press Toast Alert */}
+      {backToastMsg && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-100 bg-slate-900/90 text-white text-xs font-bold px-4 py-2.5 rounded-2xl shadow-2xl backdrop-blur-md animate-in fade-in slide-in-from-bottom-2 border border-slate-700/80">
+          {backToastMsg}
+        </div>
       )}
 
       {/* Developer & Mission About Modal */}

@@ -23,10 +23,13 @@ import {
   Share2,
 } from 'lucide-react';
 
+import { PublicModalType } from './PublicLegalModal';
+
 interface LandingPageProps {
   onOpenAuth: () => void;
   onExploreDemo: () => void;
   onOpenDeveloperAbout?: () => void;
+  onOpenLegal?: (type: PublicModalType) => void;
   lang: 'bn' | 'en';
   onToggleLang: () => void;
   isDarkMode: boolean;
@@ -37,6 +40,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenAuth,
   onExploreDemo,
   onOpenDeveloperAbout,
+  onOpenLegal,
   lang,
   onToggleLang,
   isDarkMode,
@@ -522,19 +526,26 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Links */}
           <div className="flex items-center space-x-4 text-[11px] font-semibold text-slate-400">
-            <button onClick={onOpenAuth} className="hover:text-white transition cursor-pointer">
+            <button
+              onClick={() => onOpenLegal?.('privacy')}
+              className="hover:text-emerald-400 transition cursor-pointer"
+            >
               {isEnglish ? 'Privacy' : 'গোপনীয়তা'}
             </button>
             <span>•</span>
-            <button onClick={onOpenAuth} className="hover:text-white transition cursor-pointer">
+            <button
+              onClick={() => onOpenLegal?.('terms')}
+              className="hover:text-emerald-400 transition cursor-pointer"
+            >
               {isEnglish ? 'Terms' : 'শর্তাবলী'}
             </button>
             <span>•</span>
-            {onOpenDeveloperAbout && (
-              <button onClick={onOpenDeveloperAbout} className="hover:text-white transition cursor-pointer">
-                {isEnglish ? 'Help' : 'সাহায্য'}
-              </button>
-            )}
+            <button
+              onClick={() => onOpenLegal?.('help')}
+              className="hover:text-emerald-400 transition cursor-pointer"
+            >
+              {isEnglish ? 'Help' : 'সাহায্য'}
+            </button>
           </div>
 
         </div>
