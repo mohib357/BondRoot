@@ -492,7 +492,7 @@ async function startServer() {
       await client.query('TRUNCATE TABLE persons, messages, marriages CASCADE');
       client.release();
 
-      console.warn([ADMIN RESET] All data wiped by super_admin: ${currentUser.email} at ${new Date().toISOString()});
+      console.warn(`[ADMIN RESET] All data wiped by super_admin: ${currentUser.email} at ${new Date().toISOString()}`);
       res.json({ success: true, message: 'সমস্ত ফ্যামিলি ট্রি ও বার্তা ডাটাবেস রিসেট করা হয়েছে।' });
     } catch (err: any) {
       res.status(500).json({ success: false, error: err.message });
