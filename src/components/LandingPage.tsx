@@ -74,31 +74,11 @@ const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
 
   const activeIdx = ITEMS.findIndex(i => i.id === active);
 
-  // Build SVG notch path dynamically
+  // Build SVG smooth concave cutout curve (Notch)
   function buildNotchPath(W: number, H: number, R: number, idx: number, total: number): string { // H=72
-    const cx = (idx + 0.5) * (W / total);
-    const nW = 80;
-    const nD = 40;
-    const nR = 24;
-    const nx1 = cx - nW / 2;
-    const nx2 = cx + nW / 2;
-    return [
-      "M " + R + " 0",
-      "Q 0 0 0 " + R,
-      "L 0 " + (H - R),
-      "Q 0 " + H + " " + R + " " + H,
-      "L " + (W - R) + " " + H,
-      "Q " + W + " " + H + " " + W + " " + (H - R),
-      "L " + W + " " + R,
-      "Q " + W + " 0 " + (W - R) + " 0",
-      "L " + (nx2 + nR) + " 0",
-      "Q " + nx2 + " 0 " + nx2 + " " + nR,
-      "Q " + nx2 + " " + nD + " " + cx + " " + nD,
-      "Q " + nx1 + " " + nD + " " + nx1 + " " + nR,
-      "Q " + nx1 + " 0 " + (nx1 - nR) + " 0",
-      "L " + R + " 0",
-      "Z",
-    ].join(" ");
+    const cx = ((idx >= 0 ? idx : 0) + 0.5) * (W / total);
+    const nW = 40;
+    return `M 0,20 L ${cx - nW},20 C ${cx - 22},20 ${cx - 16},0 ${cx},0 C ${cx + 16},0 ${cx + 22},20 ${cx + nW},20 L ${W},20 L ${W},${H} L 0,${H} Z`;
   }
 
   return (
@@ -176,6 +156,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   // Page-switch state — controls which sub-page is visible
   const [activePage, setActivePage] = React.useState<'home' | 'about' | 'login'>('home');
+
+  // Quick message state
+  const [directMessage, setDirectMessage] = React.useState('');
+  const [msgSending, setMsgSending] = React.useState(false);
+  const [msgSentSuccess, setMsgSentSuccess] = React.useState(false);
+  const [showQuickForm, setShowQuickForm] = React.useState(false);
 
   const scrollToDemo = () => {
     const el = document.getElementById('demo-tree-preview');
@@ -720,40 +706,160 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
           </div>
         </header>
-        <div className="flex-1 p-6 pb-28 max-w-xl mx-auto w-full">
-          <div className="section-card p-6 space-y-5 mt-6">
+        <div className="flex-1 p-4 sm:p-6 pb-28 max-w-xl mx-auto w-full space-y-4">
+
+          {/* Mission Card */}
+          <div className="section-card p-5 space-y-3 mt-2">
+            <div className="flex items-center gap-2 text-rose-500 font-extrabold text-sm">
+              <Heart className="w-4 h-4 fill-rose-500" />
+              <span>{isEnglish ? 'The Vision Behind BondRoot' : 'বন্ডরুট (BondRoot)-এর পেছনের গল্প ও উদ্দেশ্য'}</span>
+            </div>
+            <p className="text-xs text-slate-600 dark:text-zinc-300 leading-relaxed font-normal">
+              {isEnglish
+                ? 'BondRoot was crafted with a heartfelt purpose: to protect multi-generational family ties, cherish departed ancestors, and resolve intricate kinship relationships with mathematical certainty. In an era of rapid urbanization, BondRoot ensures future generations never forget their true roots.'
+                : 'আধুনিক নগরায়ন ও ব্যস্ততার যুগে আমাদের পারিবারিক শিকড় এবং পূর্বপুরুষের স্মৃতি যেন হারিয়ে না যায়—সেই মহৎ উদ্দেশ্যেই বন্ডরুট (BondRoot) নির্মিত। রক্তের সম্পর্কের সূক্ষ্ম হিসাব, নির্ভুল বাংলা সামাজিক সম্বোধন এবং পারিবারিক স্মৃতিবিজড়িত মুহূর্তগুলোকে ডিজিটাল ভল্টে চিরস্থায়ী করে রাখাই এই প্ল্যাটফর্মের মূল লক্ষ্য।'}
+            </p>
+          </div>
+
+          {/* Developer Card */}
+          <div className="section-card p-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl icon-wrap-emerald flex items-center justify-center text-2xl">👨‍💻</div>
+              <div
+                className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-extrabold text-lg flex items-center justify-center shrink-0 shadow-lg border-2 border-white dark:border-zinc-800"
+                style={{boxShadow: '4px 4px 10px rgba(99,102,241,0.3), -2px -2px 6px rgba(255,255,255,0.8)'}}
+              >
+                MI
+              </div>
               <div>
-                <h2 className="text-lg font-black text-slate-900 dark:text-white">{isEnglish ? 'Developer Info' : 'ডেভেলপার পরিচিতি'}</h2>
-                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Muhibbul Islam</p>
+                <h2 className="text-base font-extrabold text-slate-900 dark:text-white">Muhibbul Islam</h2>
+                <span className="inline-block mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800">
+                  Lead Architect & Full-Stack Engineer
+                </span>
+                <p className="text-[11px] text-slate-500 dark:text-zinc-400 mt-1">
+                  Full-Stack Engineer • Kinship Graph Systems
+                </p>
               </div>
             </div>
-            <p className="text-sm text-slate-600 dark:text-zinc-300 leading-relaxed">
-              {isEnglish
-                ? 'BondRoot is built with ❤️ by Muhibbul Islam to help Bengali families preserve their roots and discover kinship bonds across generations.'
-                : 'BondRoot তৈরি করেছেন মুহিব্বুল ইসলাম — বাঙালি পরিবারের শিকড় সংরক্ষণ ও বংশলতিকা ডিজিটাল করার অঙ্গীকার নিয়ে।'}
+
+            <p className="text-xs italic text-indigo-800 dark:text-indigo-300 leading-relaxed border-l-2 border-indigo-400 pl-3">
+              "বন্ডরুট নির্মাণের পেছনে আমার লক্ষ্য — বাঙালি পারিবারিক বন্ধন, ইতিহাস ও ঐতিহ্যকে ডিজিটাল জগতে চিরকালের জন্য সংরক্ষণ করা।"
             </p>
-            <div className="space-y-3 pt-2">
-              <p className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400">{isEnglish ? 'Get in touch' : 'যোগাযোগ করুন'}</p>
-              <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-3 p-3 rounded-2xl bg-green-50 dark:bg-green-950/40 border border-green-200 dark:border-green-800 hover:scale-[1.02] transition-all active:scale-95 cursor-pointer">
-                <span className="text-2xl">💬</span>
-                <div>
-                  <p className="text-sm font-bold text-green-800 dark:text-green-300">WhatsApp</p>
-                  <p className="text-xs text-green-600 dark:text-green-400">+880 1700-000000</p>
+
+            {/* Social & Contact Grid Buttons */}
+            <div className="space-y-2 pt-1">
+              <p className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
+                {isEnglish ? 'Contact & Social Connect' : 'যোগাযোগ ও সোশ্যাল কানেক্ট'}
+              </p>
+
+              <div className="grid grid-cols-2 gap-2">
+                {/* Send Message Form Toggle */}
+                <button
+                  type="button"
+                  onClick={() => setShowQuickForm(!showQuickForm)}
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95 cursor-pointer"
+                  style={{boxShadow: '3px 3px 6px rgba(0,0,0,0.06), -2px -2px 5px rgba(255,255,255,0.8)'}}
+                >
+                  <span>💬</span>
+                  <span>সরাসরি বার্তা</span>
+                </button>
+
+                {/* WhatsApp */}
+                <a
+                  href="https://wa.me/8801700000000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95 cursor-pointer"
+                  style={{boxShadow: '3px 3px 6px rgba(0,0,0,0.06), -2px -2px 5px rgba(255,255,255,0.8)'}}
+                >
+                  <span>🟢</span>
+                  <span>WhatsApp</span>
+                </a>
+
+                {/* Email */}
+                <a
+                  href="mailto:muhibbul524@gmail.com"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95 cursor-pointer"
+                  style={{boxShadow: '3px 3px 6px rgba(0,0,0,0.06), -2px -2px 5px rgba(255,255,255,0.8)'}}
+                >
+                  <span>✉️</span>
+                  <span>ইমেইল</span>
+                </a>
+
+                {/* Facebook */}
+                <a
+                  href="https://facebook.com/muhibbul524"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95 cursor-pointer"
+                  style={{boxShadow: '3px 3px 6px rgba(0,0,0,0.06), -2px -2px 5px rgba(255,255,255,0.8)'}}
+                >
+                  <span>🔵</span>
+                  <span>Facebook</span>
+                </a>
+
+                {/* Instagram */}
+                <a
+                  href="https://instagram.com/muhibbul524"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="col-span-2 flex items-center justify-center gap-2 p-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95 cursor-pointer"
+                  style={{boxShadow: '3px 3px 6px rgba(0,0,0,0.06), -2px -2px 5px rgba(255,255,255,0.8)'}}
+                >
+                  <span>🟣</span>
+                  <span>Instagram</span>
+                </a>
+              </div>
+
+              {/* Inline Quick Message Input Form */}
+              {showQuickForm && (
+                <div className="mt-3 p-3 rounded-2xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 space-y-2 animate-in fade-in duration-150">
+                  {msgSentSuccess ? (
+                    <div className="p-2.5 bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-200 rounded-xl font-bold text-xs flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                      <span>আপনার বার্তা সরাসরি ডেভেলপারকে পাঠানো হয়েছে! ধন্যবাদ।</span>
+                    </div>
+                  ) : (
+                    <>
+                      <textarea
+                        rows={3}
+                        placeholder="ডেভেলপারকে সরাসরি মতামত বা বার্তা লিখুন..."
+                        className="w-full p-2.5 rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-xs text-slate-900 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        value={directMessage}
+                        onChange={(e) => setDirectMessage(e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        disabled={msgSending || !directMessage.trim()}
+                        onClick={async () => {
+                          if (!directMessage.trim()) return;
+                          setMsgSending(true);
+                          try {
+                            await fetch('/api/feedback', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ name: 'Guest User', message: directMessage }),
+                            });
+                          } catch (e) {
+                            console.warn('Feedback notice:', e);
+                          } finally {
+                            setMsgSending(false);
+                            setMsgSentSuccess(true);
+                            setDirectMessage('');
+                            setTimeout(() => setMsgSentSuccess(false), 4000);
+                          }
+                        }}
+                        className="w-full py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-bold active:scale-95 transition cursor-pointer disabled:opacity-50"
+                      >
+                        {msgSending ? 'পাঠানো হচ্ছে...' : 'বার্তা পাঠান ✉️'}
+                      </button>
+                    </>
+                  )}
                 </div>
-              </a>
-              <a href="mailto:muhibbul524@gmail.com"
-                className="flex items-center gap-3 p-3 rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 hover:scale-[1.02] transition-all active:scale-95 cursor-pointer">
-                <span className="text-2xl">📧</span>
-                <div>
-                  <p className="text-sm font-bold text-blue-800 dark:text-blue-300">Email</p>
-                  <p className="text-xs text-blue-600 dark:text-blue-400">muhibbul524@gmail.com</p>
-                </div>
-              </a>
+              )}
+
             </div>
           </div>
+
         </div>
       </div>
 
@@ -787,13 +893,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               className="w-full btn-glossy-primary text-sm"
             >
               <LogIn className="w-4 h-4" />
-              <span>{isEnglish ? 'Sign In / Sign Up' : 'লগইন / নিবন্ধন'}</span>
-            </button>
-            <button
-              onClick={() => setActivePage('home')}
-              className="w-full btn-glossy-secondary text-sm"
-            >
-              <span>{isEnglish ? '← Back to Home' : '← হোমে ফিরুন'}</span>
+              <span>{isEnglish ? 'Open In-Page Sign In / Sign Up' : 'লগইন / নতুন অ্যাকাউন্ট খুলুন'}</span>
             </button>
           </div>
         </div>
