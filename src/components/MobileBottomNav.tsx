@@ -33,9 +33,40 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
     }
   };
 
+  // SVG viewBox dimensions: 400 wide × 60 tall, center notch at cx=200
+  // Smooth cubic bezier concave dip: ~88px wide, ~30px deep
+  const svgPath =
+    'M0,30 L120,30 C150,30 170,0 200,0 C230,0 250,30 280,30 L400,30 L400,60 L0,60 Z';
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden bg-white/90 dark:bg-zinc-900/90 backdrop-blur-lg border-t border-slate-200 dark:border-zinc-800 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] px-2 py-1.5 safe-area-pb">
-      <div className="flex items-center justify-around">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden backdrop-blur-lg shadow-[0_-4px_16px_rgba(0,0,0,0.06)] safe-area-pb"
+      style={{ height: '60px' }}>
+
+      {/* SVG background — light mode */}
+      <svg
+        className="absolute inset-0 w-full h-full dark:hidden pointer-events-none"
+        viewBox="0 0 400 60"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path d={svgPath} fill="white" />
+      </svg>
+
+      {/* SVG background — dark mode */}
+      <svg
+        className="absolute inset-0 w-full h-full hidden dark:block pointer-events-none"
+        viewBox="0 0 400 60"
+        preserveAspectRatio="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path d={svgPath} fill="#18181b" />
+      </svg>
+
+      {/* Nav content sits above the SVG */}
+      <div className="relative z-10 flex items-center justify-around h-full px-2">
+
         {/* Tree View */}
         <button
           onClick={() => {
@@ -48,7 +79,14 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               : 'text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200'
           }`}
         >
-          <div className={`p-1 rounded-lg ${viewMode === 'tree' ? 'bg-emerald-100 dark:bg-emerald-950/60' : ''}`}>
+          <div
+            className={`p-1 rounded-lg ${viewMode === 'tree' ? 'bg-emerald-100 dark:bg-emerald-950/60' : ''}`}
+            style={
+              viewMode === 'tree'
+                ? { boxShadow: '2px 2px 5px rgba(0,0,0,0.08), -1px -1px 4px rgba(255,255,255,0.9)' }
+                : undefined
+            }
+          >
             <GitFork className="w-4 h-4" />
           </div>
           <span className="text-[10px] mt-0.5">{isEnglish ? 'Tree' : 'লতিকা'}</span>
@@ -66,21 +104,28 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
               : 'text-slate-500 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200'
           }`}
         >
-          <div className={`p-1 rounded-lg ${viewMode === 'directory' ? 'bg-emerald-100 dark:bg-emerald-950/60' : ''}`}>
+          <div
+            className={`p-1 rounded-lg ${viewMode === 'directory' ? 'bg-emerald-100 dark:bg-emerald-950/60' : ''}`}
+            style={
+              viewMode === 'directory'
+                ? { boxShadow: '2px 2px 5px rgba(0,0,0,0.08), -1px -1px 4px rgba(255,255,255,0.9)' }
+                : undefined
+            }
+          >
             <Users className="w-4 h-4" />
           </div>
           <span className="text-[10px] mt-0.5">{isEnglish ? 'People' : 'সদস্য'}</span>
         </button>
 
-        {/* Center Prominent Action: Smart AI Add */}
+        {/* Center Prominent Action: Smart AI Add — floats above the notch */}
         <button
           onClick={() => {
             triggerHaptic();
             onOpenSmartAIAdd();
           }}
-          className="flex flex-col items-center justify-center -mt-4 relative group"
+          className="flex flex-col items-center justify-center -mt-7 relative group"
         >
-          <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-purple-500 text-white flex items-center justify-center shadow-lg shadow-purple-500/30 border-2 border-white dark:border-zinc-800 active:scale-95 transition">
+          <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 via-indigo-600 to-purple-500 text-white flex items-center justify-center shadow-lg shadow-purple-500/30 border-2 border-white dark:border-zinc-800 active:scale-95 transition">
             <Sparkles className="w-5 h-5 text-amber-300" />
           </div>
           <span className="text-[10px] font-bold text-purple-700 dark:text-purple-400 mt-0.5">
@@ -120,6 +165,7 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           </div>
           <span className="text-[10px] mt-0.5">{isEnglish ? 'Alerts' : 'বার্তা'}</span>
         </button>
+
       </div>
     </nav>
   );
