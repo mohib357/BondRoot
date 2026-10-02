@@ -769,8 +769,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="section-card p-5 space-y-4">
             <div className="flex items-center gap-3">
               <div
-                className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-extrabold text-lg flex items-center justify-center shrink-0 shadow-lg border-2 border-white dark:border-zinc-800"
-                style={{boxShadow: '4px 4px 10px rgba(99,102,241,0.3), -2px -2px 6px rgba(255,255,255,0.8)'}}
+                className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-extrabold text-2xl flex items-center justify-center shrink-0 shadow-lg border-4 border-white dark:border-zinc-700"
+                style={{boxShadow: '6px 6px 18px rgba(99,102,241,0.45), -4px -4px 12px rgba(255,255,255,0.88)'}}
               >
                 MI
               </div>

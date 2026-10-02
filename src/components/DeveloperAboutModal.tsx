@@ -131,8 +131,8 @@ export const DeveloperAboutModal: React.FC<DeveloperAboutModalProps> = ({
           {/* Developer Card */}
           <div className="bg-white dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-700 p-5 rounded-2xl flex flex-col sm:flex-row items-center sm:items-start gap-4 shadow-xs">
             <div
-              className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-extrabold text-xl flex items-center justify-center shrink-0 shadow-xl border-4 border-white dark:border-zinc-700"
-              style={{boxShadow: '4px 4px 12px rgba(99,102,241,0.4), -2px -2px 8px rgba(255,255,255,0.8)'}}
+              className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-extrabold text-2xl flex items-center justify-center shrink-0 shadow-xl border-4 border-white dark:border-zinc-700"
+              style={{boxShadow: '6px 6px 18px rgba(99,102,241,0.45), -4px -4px 12px rgba(255,255,255,0.88)'}}
             >
               MI
             </div>
