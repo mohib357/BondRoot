@@ -679,7 +679,7 @@ export const App: React.FC = () => {
         )}
 
         <LandingPage
-          onOpenAuth={() => setIsAuthModalOpen(true)}
+          onSuccess={handleAuthSuccess}
           onExploreDemo={() => setIsGuestDemoMode(true)}
           onOpenDeveloperAbout={() => setIsDeveloperAboutOpen(true)}
           onOpenLegal={(type) => setPublicLegalModalType(type)}
@@ -688,13 +688,6 @@ export const App: React.FC = () => {
           onToggleLang={() => setLang((l) => (l === 'bn' ? 'en' : 'bn'))}
           isDarkMode={isDarkMode}
           onToggleDarkMode={() => setIsDarkMode((prev) => !prev)}
-        />
-
-        {/* Auth Modal overlay when "Sign In / Sign Up" is clicked on Landing Page */}
-        <AuthModal
-          isOpen={isAuthModalOpen}
-          onSuccess={handleAuthSuccess}
-          lang={lang}
         />
 
         {/* Feature Spotlight Modal */}

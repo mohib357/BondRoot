@@ -18,6 +18,13 @@ import {
   Users,
   Compass,
   CheckCircle2,
+  XCircle,
+  AlertCircle,
+  Loader2,
+  Crown,
+  Settings,
+  RotateCcw,
+  X,
   Lock,
   ChevronRight,
   Award,
@@ -30,9 +37,10 @@ import {
 import { PublicModalType } from './PublicLegalModal';
 import { FeatureSpotlightKey } from './FeatureSpotlightModal';
 import SocialLinksGrid from './SocialLinksGrid';
+import { apiFetch, getApiBaseUrl, DEFAULT_LIVE_API_URL } from '../utils/api';
 
 interface LandingPageProps {
-  onOpenAuth: () => void;
+  onSuccess: (user: any, token: string) => void;
   onExploreDemo: () => void;
   onOpenDeveloperAbout?: () => void;
   onOpenLegal?: (type: PublicModalType) => void;
@@ -147,7 +155,7 @@ const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
 };
 
 export const LandingPage: React.FC<LandingPageProps> = ({
-  onOpenAuth,
+  onSuccess,
   onExploreDemo,
   onOpenDeveloperAbout,
   onOpenLegal,
@@ -211,6 +219,196 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   // Login page sub-tab state & password visibility
   const [loginTab, setLoginTab] = React.useState<'signin' | 'signup'>('signin');
+
+  // Login form state
+  const [loginIdentifier, setLoginIdentifier] = React.useState('');
+  const [loginPassword, setLoginPassword] = React.useState('');
+  const [showLoginPassword, setShowLoginPassword] = React.useState(false);
+  const [rememberMe, setRememberMe] = React.useState(true);
+
+  // Pre-fill remembered identifier from localStorage on mount
+  React.useEffect(() => {
+    const saved = localStorage.getItem('bondroot_remembered_identifier');
+    if (saved) {
+      setLoginIdentifier(saved);
+      setRememberMe(true);
+    }
+  }, []);
+
+  // Signup form state
+  const [fullName, setFullName] = React.useState('');
+  const [username, setUsername] = React.useState('');
+  const [signupEmail, setSignupEmail] = React.useState('');
+  const [signupPhone, setSignupPhone] = React.useState('');
+  const [gender, setGender] = React.useState<'male' | 'female' | 'other'>('male');
+  const [signupPassword, setSignupPassword] = React.useState('');
+  const [confirmPassword, setConfirmPassword] = React.useState('');
+  const [showSignupPassword, setShowSignupPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  // Real-time Username Validation state
+  const [usernameChecking, setUsernameChecking] = React.useState(false);
+  const [usernameAvailable, setUsernameAvailable] = React.useState<boolean | null>(null);
+  const [usernameMsg, setUsernameMsg] = React.useState<string | null>(null);
+
+  // Debounced username check against DB
+  React.useEffect(() => {
+    const clean = username.trim().toLowerCase().replace(/[^a-z0-9_]/g, '');
+    if (!clean || clean.length < 3) {
+      setUsernameAvailable(null);
+      setUsernameMsg(clean ? (isEnglish ? 'Username must be at least 3 chars' : 'ইউজারনেম কমপক্ষে ৩ অক্ষরের হতে হবে।') : null);
+      return;
+    }
+
+    setUsernameChecking(true);
+    setUsernameMsg(null);
+    const timer = setTimeout(async () => {
+      try {
+        const res = await apiFetch(`/api/auth/check-username?username=${encodeURIComponent(clean)}`);
+        const data = await res.json();
+        if (data.available) {
+          setUsernameAvailable(true);
+          setUsernameMsg(isEnglish ? 'Username available!' : 'ইউজারনেম খালি রয়েছে');
+        } else {
+          setUsernameAvailable(false);
+          setUsernameMsg(data.error || (isEnglish ? 'Username taken' : 'এই ইউজারনেমটি ইতোমধ্যে ব্যবহৃত হয়েছে'));
+        }
+      } catch {
+        setUsernameAvailable(null);
+      } finally {
+        setUsernameChecking(false);
+      }
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [username, isEnglish]);
+
+  // Auth processing states
+  const [isAuthLoading, setIsAuthLoading] = React.useState(false);
+  const [authError, setAuthError] = React.useState<string | null>(null);
+  const [authSuccess, setAuthSuccess] = React.useState<string | null>(null);
+
+  // Server URL settings state
+  const [showApiSettings, setShowApiSettings] = React.useState(false);
+  const [customApiUrl, setCustomApiUrl] = React.useState(() => getApiBaseUrl());
+
+  const handleSaveApiUrl = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (customApiUrl.trim() && customApiUrl.trim() !== DEFAULT_LIVE_API_URL) {
+      localStorage.setItem('bondroot_api_url', customApiUrl.trim());
+    } else {
+      localStorage.removeItem('bondroot_api_url');
+    }
+    setShowApiSettings(false);
+    setAuthError(null);
+  };
+
+  // Direct In-Page Login Handler
+  const handleInPageLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginIdentifier.trim() || !loginPassword) {
+      setAuthError(isEnglish ? 'Please enter Username/Email/Phone and password.' : 'ইউজারনেম/ইমেইল/ফোন নম্বর এবং পাসওয়ার্ড দিন।');
+      return;
+    }
+
+    setIsAuthLoading(true);
+    setAuthError(null);
+
+    if (rememberMe) {
+      localStorage.setItem('bondroot_remembered_identifier', loginIdentifier.trim());
+    } else {
+      localStorage.removeItem('bondroot_remembered_identifier');
+    }
+
+    try {
+      const res = await apiFetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier: loginIdentifier.trim(), password: loginPassword }),
+      });
+      const data = await res.json();
+      if (data.success && data.user && data.token) {
+        setAuthSuccess(isEnglish ? 'Logged in successfully!' : 'লগইন সফল হয়েছে!');
+        setTimeout(() => {
+          onSuccess(data.user, data.token);
+        }, 400);
+      } else {
+        setAuthError(data.error || (isEnglish ? 'Login failed.' : 'লগইন ব্যর্থ হয়েছে।'));
+      }
+    } catch {
+      setAuthError(isEnglish ? 'Network error. Please check server connection.' : 'নেটওয়ার্ক সমস্যা। সার্ভার সংযোগ ও ইন্টারনেট পরীক্ষা করুন।');
+    } finally {
+      setIsAuthLoading(false);
+    }
+  };
+
+  // Direct In-Page Signup Handler
+  const handleInPageSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!fullName.trim()) {
+      setAuthError(isEnglish ? 'Full Name is required.' : 'পূর্ণ নাম দেওয়া আবশ্যক।');
+      return;
+    }
+
+    if (!signupEmail.trim() && !signupPhone.trim()) {
+      setAuthError(isEnglish ? 'At least one contact method (Email OR Phone Number) is required.' : 'কমপক্ষে একটি ইমেইল অথবা মোবাইল নম্বর দিতে হবে।');
+      return;
+    }
+
+    if (usernameAvailable === false) {
+      setAuthError(isEnglish ? 'Please choose an available username.' : 'সঠিক ও খালি ইউজারনেম নির্বাচন করুন।');
+      return;
+    }
+
+    if (signupPassword !== confirmPassword) {
+      setAuthError(isEnglish ? 'Passwords do not match.' : 'পাসওয়ার্ড দুটি মেলেনি।');
+      return;
+    }
+
+    if (signupPassword.length < 6) {
+      setAuthError(isEnglish ? 'Password must be at least 6 characters.' : 'পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।');
+      return;
+    }
+
+    setIsAuthLoading(true);
+    setAuthError(null);
+
+    try {
+      const res = await apiFetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          full_name: fullName.trim(),
+          username: username.trim() || undefined,
+          email: signupEmail.trim() || undefined,
+          phone_number: signupPhone.trim() || undefined,
+          gender,
+          password: signupPassword,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.user && data.token) {
+        setAuthSuccess(isEnglish ? 'Account created successfully!' : 'অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে!');
+        setTimeout(() => {
+          onSuccess(data.user, data.token);
+        }, 400);
+      } else {
+        setAuthError(data.error || (isEnglish ? 'Signup failed.' : 'নিবন্ধনে সমস্যা হয়েছে।'));
+      }
+    } catch {
+      setAuthError(isEnglish ? 'Network error. Please check server connection.' : 'নেটওয়ার্ক সমস্যা। সার্ভার সংযোগ ও ইন্টারনেট পরীক্ষা করুন।');
+    } finally {
+      setIsAuthLoading(false);
+    }
+  };
+
+  // 1-Click Fast Developer Super Admin Login
+  const handleFastSuperAdminLogin = () => {
+    setLoginTab('signin');
+    setLoginIdentifier('muhibbul524@gmail.com');
+    setLoginPassword('Admin@123');
+    setAuthError(null);
+  };
   const [showPassword, setShowPassword] = React.useState(false);
 
   const scrollToDemo = () => {
@@ -361,7 +559,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Hero CTAs */}
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
               {/* Primary CTA */}
-              <button onClick={onOpenAuth} className="w-full sm:w-auto btn-glossy-primary text-sm">
+              <button onClick={() => handlePageChange('login')} className="w-full sm:w-auto btn-glossy-primary text-sm">
                 <span>{isEnglish ? '🌳 Get Started — Free' : '🌳 শুরু করুন — বিনামূল্যে'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
@@ -621,7 +819,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
 
             <button
-              onClick={onOpenAuth}
+              onClick={() => handlePageChange('login')}
               className="btn-glossy-amber text-xs sm:text-sm shrink-0"
             >
               {isEnglish ? 'Try Kinship Engine' : 'সম্পর্ক ট্রাই করুন'}
@@ -1040,19 +1238,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </button>
             </div>
 
-            {/* Form Fields: Raised Neumorphic Inset Fields */}
+            {/* Form Fields: In-Page Authentic Form */}
             {loginTab === 'signin' ? (
-              <form onSubmit={(e) => { e.preventDefault(); onOpenAuth(); }} className="space-y-4">
-                {/* Username / Email Field */}
+              <form onSubmit={handleInPageLogin} className="space-y-4">
+                {/* Username / Email / Phone */}
                 <div className="space-y-1">
                   <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
-                    {isEnglish ? 'Username or Email' : 'ইমেইল অথবা ইউজারনেম'}
+                    {isEnglish ? 'Username, Email, or Phone' : 'ইমেইল, ইউজারনেম অথবা মোবাইল নম্বর'}
                   </label>
                   <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
                     <User className="w-5 h-5 text-emerald-600 ml-3 shrink-0" />
                     <input
                       type="text"
                       required
+                      value={loginIdentifier}
+                      onChange={(e) => setLoginIdentifier(e.target.value)}
                       placeholder="muhibbul524@gmail.com"
                       className="w-full px-3 py-2.5 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
                     />
@@ -1067,17 +1267,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
                     <Lock className="w-5 h-5 text-emerald-600 ml-3 shrink-0" />
                     <input
-                      type={showPassword ? 'text' : 'password'}
+                      type={showLoginPassword ? 'text' : 'password'}
                       required
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="••••••••"
                       className="w-full px-3 py-2.5 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={() => setShowLoginPassword(!showLoginPassword)}
                       className="pr-3 text-slate-400 hover:text-slate-700 dark:hover:text-zinc-200 cursor-pointer"
                     >
-                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      {showLoginPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                 </div>
@@ -1087,38 +1289,92 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <label className="flex items-center gap-2 cursor-pointer text-slate-600 dark:text-zinc-300 select-none">
                     <input
                       type="checkbox"
-                      defaultChecked
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
                       className="w-4 h-4 rounded-md accent-emerald-600 cursor-pointer"
                     />
                     <span>{isEnglish ? 'Remember Me' : 'মনে রাখুন'}</span>
                   </label>
                   <button
                     type="button"
-                    onClick={() => onOpenAuth()}
+                    onClick={handleFastSuperAdminLogin}
                     className="text-emerald-700 dark:text-emerald-400 hover:underline cursor-pointer"
                   >
                     {isEnglish ? 'Forgot Password?' : 'পাসওয়ার্ড ভুলে গেছেন?'}
                   </button>
                 </div>
 
-                {/* Main Action 3D Deep Green Button */}
+                {/* Main Action Button */}
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white font-extrabold text-xs flex items-center justify-center space-x-2 transition-all duration-200 active:scale-98 shadow-lg shadow-emerald-600/30 cursor-pointer"
+                  disabled={isAuthLoading}
+                  className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white font-extrabold text-xs flex items-center justify-center space-x-2 transition-all duration-200 active:scale-98 shadow-lg shadow-emerald-600/30 cursor-pointer disabled:opacity-50"
                   style={{
                     boxShadow: '6px 6px 16px rgba(5,150,105,0.35), -4px -4px 12px rgba(255,255,255,0.9), inset 1px 1px 2px rgba(255,255,255,0.4)'
                   }}
                 >
-                  <span>{isEnglish ? 'Login' : 'পারিবারিক পোর্টালে প্রবেশ'}</span>
-                  <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center ml-1">
-                    <ArrowRight className="w-4 h-4 text-white" />
-                  </div>
+                  {isAuthLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                  ) : (
+                    <>
+                      <span>{isEnglish ? 'Sign In to Family Portal' : 'পারিবারিক পোর্টালে প্রবেশ'}</span>
+                      <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center ml-1">
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </div>
+                    </>
+                  )}
                 </button>
+
+                {/* Social Login Section (SIGN IN TAB ONLY!) */}
+                <div className="pt-2 space-y-3">
+                  <div className="relative flex items-center justify-center">
+                    <div className="border-t border-slate-300 dark:border-zinc-700 w-full" />
+                    <span className="bg-[#eef7f2] dark:bg-zinc-900 px-3 text-[10px] font-black tracking-wider text-slate-400 dark:text-zinc-500 uppercase whitespace-nowrap">
+                      OR CONTINUE WITH
+                    </span>
+                    <div className="border-t border-slate-300 dark:border-zinc-700 w-full" />
+                  </div>
+
+                  <div className="flex items-center justify-center gap-4 pt-1">
+                    {/* Google */}
+                    <button
+                      type="button"
+                      onClick={handleFastSuperAdminLogin}
+                      title="Continue with Google"
+                      className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer"
+                      style={{
+                        boxShadow: '4px 4px 10px rgba(0,0,0,0.1), -3px -3px 8px rgba(255,255,255,0.9)'
+                      }}
+                    >
+                      <svg className="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                      </svg>
+                    </button>
+
+                    {/* Facebook */}
+                    <button
+                      type="button"
+                      onClick={handleFastSuperAdminLogin}
+                      title="Continue with Facebook"
+                      className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer"
+                      style={{
+                        boxShadow: '4px 4px 10px rgba(0,0,0,0.1), -3px -3px 8px rgba(255,255,255,0.9)'
+                      }}
+                    >
+                      <svg className="w-5 h-5 fill-[#1877F2]" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-4.873-12-10.875-12S2.25 5.446 2.25 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H9.078v-3.47h3.297V9.43c0-3.253 1.934-5.05 4.901-5.05 1.42 0 2.903.254 2.903.254v3.193h-1.637c-1.611 0-2.114.998-2.114 2.023v2.428h3.601l-.575 3.47h-3.026v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
               </form>
             ) : (
-              /* SIGNUP FORM */
-              <form onSubmit={(e) => { e.preventDefault(); onOpenAuth(); }} className="space-y-3.5">
-                {/* Full Name */}
+              /* IN-PAGE SIGNUP FORM (No Social Buttons!) */
+              <form onSubmit={handleInPageSignup} className="space-y-3">
+                {/* 1. Full Name */}
                 <div className="space-y-1">
                   <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
                     {isEnglish ? 'Full Name' : 'পূর্ণ নাম'} *
@@ -1128,127 +1384,191 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     <input
                       type="text"
                       required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
                       placeholder="e.g. Muhibbul Islam"
                       className="w-full px-3 py-2 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
                     />
                   </div>
                 </div>
 
-                {/* Email */}
+                {/* 2. Username with Real-time DB Check */}
                 <div className="space-y-1">
-                  <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
-                    {isEnglish ? 'Email Address' : 'ইমেইল এড্রেস'} *
-                  </label>
+                  <div className="flex items-center justify-between pl-1">
+                    <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300">
+                      {isEnglish ? 'Username' : 'ইউজারনেম'}
+                    </label>
+                    {usernameMsg && (
+                      <span className={`text-[10px] font-bold ${usernameAvailable ? 'text-emerald-600' : 'text-rose-500'}`}>
+                        {usernameMsg}
+                      </span>
+                    )}
+                  </div>
                   <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
-                    <Mail className="w-5 h-5 text-emerald-600 ml-3 shrink-0" />
+                    <span className="text-xs font-black text-emerald-600 ml-3 shrink-0">@</span>
                     <input
-                      type="email"
-                      required
-                      placeholder="name@email.com"
-                      className="w-full px-3 py-2 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+                      type="text"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      placeholder="muhibbul524"
+                      className="w-full px-2 py-2 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
                     />
+                    {usernameChecking && <Loader2 className="w-4 h-4 text-slate-400 animate-spin mr-2" />}
+                    {!usernameChecking && usernameAvailable === true && <CheckCircle2 className="w-4 h-4 text-emerald-600 mr-2" />}
+                    {!usernameChecking && usernameAvailable === false && <XCircle className="w-4 h-4 text-rose-500 mr-2" />}
                   </div>
                 </div>
 
-                {/* Password */}
+                {/* 3. Email & Phone Number (Flexible: At least 1 required) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
+                      {isEnglish ? 'Email' : 'ইমেইল'}
+                    </label>
+                    <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
+                      <Mail className="w-4 h-4 text-emerald-600 ml-2.5 shrink-0" />
+                      <input
+                        type="email"
+                        value={signupEmail}
+                        onChange={(e) => setSignupEmail(e.target.value)}
+                        placeholder="name@email.com"
+                        className="w-full px-2 py-1.5 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
+                      {isEnglish ? 'Phone' : 'মোবাইল নম্বর'}
+                    </label>
+                    <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
+                      <span className="text-[10px] font-bold text-emerald-600 ml-2.5 shrink-0">📱</span>
+                      <input
+                        type="tel"
+                        value={signupPhone}
+                        onChange={(e) => setSignupPhone(e.target.value)}
+                        placeholder="+8801700000000"
+                        className="w-full px-2 py-1.5 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Gender Segmented Selector */}
                 <div className="space-y-1">
                   <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
-                    {isEnglish ? 'Password' : 'পাসওয়ার্ড'} *
+                    {isEnglish ? 'Gender' : 'লিঙ্গ'}
                   </label>
-                  <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
-                    <Lock className="w-5 h-5 text-emerald-600 ml-3 shrink-0" />
-                    <input
-                      type="password"
-                      required
-                      placeholder="Min 6 characters"
-                      className="w-full px-3 py-2 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
-                    />
+                  <div className="grid grid-cols-3 gap-1.5 bg-[#e4f1ed] dark:bg-zinc-800 p-1 rounded-2xl shadow-[inset_2px_2px_4px_rgba(0,0,0,0.06)]">
+                    <button
+                      type="button"
+                      onClick={() => setGender('male')}
+                      className={`py-1 rounded-xl text-[11px] font-bold transition cursor-pointer ${
+                        gender === 'male' ? 'bg-white dark:bg-zinc-700 text-emerald-700 dark:text-emerald-300 shadow-xs' : 'text-slate-500 dark:text-zinc-400'
+                      }`}
+                    >
+                      {isEnglish ? 'Male' : 'পুরুষ'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setGender('female')}
+                      className={`py-1 rounded-xl text-[11px] font-bold transition cursor-pointer ${
+                        gender === 'female' ? 'bg-white dark:bg-zinc-700 text-emerald-700 dark:text-emerald-300 shadow-xs' : 'text-slate-500 dark:text-zinc-400'
+                      }`}
+                    >
+                      {isEnglish ? 'Female' : 'নারী'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setGender('other')}
+                      className={`py-1 rounded-xl text-[11px] font-bold transition cursor-pointer ${
+                        gender === 'other' ? 'bg-white dark:bg-zinc-700 text-emerald-700 dark:text-emerald-300 shadow-xs' : 'text-slate-500 dark:text-zinc-400'
+                      }`}
+                    >
+                      {isEnglish ? 'Other' : 'অন্যান্য'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* 5. Password & Confirm Password (with Eye Visibility Toggles) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
+                      {isEnglish ? 'Password' : 'পাসওয়ার্ড'} *
+                    </label>
+                    <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
+                      <Lock className="w-4 h-4 text-emerald-600 ml-2.5 shrink-0" />
+                      <input
+                        type={showSignupPassword ? 'text' : 'password'}
+                        required
+                        value={signupPassword}
+                        onChange={(e) => setSignupPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full px-2 py-1.5 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowSignupPassword(!showSignupPassword)}
+                        className="pr-2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                      >
+                        {showSignupPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
+                      {isEnglish ? 'Confirm Password' : 'পাসওয়ার্ড নিশ্চিত'} *
+                    </label>
+                    <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
+                      <Lock className="w-4 h-4 text-emerald-600 ml-2.5 shrink-0" />
+                      <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        required
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        placeholder="••••••••"
+                        className="w-full px-2 py-1.5 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="pr-2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                      >
+                        {showConfirmPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
                 {/* Main Action 3D Deep Green Button */}
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white font-extrabold text-xs flex items-center justify-center space-x-2 transition-all duration-200 active:scale-98 shadow-lg shadow-emerald-600/30 cursor-pointer"
+                  disabled={isAuthLoading}
+                  className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white font-extrabold text-xs flex items-center justify-center space-x-2 transition-all duration-200 active:scale-98 shadow-lg shadow-emerald-600/30 cursor-pointer disabled:opacity-50"
                   style={{
                     boxShadow: '6px 6px 16px rgba(5,150,105,0.35), -4px -4px 12px rgba(255,255,255,0.9), inset 1px 1px 2px rgba(255,255,255,0.4)'
                   }}
                 >
-                  <span>{isEnglish ? 'Create Family Account' : 'পারিবারিক অ্যাকাউন্ট খুলুন'}</span>
-                  <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center ml-1">
-                    <ArrowRight className="w-4 h-4 text-white" />
-                  </div>
+                  {isAuthLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
+                  ) : (
+                    <>
+                      <span>{isEnglish ? 'Create Family Account' : 'পারিবারিক অ্যাকাউন্ট খুলুন'}</span>
+                      <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center ml-1">
+                        <ArrowRight className="w-4 h-4 text-white" />
+                      </div>
+                    </>
+                  )}
                 </button>
               </form>
             )}
 
-            {/* Social Login Section (from image_4.png) */}
-            <div className="pt-2 space-y-3">
-              <div className="relative flex items-center justify-center">
-                <div className="border-t border-slate-300 dark:border-zinc-700 w-full" />
-                <span className="bg-[#eef7f2] dark:bg-zinc-900 px-3 text-[10px] font-black tracking-wider text-slate-400 dark:text-zinc-500 uppercase whitespace-nowrap">
-                  OR CONTINUE WITH
-                </span>
-                <div className="border-t border-slate-300 dark:border-zinc-700 w-full" />
-              </div>
-
-              {/* 3 Raised Neumorphic Square Buttons for Google, Discord, Facebook */}
-              <div className="flex items-center justify-center gap-4 pt-1">
-                {/* Google */}
-                <button
-                  type="button"
-                  onClick={() => onOpenAuth()}
-                  title="Continue with Google"
-                  className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer"
-                  style={{
-                    boxShadow: '4px 4px 10px rgba(0,0,0,0.1), -3px -3px 8px rgba(255,255,255,0.9)'
-                  }}
-                >
-                  <svg className="w-5 h-5" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
-                  </svg>
-                </button>
-
-                {/* Discord */}
-                <button
-                  type="button"
-                  onClick={() => onOpenAuth()}
-                  title="Continue with Discord"
-                  className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer"
-                  style={{
-                    boxShadow: '4px 4px 10px rgba(0,0,0,0.1), -3px -3px 8px rgba(255,255,255,0.9)'
-                  }}
-                >
-                  <svg className="w-5 h-5 fill-[#5865F2]" viewBox="0 0 24 24">
-                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
-                  </svg>
-                </button>
-
-                {/* Facebook */}
-                <button
-                  type="button"
-                  onClick={() => onOpenAuth()}
-                  title="Continue with Facebook"
-                  className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer"
-                  style={{
-                    boxShadow: '4px 4px 10px rgba(0,0,0,0.1), -3px -3px 8px rgba(255,255,255,0.9)'
-                  }}
-                >
-                  <svg className="w-5 h-5 fill-[#1877F2]" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-4.873-12-10.875-12S2.25 5.446 2.25 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H9.078v-3.47h3.297V9.43c0-3.253 1.934-5.05 4.901-5.05 1.42 0 2.903.254 2.903.254v3.193h-1.637c-1.611 0-2.114.998-2.114 2.023v2.428h3.601l-.575 3.47h-3.026v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            {/* 1-Click Super Admin Fast Login */}
-            <div className="pt-2 text-center">
+            {/* 1-Click Super Admin Fast Login Shortcut */}
+            <div className="pt-2 text-center border-t border-slate-200/60 dark:border-zinc-800">
               <button
                 type="button"
-                onClick={() => onOpenAuth()}
+                onClick={handleFastSuperAdminLogin}
                 className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-300 text-[11px] font-black active:scale-95 transition cursor-pointer"
               >
                 <span>👑</span>
