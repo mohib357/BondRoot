@@ -4,6 +4,7 @@ import {
   GitFork,
   Sparkles,
   MessageSquare,
+  Mail,
   Shield,
   ArrowRight,
   Heart,
@@ -787,70 +788,120 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               "বন্ডরুট নির্মাণের পেছনে আমার লক্ষ্য — বাঙালি পারিবারিক বন্ধন, ইতিহাস ও ঐতিহ্যকে ডিজিটাল জগতে চিরকালের জন্য সংরক্ষণ করা।"
             </p>
 
-            {/* Social & Contact Grid Buttons */}
-            <div className="space-y-2 pt-1">
-              <p className="text-xs font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
+            {/* Circular 3D Neumorphic Social / Contact Button Grid */}
+            <div className="pt-2 space-y-2">
+              <p className="text-[11px] font-extrabold uppercase tracking-wider text-slate-500 dark:text-zinc-400 text-center sm:text-left">
                 {isEnglish ? 'Contact & Social Connect' : 'যোগাযোগ ও সোশ্যাল কানেক্ট'}
               </p>
 
-              <div className="grid grid-cols-2 gap-2">
-                {/* Send Message Form Toggle */}
-                <button
-                  type="button"
-                  onClick={() => setShowQuickForm(!showQuickForm)}
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95 cursor-pointer"
-                  style={{boxShadow: '3px 3px 6px rgba(0,0,0,0.06), -2px -2px 5px rgba(255,255,255,0.8)'}}
-                >
-                  <span>💬</span>
-                  <span>সরাসরি বার্তা</span>
-                </button>
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-4 py-2">
 
-                {/* WhatsApp */}
-                <a
-                  href="https://wa.me/8801700000000"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95 cursor-pointer"
-                  style={{boxShadow: '3px 3px 6px rgba(0,0,0,0.06), -2px -2px 5px rgba(255,255,255,0.8)'}}
-                >
-                  <span>🟢</span>
-                  <span>WhatsApp</span>
-                </a>
+                {/* 1. Direct Message */}
+                <div className="flex flex-col items-center group relative">
+                  <button
+                    type="button"
+                    title={isEnglish ? 'Send Message' : 'সরাসরি বার্তা'}
+                    onClick={() => setShowQuickForm(!showQuickForm)}
+                    className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-br from-indigo-500 via-indigo-600 to-indigo-700 text-white flex items-center justify-center transition-all duration-200 active:scale-90 hover:scale-105 cursor-pointer relative"
+                    style={{
+                      borderRadius: '9999px',
+                      boxShadow: '5px 5px 12px rgba(0,0,0,0.15), -4px -4px 10px rgba(255,255,255,0.9), inset 1px 1px 2px rgba(255,255,255,0.5)'
+                    }}
+                  >
+                    <MessageSquare className="w-5 h-5 text-white stroke-[2.2]" />
+                  </button>
+                  <span className="text-[10px] font-extrabold text-slate-600 dark:text-zinc-400 mt-1 text-center">
+                    {isEnglish ? 'Message' : 'বার্তা'}
+                  </span>
+                </div>
 
-                {/* Email */}
-                <a
-                  href="mailto:muhibbul524@gmail.com"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95 cursor-pointer"
-                  style={{boxShadow: '3px 3px 6px rgba(0,0,0,0.06), -2px -2px 5px rgba(255,255,255,0.8)'}}
-                >
-                  <span>✉️</span>
-                  <span>ইমেইল</span>
-                </a>
+                {/* 2. WhatsApp */}
+                <div className="flex flex-col items-center group relative">
+                  <a
+                    href="https://wa.me/8801700000000"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="WhatsApp"
+                    className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-br from-emerald-500 via-green-500 to-emerald-600 text-white flex items-center justify-center transition-all duration-200 active:scale-90 hover:scale-105 cursor-pointer relative"
+                    style={{
+                      borderRadius: '9999px',
+                      boxShadow: '5px 5px 12px rgba(0,0,0,0.15), -4px -4px 10px rgba(255,255,255,0.9), inset 1px 1px 2px rgba(255,255,255,0.5)'
+                    }}
+                  >
+                    <svg className="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+                      <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.758.459 3.474 1.33 4.988l-1.413 5.163 5.286-1.385c1.458.796 3.104 1.215 4.782 1.216h.004c5.505 0 9.989-4.478 9.99-9.984 0-2.668-1.038-5.176-2.925-7.062a9.927 9.927 0 0 0-7.064-2.92zm5.82 14.161c-.246.691-1.229 1.263-1.697 1.341-.468.079-1.077.112-1.74-.087-.401-.121-.918-.287-1.583-.574-2.793-1.202-4.617-4.032-4.757-4.218-.14-.187-1.139-1.516-1.139-2.891 0-1.376.721-2.052.978-2.332.257-.281.562-.351.75-.351.187 0 .374.002.538.01.176.008.411-.067.644.492.234.56.795 1.942.865 2.083.07.14.117.304.023.491-.093.187-.14.304-.28.468-.14.164-.295.367-.422.492-.14.14-.286.293-.123.573.164.281.728 1.198 1.564 1.943 1.076.958 1.982 1.255 2.263 1.396.281.14.445.117.608-.07.164-.187.702-.818.89-1.099.187-.281.374-.234.632-.14.257.094 1.637.772 1.918.913.281.14.468.211.538.328.07.117.07.679-.176 1.37z"/>
+                    </svg>
+                  </a>
+                  <span className="text-[10px] font-extrabold text-slate-600 dark:text-zinc-400 mt-1 text-center">
+                    WhatsApp
+                  </span>
+                </div>
 
-                {/* Facebook */}
-                <a
-                  href="https://facebook.com/muhibbul524"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95 cursor-pointer"
-                  style={{boxShadow: '3px 3px 6px rgba(0,0,0,0.06), -2px -2px 5px rgba(255,255,255,0.8)'}}
-                >
-                  <span>🔵</span>
-                  <span>Facebook</span>
-                </a>
+                {/* 3. Email */}
+                <div className="flex flex-col items-center group relative">
+                  <a
+                    href="mailto:muhibbul524@gmail.com"
+                    title={isEnglish ? 'Email' : 'ইমেইল'}
+                    className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-br from-sky-400 via-sky-500 to-blue-600 text-white flex items-center justify-center transition-all duration-200 active:scale-90 hover:scale-105 cursor-pointer relative"
+                    style={{
+                      borderRadius: '9999px',
+                      boxShadow: '5px 5px 12px rgba(0,0,0,0.15), -4px -4px 10px rgba(255,255,255,0.9), inset 1px 1px 2px rgba(255,255,255,0.5)'
+                    }}
+                  >
+                    <Mail className="w-5 h-5 text-white stroke-[2.2]" />
+                  </a>
+                  <span className="text-[10px] font-extrabold text-slate-600 dark:text-zinc-400 mt-1 text-center">
+                    {isEnglish ? 'Email' : 'ইমেইল'}
+                  </span>
+                </div>
 
-                {/* Instagram */}
-                <a
-                  href="https://instagram.com/muhibbul524"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="col-span-2 flex items-center justify-center gap-2 p-2.5 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95 cursor-pointer"
-                  style={{boxShadow: '3px 3px 6px rgba(0,0,0,0.06), -2px -2px 5px rgba(255,255,255,0.8)'}}
-                >
-                  <span>🟣</span>
-                  <span>Instagram</span>
-                </a>
+                {/* 4. Facebook */}
+                <div className="flex flex-col items-center group relative">
+                  <a
+                    href="https://facebook.com/muhibbul524"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Facebook"
+                    className="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white flex items-center justify-center transition-all duration-200 active:scale-90 hover:scale-105 cursor-pointer relative"
+                    style={{
+                      borderRadius: '9999px',
+                      boxShadow: '5px 5px 12px rgba(0,0,0,0.15), -4px -4px 10px rgba(255,255,255,0.9), inset 1px 1px 2px rgba(255,255,255,0.5)'
+                    }}
+                  >
+                    <svg className="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-4.873-12-10.875-12S2.25 5.446 2.25 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H9.078v-3.47h3.297V9.43c0-3.253 1.934-5.05 4.901-5.05 1.42 0 2.903.254 2.903.254v3.193h-1.637c-1.611 0-2.114.998-2.114 2.023v2.428h3.601l-.575 3.47h-3.026v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </a>
+                  <span className="text-[10px] font-extrabold text-slate-600 dark:text-zinc-400 mt-1 text-center">
+                    Facebook
+                  </span>
+                </div>
+
+                {/* 5. Instagram */}
+                <div className="flex flex-col items-center group relative">
+                  <a
+                    href="https://instagram.com/muhibbul524"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Instagram"
+                    className="w-12 h-12 sm:w-13 sm:h-13 rounded-full text-white flex items-center justify-center transition-all duration-200 active:scale-90 hover:scale-105 cursor-pointer relative"
+                    style={{
+                      borderRadius: '9999px',
+                      background: 'linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)',
+                      boxShadow: '5px 5px 12px rgba(0,0,0,0.15), -4px -4px 10px rgba(255,255,255,0.9), inset 1px 1px 2px rgba(255,255,255,0.5)'
+                    }}
+                  >
+                    <svg className="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+                      <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                    </svg>
+                  </a>
+                  <span className="text-[10px] font-extrabold text-slate-600 dark:text-zinc-400 mt-1 text-center">
+                    Instagram
+                  </span>
+                </div>
+
               </div>
+            </div>
 
               {/* Inline Quick Message Input Form */}
               {showQuickForm && (
@@ -903,7 +954,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
         </div>
-      </div>
 
       {/* ── Language Settings Page (In-Page View) ── */}
       <div style={{display: activePage === 'lang' ? 'flex' : 'none', flexDirection:'column'}} className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a]">
