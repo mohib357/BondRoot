@@ -5,6 +5,9 @@ import {
   Sparkles,
   MessageSquare,
   Mail,
+  User,
+  Eye,
+  EyeOff,
   Shield,
   ArrowRight,
   Heart,
@@ -205,6 +208,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const [msgSending, setMsgSending] = React.useState(false);
   const [msgSentSuccess, setMsgSentSuccess] = React.useState(false);
   const [showQuickForm, setShowQuickForm] = React.useState(false);
+
+  // Login page sub-tab state & password visibility
+  const [loginTab, setLoginTab] = React.useState<'signin' | 'signup'>('signin');
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const scrollToDemo = () => {
     const el = document.getElementById('demo-tree-preview');
@@ -953,39 +960,311 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </div>
 
-      {/* ── Login Page ── */}
-      <div style={{display: activePage === 'login' ? 'flex' : 'none', flexDirection:'column'}} className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a]">
+      {/* ── Login Page (Full-Screen Futuristic Neumorphic Soft UI) ── */}
+      <div style={{display: activePage === 'login' ? 'flex' : 'none', flexDirection:'column'}} className="min-h-screen bg-gradient-to-br from-slate-100 via-[#e8f4f0] to-[#d8ece6] dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950 relative overflow-hidden">
+
+        {/* Floating Ambient 3D Soft Geometric Shapes & Glows */}
+        <div className="absolute -top-16 -left-16 w-56 h-56 rounded-full bg-emerald-200/40 dark:bg-emerald-900/20 blur-2xl pointer-events-none" />
+        <div className="absolute top-1/4 -right-12 w-48 h-48 rounded-full bg-teal-200/50 dark:bg-teal-900/30 blur-2xl pointer-events-none" />
+        <div className="absolute bottom-20 -left-12 w-52 h-52 rounded-full bg-emerald-300/30 dark:bg-emerald-950/40 blur-3xl pointer-events-none" />
+
         {/* Sticky Header */}
-        <header className="sticky top-0 z-40 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800">
-          <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-3">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white">
-              <Network className="w-5 h-5" />
-            </div>
-            <span className="text-lg font-black bg-gradient-to-r from-amber-500 via-emerald-600 to-teal-600 bg-clip-text text-transparent">BondRoot</span>
-            <div className="ml-auto">
-              <button onClick={onToggleDarkMode} className="p-2 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-zinc-800/80 transition-all active:scale-90 cursor-pointer neu-button">
-                {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
-              </button>
-            </div>
-          </div>
-        </header>
-        <div className="flex-1 flex flex-col items-center justify-center p-6 pb-28">
-          <div className="section-card p-8 w-full max-w-sm space-y-5">
-            <div className="text-center space-y-2">
-              <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white mx-auto shadow-lg shadow-emerald-500/30">
-                <Network className="w-8 h-8" />
+        <header className="sticky top-0 z-40 bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border-b border-slate-200/60 dark:border-zinc-800/60">
+          <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white shadow-md">
+                <Network className="w-5 h-5" />
               </div>
-              <h2 className="text-xl font-black text-slate-900 dark:text-white">{isEnglish ? 'Welcome Back' : 'স্বাগতম'}</h2>
-              <p className="text-xs text-slate-500 dark:text-zinc-400">{isEnglish ? 'Sign in to your BondRoot account' : 'আপনার BondRoot অ্যাকাউন্টে প্রবেশ করুন'}</p>
+              <span className="text-lg font-black bg-gradient-to-r from-amber-500 via-emerald-600 to-teal-600 bg-clip-text text-transparent">BondRoot</span>
             </div>
-            <button
-              onClick={() => { onOpenAuth(); }}
-              className="w-full btn-glossy-primary text-sm"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>{isEnglish ? 'Open In-Page Sign In / Sign Up' : 'লগইন / নতুন অ্যাকাউন্ট খুলুন'}</span>
+
+            {/* Dark Mode Toggle */}
+            <button onClick={onToggleDarkMode} className="p-2.5 rounded-2xl bg-white/80 dark:bg-zinc-800/80 shadow-[4px_4px_10px_rgba(0,0,0,0.06),-2px_-2px_6px_rgba(255,255,255,0.9)] transition-all active:scale-90 cursor-pointer">
+              {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
             </button>
           </div>
+        </header>
+
+        {/* Full-Screen Page Content Container */}
+        <div className="flex-1 flex flex-col justify-center items-center p-4 sm:p-6 pb-28 max-w-md mx-auto w-full relative z-10 space-y-4">
+
+          {/* Top Logo/Branding: Raised Circular Neumorphic Holder with 3D Flame/Tree Icon */}
+          <div className="flex flex-col items-center text-center space-y-2">
+            <div
+              className="w-20 h-20 sm:w-22 sm:h-22 rounded-3xl bg-gradient-to-tr from-emerald-600 via-teal-600 to-emerald-700 text-white flex items-center justify-center shadow-xl relative group"
+              style={{
+                boxShadow: '8px 8px 20px rgba(0,0,0,0.12), -8px -8px 20px rgba(255,255,255,0.95), inset 2px 2px 4px rgba(255,255,255,0.4)'
+              }}
+            >
+              <Network className="w-10 h-10 stroke-[2.2] drop-shadow-md text-white" />
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+              {isEnglish ? 'Welcome Back' : 'স্বাগতম'}
+            </h1>
+            <p className="text-xs font-semibold text-slate-500 dark:text-zinc-400">
+              {isEnglish ? 'Sign in to your BondRoot account' : 'আপনার BondRoot অ্যাকাউন্টে প্রবেশ করুন'}
+            </p>
+          </div>
+
+          {/* Raised Neumorphic Container for Form & Tabs */}
+          <div
+            className="w-full p-6 sm:p-7 rounded-3xl bg-[#eef7f2]/90 dark:bg-zinc-900/90 backdrop-blur-sm border border-white/60 dark:border-zinc-800 space-y-5"
+            style={{
+              boxShadow: '12px 12px 30px rgba(0,0,0,0.08), -10px -10px 25px rgba(255,255,255,0.95)'
+            }}
+          >
+            {/* Authentication Tabs: Raised Neumorphic Sliding Pill */}
+            <div className="relative flex bg-[#e4f1ed] dark:bg-zinc-800/90 rounded-2xl p-1.5 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]">
+              <div
+                className="absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] rounded-xl bg-white dark:bg-zinc-700 shadow-md transition-transform duration-300 ease-out"
+                style={{ transform: loginTab === 'signin' ? 'translateX(3px)' : 'translateX(calc(100% + 6px))' }}
+              />
+              <button
+                type="button"
+                onClick={() => setLoginTab('signin')}
+                className={`relative z-10 flex-1 py-2.5 text-xs font-black rounded-xl transition-colors duration-150 cursor-pointer ${
+                  loginTab === 'signin' ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-zinc-400'
+                }`}
+              >
+                {isEnglish ? 'Sign In (লগইন)' : 'লগইন (Sign In)'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setLoginTab('signup')}
+                className={`relative z-10 flex-1 py-2.5 text-xs font-black rounded-xl transition-colors duration-150 cursor-pointer ${
+                  loginTab === 'signup' ? 'text-emerald-700 dark:text-emerald-300' : 'text-slate-500 dark:text-zinc-400'
+                }`}
+              >
+                {isEnglish ? 'Create Account (নিবন্ধন)' : 'নতুন অ্যাকাউন্ট (Sign Up)'}
+              </button>
+            </div>
+
+            {/* Form Fields: Raised Neumorphic Inset Fields */}
+            {loginTab === 'signin' ? (
+              <form onSubmit={(e) => { e.preventDefault(); onOpenAuth(); }} className="space-y-4">
+                {/* Username / Email Field */}
+                <div className="space-y-1">
+                  <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
+                    {isEnglish ? 'Username or Email' : 'ইমেইল অথবা ইউজারনেম'}
+                  </label>
+                  <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
+                    <User className="w-5 h-5 text-emerald-600 ml-3 shrink-0" />
+                    <input
+                      type="text"
+                      required
+                      placeholder="muhibbul524@gmail.com"
+                      className="w-full px-3 py-2.5 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+                    />
+                  </div>
+                </div>
+
+                {/* Password Field */}
+                <div className="space-y-1">
+                  <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
+                    {isEnglish ? 'Password' : 'পাসওয়ার্ড'}
+                  </label>
+                  <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
+                    <Lock className="w-5 h-5 text-emerald-600 ml-3 shrink-0" />
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      required
+                      placeholder="••••••••"
+                      className="w-full px-3 py-2.5 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="pr-3 text-slate-400 hover:text-slate-700 dark:hover:text-zinc-200 cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Remember Me & Forgot Password Row */}
+                <div className="flex items-center justify-between text-[11px] font-extrabold px-1">
+                  <label className="flex items-center gap-2 cursor-pointer text-slate-600 dark:text-zinc-300 select-none">
+                    <input
+                      type="checkbox"
+                      defaultChecked
+                      className="w-4 h-4 rounded-md accent-emerald-600 cursor-pointer"
+                    />
+                    <span>{isEnglish ? 'Remember Me' : 'মনে রাখুন'}</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => onOpenAuth()}
+                    className="text-emerald-700 dark:text-emerald-400 hover:underline cursor-pointer"
+                  >
+                    {isEnglish ? 'Forgot Password?' : 'পাসওয়ার্ড ভুলে গেছেন?'}
+                  </button>
+                </div>
+
+                {/* Main Action 3D Deep Green Button */}
+                <button
+                  type="submit"
+                  className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white font-extrabold text-xs flex items-center justify-center space-x-2 transition-all duration-200 active:scale-98 shadow-lg shadow-emerald-600/30 cursor-pointer"
+                  style={{
+                    boxShadow: '6px 6px 16px rgba(5,150,105,0.35), -4px -4px 12px rgba(255,255,255,0.9), inset 1px 1px 2px rgba(255,255,255,0.4)'
+                  }}
+                >
+                  <span>{isEnglish ? 'Login' : 'পারিবারিক পোর্টালে প্রবেশ'}</span>
+                  <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center ml-1">
+                    <ArrowRight className="w-4 h-4 text-white" />
+                  </div>
+                </button>
+              </form>
+            ) : (
+              /* SIGNUP FORM */
+              <form onSubmit={(e) => { e.preventDefault(); onOpenAuth(); }} className="space-y-3.5">
+                {/* Full Name */}
+                <div className="space-y-1">
+                  <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
+                    {isEnglish ? 'Full Name' : 'পূর্ণ নাম'} *
+                  </label>
+                  <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
+                    <User className="w-5 h-5 text-emerald-600 ml-3 shrink-0" />
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Muhibbul Islam"
+                      className="w-full px-3 py-2 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+                    />
+                  </div>
+                </div>
+
+                {/* Email */}
+                <div className="space-y-1">
+                  <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
+                    {isEnglish ? 'Email Address' : 'ইমেইল এড্রেস'} *
+                  </label>
+                  <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
+                    <Mail className="w-5 h-5 text-emerald-600 ml-3 shrink-0" />
+                    <input
+                      type="email"
+                      required
+                      placeholder="name@email.com"
+                      className="w-full px-3 py-2 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+                    />
+                  </div>
+                </div>
+
+                {/* Password */}
+                <div className="space-y-1">
+                  <label className="text-[11px] font-extrabold text-slate-700 dark:text-zinc-300 pl-1">
+                    {isEnglish ? 'Password' : 'পাসওয়ার্ড'} *
+                  </label>
+                  <div className="rounded-2xl bg-[#e6f3ee] dark:bg-zinc-800 shadow-[inset_3px_3px_6px_rgba(0,0,0,0.08),inset_-3px_-3px_6px_rgba(255,255,255,0.9)] p-1 flex items-center">
+                    <Lock className="w-5 h-5 text-emerald-600 ml-3 shrink-0" />
+                    <input
+                      type="password"
+                      required
+                      placeholder="Min 6 characters"
+                      className="w-full px-3 py-2 text-xs font-semibold bg-transparent text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
+                    />
+                  </div>
+                </div>
+
+                {/* Main Action 3D Deep Green Button */}
+                <button
+                  type="submit"
+                  className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white font-extrabold text-xs flex items-center justify-center space-x-2 transition-all duration-200 active:scale-98 shadow-lg shadow-emerald-600/30 cursor-pointer"
+                  style={{
+                    boxShadow: '6px 6px 16px rgba(5,150,105,0.35), -4px -4px 12px rgba(255,255,255,0.9), inset 1px 1px 2px rgba(255,255,255,0.4)'
+                  }}
+                >
+                  <span>{isEnglish ? 'Create Family Account' : 'পারিবারিক অ্যাকাউন্ট খুলুন'}</span>
+                  <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center ml-1">
+                    <ArrowRight className="w-4 h-4 text-white" />
+                  </div>
+                </button>
+              </form>
+            )}
+
+            {/* Social Login Section (from image_4.png) */}
+            <div className="pt-2 space-y-3">
+              <div className="relative flex items-center justify-center">
+                <div className="border-t border-slate-300 dark:border-zinc-700 w-full" />
+                <span className="bg-[#eef7f2] dark:bg-zinc-900 px-3 text-[10px] font-black tracking-wider text-slate-400 dark:text-zinc-500 uppercase whitespace-nowrap">
+                  OR CONTINUE WITH
+                </span>
+                <div className="border-t border-slate-300 dark:border-zinc-700 w-full" />
+              </div>
+
+              {/* 3 Raised Neumorphic Square Buttons for Google, Discord, Facebook */}
+              <div className="flex items-center justify-center gap-4 pt-1">
+                {/* Google */}
+                <button
+                  type="button"
+                  onClick={() => onOpenAuth()}
+                  title="Continue with Google"
+                  className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer"
+                  style={{
+                    boxShadow: '4px 4px 10px rgba(0,0,0,0.1), -3px -3px 8px rgba(255,255,255,0.9)'
+                  }}
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                  </svg>
+                </button>
+
+                {/* Discord */}
+                <button
+                  type="button"
+                  onClick={() => onOpenAuth()}
+                  title="Continue with Discord"
+                  className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer"
+                  style={{
+                    boxShadow: '4px 4px 10px rgba(0,0,0,0.1), -3px -3px 8px rgba(255,255,255,0.9)'
+                  }}
+                >
+                  <svg className="w-5 h-5 fill-[#5865F2]" viewBox="0 0 24 24">
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z" />
+                  </svg>
+                </button>
+
+                {/* Facebook */}
+                <button
+                  type="button"
+                  onClick={() => onOpenAuth()}
+                  title="Continue with Facebook"
+                  className="w-12 h-12 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer"
+                  style={{
+                    boxShadow: '4px 4px 10px rgba(0,0,0,0.1), -3px -3px 8px rgba(255,255,255,0.9)'
+                  }}
+                >
+                  <svg className="w-5 h-5 fill-[#1877F2]" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-4.873-12-10.875-12S2.25 5.446 2.25 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H9.078v-3.47h3.297V9.43c0-3.253 1.934-5.05 4.901-5.05 1.42 0 2.903.254 2.903.254v3.193h-1.637c-1.611 0-2.114.998-2.114 2.023v2.428h3.601l-.575 3.47h-3.026v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            {/* 1-Click Super Admin Fast Login */}
+            <div className="pt-2 text-center">
+              <button
+                type="button"
+                onClick={() => onOpenAuth()}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-300 text-[11px] font-black active:scale-95 transition cursor-pointer"
+              >
+                <span>👑</span>
+                <span>{isEnglish ? 'Developer Super Admin Fast Login' : '👑 সুপার অ্যাডমিন দ্রুত লগইন (1-Click)'}</span>
+              </button>
+            </div>
+
+          </div>
+
+          {/* Footer Tagline (from image_4.png) */}
+          <div className="pt-2 text-center">
+            <span className="text-[10px] font-black tracking-widest text-slate-400 dark:text-zinc-500 uppercase">
+              PRESERVE • CONNECT • GROW TOGETHER
+            </span>
+          </div>
+
         </div>
       </div>
 
