@@ -164,9 +164,17 @@ async function startServer() {
   // POST /api/auth/signup - Register new user (rate limited: 5 per 15 min per IP)
   app.post('/api/auth/signup', rateLimit(15 * 60 * 1000, 5), async (req, res) => {
     try {
-      const { full_name, email, phone_number, password } = req.body;
-      if (!full_name || !email || !password) {
-        return res.status(400).json({ success: false, error: 'পূর্ণ নাম, ইমেইল এবং পাসওয়ার্ড আবশ্যক।' });
+      const { full_name, username, email, phone_number, gender, password } = req.body;
+      if (!full_name || !password) {
+        return res.status(400).json({ success: false, error: 'পূর্ণ নাম এবং পাসওয়ার্ড আবশ্যক।' });
+      }
+
+      const cleanEmail = email && email.trim() ? email.trim().toLowerCase() : null;
+      const cleanPhone = phone_number && phone_number.trim() ? phone_number.trim() : null;
+      const cleanUsername = username && username.trim() ? username.trim().toLowerCase() : null;
+
+      if (!cleanEmail && !cleanPhone) {
+        return res.status(400).json({ success: false, error: 'কমপক্ষে একটি ইমেইল অথবা মোবাইল নম্বর দিতে হবে।' });
       }
 
       if (password.length < 6) {
@@ -175,16 +183,27 @@ async function startServer() {
 
       const client = await pool.connect();
       
-      // Check existing email
-      const emailCheck = await client.query('SELECT id FROM users WHERE LOWER(email) = LOWER($1)', [email.trim()]);
-      if (emailCheck.rows.length > 0) {
-        client.release();
-        return res.status(400).json({ success: false, error: 'এই ইমেইল দিয়ে ইতোমধ্যে একটি অ্যাকাউন্ট রয়েছে।' });
+      // Check existing username if provided
+      if (cleanUsername) {
+        const userCheck = await client.query('SELECT id FROM users WHERE LOWER(username) = $1', [cleanUsername]);
+        if (userCheck.rows.length > 0) {
+          client.release();
+          return res.status(400).json({ success: false, error: 'এই ইউজারনেম ইতোমধ্যে ব্যবহৃত হয়েছে। অন্য একটি ইউজারনেম দিন।' });
+        }
+      }
+
+      // Check existing email if provided
+      if (cleanEmail) {
+        const emailCheck = await client.query('SELECT id FROM users WHERE LOWER(email) = $1', [cleanEmail]);
+        if (emailCheck.rows.length > 0) {
+          client.release();
+          return res.status(400).json({ success: false, error: 'এই ইমেইল দিয়ে ইতোমধ্যে একটি অ্যাকাউন্ট রয়েছে।' });
+        }
       }
 
       // Check existing phone if provided
-      if (phone_number && phone_number.trim()) {
-        const phoneCheck = await client.query('SELECT id FROM users WHERE phone_number = $1', [phone_number.trim()]);
+      if (cleanPhone) {
+        const phoneCheck = await client.query('SELECT id FROM users WHERE phone_number = $1', [cleanPhone]);
         if (phoneCheck.rows.length > 0) {
           client.release();
           return res.status(400).json({ success: false, error: 'এই মোবাইল নম্বর দিয়ে ইতোমধ্যে একটি অ্যাকাউন্ট রয়েছে।' });
@@ -192,19 +211,21 @@ async function startServer() {
       }
 
       const userId = 'usr_' + Date.now() + '_' + Math.random().toString(36).substring(2, 7);
-      const isSuperAdminEmail = email.trim().toLowerCase() === 'muhibbul524@gmail.com';
+      const finalEmail = cleanEmail || `${userId}@bondroot.local`;
+      const isSuperAdminEmail = finalEmail.toLowerCase() === 'muhibbul524@gmail.com';
       const role = isSuperAdminEmail ? 'super_admin' : 'member';
       const passwordHash = hashPassword(password);
 
       const insertRes = await client.query(`
-        INSERT INTO users (id, full_name, email, phone_number, password_hash, role)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING id, full_name, email, phone_number, role, avatar_url, created_at
+        INSERT INTO users (id, full_name, username, email, phone_number, password_hash, role)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING id, full_name, username, email, phone_number, role, avatar_url, created_at
       `, [
         userId,
         full_name.trim(),
-        email.trim().toLowerCase(),
-        phone_number ? phone_number.trim() : null,
+        cleanUsername,
+        finalEmail,
+        cleanPhone,
         passwordHash,
         role
       ]);
@@ -231,20 +252,20 @@ async function startServer() {
     try {
       const { identifier, password } = req.body;
       if (!identifier || !password) {
-        return res.status(400).json({ success: false, error: 'ইমেইল/ফোন নম্বর এবং পাসওয়ার্ড দিন।' });
+        return res.status(400).json({ success: false, error: 'ইউজারনেম/ইমেইল/ফোন নম্বর এবং পাসওয়ার্ড দিন।' });
       }
 
       const client = await pool.connect();
       const userRes = await client.query(`
-        SELECT id, full_name, email, phone_number, password_hash, role, avatar_url, created_at
+        SELECT id, full_name, username, email, phone_number, password_hash, role, avatar_url, created_at
         FROM users
-        WHERE LOWER(email) = LOWER($1) OR phone_number = $1
+        WHERE LOWER(email) = LOWER($1) OR phone_number = $1 OR LOWER(username) = LOWER($1)
       `, [identifier.trim()]);
 
       client.release();
 
       if (userRes.rows.length === 0) {
-        return res.status(401).json({ success: false, error: 'ভুল ইমেইল/ফোন অথবা পাসওয়ার্ড।' });
+        return res.status(401).json({ success: false, error: 'ভুল ইউজারনেম/ইমেইল/ফোন অথবা পাসওয়ার্ড।' });
       }
 
       const user = userRes.rows[0];
