@@ -234,17 +234,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </form>
         )}
 
-        {/* Tab Switcher — Sliding Pill */}
-        <div className="relative flex bg-slate-100 dark:bg-zinc-800 rounded-2xl p-1 mx-4 mt-4 mb-0">
+        {/* Tab Switcher — Neumorphic Sliding Pill */}
+        <div className="relative flex bg-slate-100 dark:bg-zinc-800 rounded-2xl p-1.5 mx-4 mt-4 mb-0 shadow-[inset_2px_2px_5px_rgba(0,0,0,0.06),inset_-2px_-2px_5px_rgba(255,255,255,0.8)]">
           {/* Sliding pill indicator */}
           <div
-            className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-xl bg-white dark:bg-zinc-700 shadow-sm transition-transform duration-200 ease-out"
-            style={{ transform: tab === 'login' ? 'translateX(4px)' : 'translateX(calc(100% + 4px))' }}
+            className="absolute top-1.5 bottom-1.5 w-[calc(50%-6px)] rounded-xl bg-white dark:bg-zinc-700 shadow-md transition-transform duration-200 ease-out"
+            style={{ transform: tab === 'login' ? 'translateX(3px)' : 'translateX(calc(100% + 6px))' }}
           />
           <button
             type="button"
             onClick={() => { setTab('login'); setErrorMsg(null); }}
-            className={`relative z-10 flex-1 py-2.5 text-xs font-bold rounded-xl transition-colors duration-150 cursor-pointer ${
+            className={`relative z-10 flex-1 py-2.5 text-xs font-extrabold rounded-xl transition-colors duration-150 cursor-pointer ${
               tab === 'login'
                 ? 'text-emerald-700 dark:text-emerald-400'
                 : 'text-slate-500 dark:text-zinc-400'
@@ -255,7 +255,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           <button
             type="button"
             onClick={() => { setTab('signup'); setErrorMsg(null); }}
-            className={`relative z-10 flex-1 py-2.5 text-xs font-bold rounded-xl transition-colors duration-150 cursor-pointer ${
+            className={`relative z-10 flex-1 py-2.5 text-xs font-extrabold rounded-xl transition-colors duration-150 cursor-pointer ${
               tab === 'signup'
                 ? 'text-emerald-700 dark:text-emerald-400'
                 : 'text-slate-500 dark:text-zinc-400'

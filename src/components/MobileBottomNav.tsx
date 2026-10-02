@@ -34,9 +34,9 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
   };
 
   // SVG viewBox dimensions: 400 wide × 60 tall, center notch at cx=200
-  // Smooth cubic bezier concave dip: ~88px wide, ~30px deep
+  // Ultra-smooth fluid concave dip curve
   const svgPath =
-    'M0,30 L120,30 C150,30 170,0 200,0 C230,0 250,30 280,30 L400,30 L400,60 L0,60 Z';
+    'M 0,20 L 152,20 C 172,20 178,0 200,0 C 222,0 228,20 248,20 L 400,20 L 400,60 L 0,60 Z';
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-40 md:hidden backdrop-blur-lg shadow-[0_-4px_16px_rgba(0,0,0,0.06)] safe-area-pb"
@@ -117,18 +117,18 @@ export const MobileBottomNav: React.FC<MobileBottomNavProps> = ({
           <span className="text-[10px] mt-0.5">{isEnglish ? 'People' : 'সদস্য'}</span>
         </button>
 
-        {/* Center Prominent Action: Smart AI Add — floats above the notch */}
+        {/* Center Prominent Action: Smart AI Add — floats above the smooth concave notch */}
         <button
           onClick={() => {
             triggerHaptic();
             onOpenSmartAIAdd();
           }}
-          className="flex flex-col items-center justify-center -mt-7 relative group"
+          className="flex flex-col items-center justify-center -mt-7 relative group cursor-pointer"
         >
-          <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-purple-600 via-indigo-600 to-purple-500 text-white flex items-center justify-center shadow-lg shadow-purple-500/30 border-2 border-white dark:border-zinc-800 active:scale-95 transition">
-            <Sparkles className="w-5 h-5 text-amber-300" />
+          <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 text-white flex items-center justify-center shadow-xl shadow-purple-500/40 ring-4 ring-white dark:ring-zinc-900 active:scale-95 transition">
+            <Sparkles className="w-6 h-6 text-amber-300 fill-amber-300/30" />
           </div>
-          <span className="text-[10px] font-bold text-purple-700 dark:text-purple-400 mt-0.5">
+          <span className="text-[10px] font-black text-purple-700 dark:text-purple-400 mt-0.5">
             {isEnglish ? 'AI Add' : 'AI এন্ট্রি'}
           </span>
         </button>
