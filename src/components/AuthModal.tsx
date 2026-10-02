@@ -165,8 +165,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-100 overflow-y-auto bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-      <div className="bg-white dark:bg-zinc-900 rounded-3xl max-w-md w-full shadow-2xl overflow-hidden border border-slate-200 dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-200 relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gradient-to-br from-slate-100 via-emerald-50 to-teal-50 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950">
+      <div className="bg-white dark:bg-zinc-900 rounded-3xl max-w-md w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-slate-200 dark:border-zinc-800 animate-in fade-in zoom-in-95 duration-200 relative">
         
         {/* Top Hero Brand Header */}
         <div className="relative bg-gradient-to-r from-emerald-800 via-teal-800 to-emerald-950 p-6 text-white text-center">
@@ -234,32 +234,31 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           </form>
         )}
 
-        {/* Tab Switcher */}
-        <div className="flex border-b border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-900/50 p-1.5 gap-1.5">
+        {/* Tab Switcher — Sliding Pill */}
+        <div className="relative flex bg-slate-100 dark:bg-zinc-800 rounded-2xl p-1 mx-4 mt-4 mb-0">
+          {/* Sliding pill indicator */}
+          <div
+            className="absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-xl bg-white dark:bg-zinc-700 shadow-sm transition-transform duration-200 ease-out"
+            style={{ transform: tab === 'login' ? 'translateX(4px)' : 'translateX(calc(100% + 4px))' }}
+          />
           <button
             type="button"
-            onClick={() => {
-              setTab('login');
-              setErrorMsg(null);
-            }}
-            className={`flex-1 py-2.5 text-xs font-bold rounded-2xl transition cursor-pointer ${
+            onClick={() => { setTab('login'); setErrorMsg(null); }}
+            className={`relative z-10 flex-1 py-2.5 text-xs font-bold rounded-xl transition-colors duration-150 cursor-pointer ${
               tab === 'login'
-                ? 'bg-white dark:bg-zinc-800 text-emerald-700 dark:text-emerald-400 shadow-xs'
-                : 'text-slate-500 hover:text-slate-800 dark:text-zinc-400 dark:hover:text-zinc-200'
+                ? 'text-emerald-700 dark:text-emerald-400'
+                : 'text-slate-500 dark:text-zinc-400'
             }`}
           >
             {isEnglish ? 'Sign In (লগইন)' : 'লগইন (Sign In)'}
           </button>
           <button
             type="button"
-            onClick={() => {
-              setTab('signup');
-              setErrorMsg(null);
-            }}
-            className={`flex-1 py-2.5 text-xs font-bold rounded-2xl transition cursor-pointer ${
+            onClick={() => { setTab('signup'); setErrorMsg(null); }}
+            className={`relative z-10 flex-1 py-2.5 text-xs font-bold rounded-xl transition-colors duration-150 cursor-pointer ${
               tab === 'signup'
-                ? 'bg-white dark:bg-zinc-800 text-emerald-700 dark:text-emerald-400 shadow-xs'
-                : 'text-slate-500 hover:text-slate-800 dark:text-zinc-400 dark:hover:text-zinc-200'
+                ? 'text-emerald-700 dark:text-emerald-400'
+                : 'text-slate-500 dark:text-zinc-400'
             }`}
           >
             {isEnglish ? 'Create Account (নিবন্ধন)' : 'নতুন অ্যাকাউন্ট (Sign Up)'}
