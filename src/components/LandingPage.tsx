@@ -41,8 +41,8 @@ interface LandingPageProps {
 // ── Landing Bottom Nav — Full-width curvy notch active indicator ──
 interface LandingBottomNavProps {
   isEnglish: boolean;
-  activePage: 'home' | 'about' | 'login';
-  setActivePage: (p: 'home' | 'about' | 'login') => void;
+  activePage: 'home' | 'about' | 'login' | 'lang';
+  setActivePage: (p: 'home' | 'about' | 'login' | 'lang') => void;
   onToggleLang: () => void;
   isDarkMode: boolean;
 }
@@ -53,15 +53,15 @@ const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
   // Sync nav highlight with parent activePage
   const [active, setActive] = React.useState<'home' | 'lang' | 'about' | 'login'>(activePage);
   React.useEffect(() => {
-    if (activePage === 'home' || activePage === 'about' || activePage === 'login') {
+    if (activePage === 'home' || activePage === 'about' || activePage === 'login' || activePage === 'lang') {
       setActive(activePage);
     }
   }, [activePage]);
 
   const ITEMS = [
     { id: 'home' as const,  label: isEnglish ? 'Home'    : 'হোম',     onClick: () => { setActive('home'); setActivePage('home'); window.scrollTo({top:0,behavior:'smooth'}); } },
-    { id: 'lang' as const,  label: isEnglish ? 'বাংলা'  : 'English',     onClick: () => { setActive('lang');  onToggleLang(); } },
-    { id: 'about' as const, label: isEnglish ? 'About'   : 'এবাউট',   onClick: () => { setActive('about'); setActivePage('about'); } },
+    { id: 'lang' as const,  label: isEnglish ? 'Language': 'ভাষা',    onClick: () => { setActive('lang'); setActivePage('lang'); } },
+    { id: 'about' as const, label: isEnglish ? 'About'   : 'পরিচিতি', onClick: () => { setActive('about'); setActivePage('about'); } },
     { id: 'login' as const, label: isEnglish ? 'Login'   : 'লগইন',    onClick: () => { setActive('login'); setActivePage('login'); } },
   ];
 
@@ -155,7 +155,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const isEnglish = lang === 'en';
 
   // Page-switch state — controls which sub-page is visible
-  const [activePage, setActivePage] = React.useState<'home' | 'about' | 'login'>('home');
+  const [activePage, setActivePage] = React.useState<'home' | 'about' | 'login' | 'lang'>('home');
 
   // Quick message state
   const [directMessage, setDirectMessage] = React.useState('');
@@ -860,6 +860,112 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
           </div>
 
+        </div>
+      </div>
+
+      {/* ── Language Settings Page (In-Page View) ── */}
+      <div style={{display: activePage === 'lang' ? 'flex' : 'none', flexDirection:'column'}} className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a]">
+        {/* Sticky Header */}
+        <header className="sticky top-0 z-40 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md border-b border-slate-200/80 dark:border-zinc-800">
+          <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-700 to-emerald-500 flex items-center justify-center text-white">
+              <Network className="w-5 h-5" />
+            </div>
+            <span className="text-lg font-black bg-gradient-to-r from-amber-500 via-emerald-600 to-teal-600 bg-clip-text text-transparent">BondRoot</span>
+            <div className="ml-auto">
+              <button onClick={onToggleDarkMode} className="p-2 rounded-xl border border-slate-200 dark:border-zinc-700 bg-white/80 dark:bg-zinc-800/80 transition-all active:scale-90 cursor-pointer neu-button">
+                {isDarkMode ? <Sun className="w-5 h-5 text-amber-400" /> : <Moon className="w-5 h-5 text-slate-600" />}
+              </button>
+            </div>
+          </div>
+        </header>
+
+        <div className="flex-1 flex flex-col justify-center p-4 sm:p-6 pb-28 max-w-md mx-auto w-full">
+          <div className="section-card p-6 w-full space-y-5">
+
+            <div className="text-center space-y-1">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-teal-600 via-emerald-600 to-teal-500 text-white flex items-center justify-center mx-auto shadow-md shadow-emerald-500/20">
+                <Globe className="w-7 h-7" />
+              </div>
+              <h2 className="text-lg font-black text-slate-900 dark:text-white">
+                {isEnglish ? 'Language & Display Settings' : 'ভাষা ও ডিসপ্লে সেটিংস'}
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-zinc-400">
+                {isEnglish
+                  ? 'Select your preferred display language for BondRoot'
+                  : 'BondRoot অ্যাপের পছন্দের ডিসপ্লে ভাষা নির্বাচন করুন'}
+              </p>
+            </div>
+
+            {/* Language Selection Options */}
+            <div className="space-y-3 pt-2">
+
+              {/* Bangla Option */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (isEnglish) onToggleLang();
+                }}
+                className={`w-full p-4 rounded-2xl border transition-all flex items-center justify-between cursor-pointer active:scale-98 ${
+                  !isEnglish
+                    ? 'bg-emerald-50/90 dark:bg-emerald-950/60 border-emerald-500 ring-2 ring-emerald-500/30'
+                    : 'bg-white dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 hover:border-emerald-300'
+                }`}
+                style={{boxShadow: '4px 4px 10px rgba(0,0,0,0.05), -2px -2px 8px rgba(255,255,255,0.8)'}}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200 font-black text-sm flex items-center justify-center">
+                    🇧🇩
+                  </div>
+                  <div className="text-left">
+                    <p className="font-extrabold text-sm text-slate-900 dark:text-white">বাংলা (Bangla)</p>
+                    <p className="text-[11px] text-slate-500 dark:text-zinc-400">বাঙালি পরিবারের জন্য স্বাভাবিক ও প্রাঞ্জল বাংলা পরিবেশ</p>
+                  </div>
+                </div>
+                {!isEnglish && (
+                  <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-4 h-4" />
+                  </div>
+                )}
+              </button>
+
+              {/* English Option */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (!isEnglish) onToggleLang();
+                }}
+                className={`w-full p-4 rounded-2xl border transition-all flex items-center justify-between cursor-pointer active:scale-98 ${
+                  isEnglish
+                    ? 'bg-emerald-50/90 dark:bg-emerald-950/60 border-emerald-500 ring-2 ring-emerald-500/30'
+                    : 'bg-white dark:bg-zinc-800 border-slate-200 dark:border-zinc-700 hover:border-emerald-300'
+                }`}
+                style={{boxShadow: '4px 4px 10px rgba(0,0,0,0.05), -2px -2px 8px rgba(255,255,255,0.8)'}}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/60 text-indigo-800 dark:text-indigo-200 font-black text-sm flex items-center justify-center">
+                    🌐
+                  </div>
+                  <div className="text-left">
+                    <p className="font-extrabold text-sm text-slate-900 dark:text-white">English</p>
+                    <p className="text-[11px] text-slate-500 dark:text-zinc-400">International English language interface</p>
+                  </div>
+                </div>
+                {isEnglish && (
+                  <div className="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shrink-0">
+                    <CheckCircle2 className="w-4 h-4" />
+                  </div>
+                )}
+              </button>
+
+            </div>
+
+            {/* Quick Helper Note */}
+            <div className="p-3 rounded-xl bg-slate-50 dark:bg-zinc-800/80 border border-slate-200 dark:border-zinc-700 text-[11px] text-slate-500 dark:text-zinc-400 text-center">
+              <span>{isEnglish ? 'Language changes apply instantly across the entire application.' : 'ভাষা নির্বাচন সাথে সাথে পুরো অ্যাপে প্রয়োগ হবে।'}</span>
+            </div>
+
+          </div>
         </div>
       </div>
 
