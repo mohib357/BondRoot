@@ -59,7 +59,7 @@ const LandingBottomNav: React.FC<LandingBottomNavProps> = ({
   }, [activePage]);
 
   const ITEMS = [
-    { id: 'home' as const,  label: isEnglish ? 'Home'    : 'হোম',     onClick: () => { setActive('home'); setActivePage('home'); window.scrollTo({top:0,behavior:'smooth'}); } },
+    { id: 'home' as const,  label: isEnglish ? 'Home'    : 'হোম',     onClick: () => { setActive('home'); setActivePage('home'); const el = document.getElementById('landing-page-top'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' }); try { window.scrollTo({top:0,left:0,behavior:'smooth'}); document.documentElement.scrollTo({top:0,left:0,behavior:'smooth'}); document.body.scrollTo({top:0,left:0,behavior:'smooth'}); } catch { window.scrollTo(0,0); } } },
     { id: 'lang' as const,  label: isEnglish ? 'Language': 'ভাষা',    onClick: () => { setActive('lang'); setActivePage('lang'); } },
     { id: 'about' as const, label: isEnglish ? 'About'   : 'পরিচিতি', onClick: () => { setActive('about'); setActivePage('about'); } },
     { id: 'login' as const, label: isEnglish ? 'Login'   : 'লগইন',    onClick: () => { setActive('login'); setActivePage('login'); } },
@@ -157,28 +157,46 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   // Page-switch state — controls which sub-page is visible
   const [activePage, setActivePage] = React.useState<'home' | 'about' | 'login' | 'lang'>('home');
 
+  // Smooth Scroll to Top Helper (Works across all Android WebViews & Browsers)
+  const scrollToTop = React.useCallback(() => {
+    const topEl = document.getElementById('landing-page-top');
+    if (topEl && typeof topEl.scrollIntoView === 'function') {
+      topEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    try {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      document.documentElement.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      document.body.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    } catch {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
   // Handle Page Changes with Browser History (Android Back Button) & Smooth Scroll to Top
   const handlePageChange = React.useCallback((targetPage: 'home' | 'about' | 'login' | 'lang') => {
     if (targetPage === 'home') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollToTop();
     }
     if (targetPage !== activePage) {
       if (targetPage !== 'home') {
         window.history.pushState({ page: targetPage }, '');
       }
       setActivePage(targetPage);
+      if (targetPage === 'home') {
+        setTimeout(scrollToTop, 50);
+      }
     }
-  }, [activePage]);
+  }, [activePage, scrollToTop]);
 
   // Android Hardware Back Button Handler (popstate listener)
   React.useEffect(() => {
     const handlePopState = () => {
       setActivePage('home');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      scrollToTop();
     };
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [scrollToTop]);
 
   // Quick message state
   const [directMessage, setDirectMessage] = React.useState('');
@@ -198,6 +216,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   return (
     <div className="min-h-screen bg-[#eef7f2] dark:bg-[#060e0a] text-slate-900 dark:text-zinc-100 flex flex-col font-sans relative overflow-x-hidden selection:bg-emerald-100 selection:text-emerald-900">
+      <div id="landing-page-top" className="absolute top-0 left-0 w-px h-px pointer-events-none" />
 
 
       {/* ── Page content with smooth transitions ── */}
