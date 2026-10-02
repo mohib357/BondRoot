@@ -157,6 +157,29 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   // Page-switch state — controls which sub-page is visible
   const [activePage, setActivePage] = React.useState<'home' | 'about' | 'login' | 'lang'>('home');
 
+  // Handle Page Changes with Browser History (Android Back Button) & Smooth Scroll to Top
+  const handlePageChange = React.useCallback((targetPage: 'home' | 'about' | 'login' | 'lang') => {
+    if (targetPage === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    if (targetPage !== activePage) {
+      if (targetPage !== 'home') {
+        window.history.pushState({ page: targetPage }, '');
+      }
+      setActivePage(targetPage);
+    }
+  }, [activePage]);
+
+  // Android Hardware Back Button Handler (popstate listener)
+  React.useEffect(() => {
+    const handlePopState = () => {
+      setActivePage('home');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // Quick message state
   const [directMessage, setDirectMessage] = React.useState('');
   const [msgSending, setMsgSending] = React.useState(false);
@@ -1009,7 +1032,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <LandingBottomNav
         isEnglish={isEnglish}
         activePage={activePage}
-        setActivePage={setActivePage}
+        setActivePage={handlePageChange}
         onToggleLang={onToggleLang}
         isDarkMode={isDarkMode}
       />
