@@ -36,6 +36,7 @@ export const DeveloperAboutModal: React.FC<DeveloperAboutModalProps> = ({
   const [message, setMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [sentSuccess, setSentSuccess] = useState(false);
+  const [showMessageForm, setShowMessageForm] = useState(false);
 
   const handleSubmitFeedback = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +92,7 @@ export const DeveloperAboutModal: React.FC<DeveloperAboutModalProps> = ({
         </div>
 
         {/* Scrollable Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 text-xs">
+        <div className="flex-1 min-h-0 overflow-y-auto p-6 space-y-6 text-xs">
           
           {/* Mission Section */}
           <div className="bg-emerald-50/70 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/60 p-5 rounded-2xl space-y-2">
@@ -127,36 +128,109 @@ export const DeveloperAboutModal: React.FC<DeveloperAboutModalProps> = ({
 
           {/* Developer Card */}
           <div className="bg-white dark:bg-zinc-800/50 border border-slate-200 dark:border-zinc-700 p-5 rounded-2xl flex flex-col sm:flex-row items-center sm:items-start gap-4 shadow-xs">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white font-extrabold text-xl flex items-center justify-center shrink-0 shadow-lg border-2 border-white/40">
-              MH
+            <div
+              className="w-20 h-20 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-extrabold text-xl flex items-center justify-center shrink-0 shadow-xl border-4 border-white dark:border-zinc-700"
+              style={{boxShadow: '4px 4px 12px rgba(99,102,241,0.4), -2px -2px 8px rgba(255,255,255,0.8)'}}
+            >
+              MI
             </div>
 
             <div className="flex-1 text-center sm:text-left space-y-1">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                 <h4 className="text-base font-extrabold text-slate-900 dark:text-white">
-                  মুহিববুল হাসান (Muhibbul Hasan)
+                  Muhibbul Islam
                 </h4>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700">
-                  Lead Architect & Creator
+                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700">
+                  Lead Architect & Full-Stack Engineer
                 </span>
               </div>
               <p className="text-slate-500 dark:text-zinc-400 font-medium">
                 Full-Stack Software Engineer • Kinship Graph Systems
               </p>
-              <p className="text-[11px] text-slate-600 dark:text-zinc-400 pt-1 leading-relaxed">
-                পেশাদার সফটওয়্যার প্রকৌশলী হিসেবে দেশীয় ও আন্তর্জাতিক প্রযুক্তিতে অবদান রাখার পাশাপাশি শিকড়ের সন্ধান ও বাঙালির পারিবারিক ঐতিহ্য সংরক্ষণে নিবেদিতপ্রাণ।
+              <p className="text-[11px] italic text-indigo-700 dark:text-indigo-300 leading-relaxed pt-1 border-l-2 border-indigo-300 pl-2">
+                "বন্ডরুট নির্মাণের পেছনে আমার লক্ষ্য — বাঙালি পারিবারিক বন্ধন, ইতিহাস ও ঐতিহ্যকে ডিজিটাল জগতে চিরকালের জন্য সংরক্ষণ করা।"
               </p>
 
-              {/* Developer Links */}
-              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-2">
+              {/* Social / Contact Button Grid */}
+              <div className="grid grid-cols-2 gap-2 pt-3">
+                {/* Send Message */}
+                <button
+                  type="button"
+                  onClick={() => setShowMessageForm(!showMessageForm)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95"
+                  style={{boxShadow: '4px 4px 8px rgba(0,0,0,0.1), -2px -2px 6px rgba(255,255,255,0.8)'}}
+                >
+                  <span>💬</span>
+                  <span>সরাসরি বার্তা</span>
+                </button>
+                {/* WhatsApp */}
+                <a
+                  href="https://wa.me/8801700000000"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95"
+                  style={{boxShadow: '4px 4px 8px rgba(0,0,0,0.1), -2px -2px 6px rgba(255,255,255,0.8)'}}
+                >
+                  <span>🟢</span>
+                  <span>WhatsApp</span>
+                </a>
+                {/* Email */}
                 <a
                   href="mailto:muhibbul524@gmail.com"
-                  className="inline-flex items-center space-x-1 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-zinc-700 hover:bg-slate-200 font-bold text-slate-800 dark:text-zinc-200 transition"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95"
+                  style={{boxShadow: '4px 4px 8px rgba(0,0,0,0.1), -2px -2px 6px rgba(255,255,255,0.8)'}}
                 >
-                  <Mail className="w-3.5 h-3.5 text-rose-500" />
-                  <span>muhibbul524@gmail.com</span>
+                  <span>✉️</span>
+                  <span>ইমেইল</span>
+                </a>
+                {/* Facebook */}
+                <a
+                  href="https://facebook.com/muhibbul524"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95"
+                  style={{boxShadow: '4px 4px 8px rgba(0,0,0,0.1), -2px -2px 6px rgba(255,255,255,0.8)'}}
+                >
+                  <span>🔵</span>
+                  <span>Facebook</span>
+                </a>
+                {/* Instagram */}
+                <a
+                  href="https://instagram.com/muhibbul524"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="col-span-2 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-700 dark:text-zinc-200 transition active:scale-95"
+                  style={{boxShadow: '4px 4px 8px rgba(0,0,0,0.1), -2px -2px 6px rgba(255,255,255,0.8)'}}
+                >
+                  <span>🟣</span>
+                  <span>Instagram</span>
                 </a>
               </div>
+
+              {/* Inline collapsible quick-message form (UI only, no API call) */}
+              {showMessageForm && (
+                <div className="mt-3 p-3 rounded-xl bg-slate-50 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 space-y-2 animate-in fade-in duration-150">
+                  <textarea
+                    rows={3}
+                    placeholder="আপনার বার্তা লিখুন..."
+                    className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs text-slate-900 dark:text-white resize-none focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSentSuccess(true);
+                      setMessage('');
+                      setShowMessageForm(false);
+                      setTimeout(() => setSentSuccess(false), 4000);
+                    }}
+                    className="w-full py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-bold active:scale-95 transition"
+                  >
+                    পাঠাও ✉️
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
